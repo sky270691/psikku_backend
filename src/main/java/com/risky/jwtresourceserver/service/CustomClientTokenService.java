@@ -19,9 +19,8 @@ import java.util.Base64;
 @Service
 public class CustomClientTokenService {
 
-    private TokenFactory tokenFactory = new TokenFactory();
 
-    public TokenFactory getToken(){
+    public TokenFactory getToken(String username, String password){
         String endpoint = "http://localhost:8080/oauth/token";
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -34,8 +33,8 @@ public class CustomClientTokenService {
         MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
         map.add("scope","write");
         map.add("grant_type","password");
-        map.add("username", "komo");
-        map.add("password","admin123");
+        map.add("username", username);
+        map.add("password",password);
 
 
 //        dataToPost.setScope("write");

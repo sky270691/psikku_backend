@@ -5,9 +5,7 @@ public class User {
 
     long id;
     String username;
-    String password;
-    String fullname;
-    String authority;
+    String token;
 
     public long getId() {
         return id;
@@ -25,27 +23,11 @@ public class User {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getToken() {
+        return token;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
-    public String getAuthority() {
-        return authority;
-    }
-
-    public void setAuthority(String authority) {
-        this.authority = authority;
+    public void setToken(String token) {
+        this.token = token;
     }
 }

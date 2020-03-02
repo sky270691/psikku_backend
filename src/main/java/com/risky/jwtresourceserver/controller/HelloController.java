@@ -6,9 +6,8 @@ import com.risky.jwtresourceserver.service.CustomClientTokenService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.security.web.header.Header;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -19,12 +18,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.DatatypeConverter;
 import java.net.HttpURLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @RestController
 public class HelloController {
 
+    @Autowired
+    CustomClientTokenService clientTokenService;
 
     @Autowired
     TokenFactory tf ;
@@ -38,9 +41,12 @@ public class HelloController {
         return "HELLO!";
     }
 
-//    @PostMapping("/register")
-//    public String register() {
-//    }
+    @GetMapping("/register")
+    public String register() {
+        return "{\n" +
+                "\"status\"=" + "\"success\""
+                +"}";
+    }
 
 //    @GetMapping(value = "/check/{token}")
 //    public String check_token(@PathVariable String token){
@@ -58,9 +64,18 @@ public class HelloController {
 
 
 
+
     @PostMapping(value = "/login")
-    public TokenFactory succesLogin(){
-        return client.getToken();
+    public TokenFactory successLogin3(@RequestHeader("Authorization") String header) {
+        String[] credential = header.split(" ");
+        byte[] decoded = Base64.getDecoder().decode(credential[1]);
+        String fullCredential = new String(decoded);
+        String[] extractedFullCredential = fullCredential.split(":");
+        String username = extractedFullCredential[0];
+        String password = extractedFullCredential[1];
+        return clientTokenService.getToken(username,password);
     }
+
+
 
 }
