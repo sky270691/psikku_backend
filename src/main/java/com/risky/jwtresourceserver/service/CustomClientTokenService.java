@@ -1,6 +1,7 @@
 package com.risky.jwtresourceserver.service;
 
 import com.risky.jwtresourceserver.entity.TokenFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,10 +19,11 @@ import java.util.Base64;
 
 @Service
 public class CustomClientTokenService {
-
+    @Value(value = "${tokensource.host}")
+    private String endpoint;
 
     public TokenFactory getToken(String username, String password){
-        String endpoint = "http://localhost:8080/oauth/token";
+
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         // set content type to URLENCODED for request token only support this media type
