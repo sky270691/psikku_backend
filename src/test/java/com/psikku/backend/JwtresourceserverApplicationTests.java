@@ -1,4 +1,4 @@
-package com.risky.jwtresourceserver;
+package com.psikku.backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

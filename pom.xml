@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.risky</groupId>
-    <artifactId>jwtresourceserver</artifactId>
+    <artifactId>psikku-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>jwtresourceserver</name>
+    <name>Psikku Backend Server</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>

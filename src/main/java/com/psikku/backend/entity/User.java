@@ -1,4 +1,4 @@
-package com.risky.jwtresourceserver.entity;
+package com.psikku.backend.entity;
 
 public class User {
 

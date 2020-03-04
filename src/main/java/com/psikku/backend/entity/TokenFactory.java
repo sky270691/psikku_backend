@@ -1,6 +1,7 @@
-package com.risky.jwtresourceserver.entity;
+package com.psikku.backend.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -10,6 +11,7 @@ public class TokenFactory {
     @JsonIgnore
     private String token_type;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private int expires_in;
 
     @JsonIgnore
@@ -18,9 +20,11 @@ public class TokenFactory {
     @JsonIgnore
     private String jti;
 
+
     public String getAccess_token() {
         return access_token;
     }
+
 
     public void setAccess_token(String access_token) {
         this.access_token = access_token;
@@ -57,6 +61,7 @@ public class TokenFactory {
     public void setJti(String jti) {
         this.jti = jti;
     }
+
 
     @Override
     public String toString() {

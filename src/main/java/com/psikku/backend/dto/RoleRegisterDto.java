@@ -1,4 +1,4 @@
-package com.risky.jwtresourceserver.dto;
+package com.psikku.backend.dto;
 
 public class RoleRegisterDto {
     private String name;

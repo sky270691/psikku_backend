@@ -1,20 +1,13 @@
-package com.risky.jwtresourceserver.service;
+package com.psikku.backend.service;
 
-import com.risky.jwtresourceserver.entity.TokenFactory;
+import com.psikku.backend.entity.TokenFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerProperties;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Base64Utils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.xml.bind.DatatypeConverter;
 import java.util.Base64;
 
 @Service
@@ -22,7 +15,7 @@ public class CustomClientTokenService {
     @Value(value = "${tokensource.host}")
     private String endpoint;
 
-    public TokenFactory getToken(String username, String password){
+    public ResponseEntity<TokenFactory> getToken(String username, String password){
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -50,10 +43,8 @@ public class CustomClientTokenService {
         // response
         ResponseEntity<TokenFactory> responseEntity=  restTemplate.postForEntity(endpoint,entity,TokenFactory.class);
 
-        // assign the response body to tokenfactory object
-        TokenFactory tf = responseEntity.getBody();
 
-        return tf;
+        return responseEntity;
     }
 
 }
