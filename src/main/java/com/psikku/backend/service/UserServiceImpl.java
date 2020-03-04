@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     CustomClientTokenService clientTokenService;
 
-    @Value(value = "${users.enpdoint}")
+    @Value(value = "${auth-server.users.enpdoint}")
     private String usersEndpoint;
 
     @Override
