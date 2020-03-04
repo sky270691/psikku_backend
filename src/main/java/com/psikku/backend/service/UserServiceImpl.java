@@ -1,19 +1,28 @@
 package com.psikku.backend.service;
 
+import com.psikku.backend.dto.RoleRegisterDto;
 import com.psikku.backend.dto.UserRegisterDto;
 import com.psikku.backend.dto.UserRegisterResponse;
 import com.psikku.backend.entity.TokenFactory;
 import com.psikku.backend.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import javax.management.relation.Role;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
     CustomClientTokenService clientTokenService;
+
+    @Value(value = "${users.enpdoint}")
+    private String usersEndpoint;
 
     @Override
     public User findUserByUsername(String username) {
@@ -23,7 +32,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<UserRegisterResponse> registerNewUser(UserRegisterDto userRegisterDto) {
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<UserRegisterResponse> response = restTemplate.postForEntity("http://localhost:8080/new_user",userRegisterDto,UserRegisterResponse.class);
+        RoleRegisterDto userRole = new RoleRegisterDto();
+        userRole.setName("ROLE_USER");
+        List<RoleRegisterDto> roleRegisterDtoList = new ArrayList<>();
+        roleRegisterDtoList.add(userRole);
+
+        userRegisterDto.setRoles(roleRegisterDtoList);
+        ResponseEntity<UserRegisterResponse> response = restTemplate.postForEntity(usersEndpoint,userRegisterDto,UserRegisterResponse.class);
         return response;
     }
 
