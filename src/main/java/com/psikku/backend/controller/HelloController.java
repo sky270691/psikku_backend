@@ -1,6 +1,7 @@
 package com.psikku.backend.controller;
 
 import com.psikku.backend.dto.UserRegisterDto;
+import com.psikku.backend.dto.UserRegisterAuthServerResponse;
 import com.psikku.backend.dto.UserRegisterResponse;
 import com.psikku.backend.entity.TokenFactory;
 import com.psikku.backend.service.CustomClientTokenService;
@@ -29,8 +30,8 @@ public class HelloController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserRegisterResponse> register(@RequestBody UserRegisterDto userRegisterDto) {
-        return userService.registerNewUser(userRegisterDto);
+    public UserRegisterResponse register(@RequestBody UserRegisterDto userRegisterDto) {
+        return userService.registerNewUserToAuthServer(userRegisterDto);
     }
 
 
@@ -49,6 +50,9 @@ public class HelloController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "incorrect username or password",e);
         }
     }
-
+    //todo
+    // tesasdjagsdljgkljasdlfjkljasdlgj
+    // jalskdgjlkasjdflkjasljglasjdf
+    // jadlkgjasldfjlsadjfl
 
 }

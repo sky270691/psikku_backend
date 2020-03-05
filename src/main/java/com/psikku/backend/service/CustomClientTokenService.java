@@ -12,7 +12,7 @@ import java.util.Base64;
 
 @Service
 public class CustomClientTokenService {
-    @Value(value = "${auth-server.tokensource.endpoint}")
+    @Value(value = "${auth-server.endpoint.tokensource}")
     private String endpoint;
 
     public ResponseEntity<TokenFactory> getToken(String username, String password){

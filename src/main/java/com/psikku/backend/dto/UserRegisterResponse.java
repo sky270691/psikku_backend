@@ -7,6 +7,7 @@ public class UserRegisterResponse {
     private String status;
     private String message;
 
+
     public long getId() {
         return id;
     }
@@ -38,6 +39,4 @@ public class UserRegisterResponse {
     public void setMessage(String message) {
         this.message = message;
     }
-
-
 }

@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class TokenFactory {
 
+
+    private String status;
+
     private String access_token;
     @JsonIgnore
     private String token_type;
@@ -19,6 +22,7 @@ public class TokenFactory {
 
     @JsonIgnore
     private String jti;
+
 
 
     public String getAccess_token() {
@@ -62,6 +66,13 @@ public class TokenFactory {
         this.jti = jti;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     @Override
     public String toString() {

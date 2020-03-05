@@ -1,5 +1,7 @@
 package com.psikku.backend.dto;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class UserRegisterDto {
@@ -7,6 +9,9 @@ public class UserRegisterDto {
     private String username;
     private String password;
     private String fullname;
+    private String email;
+//    private LocalDateTime createTime;
+    private LocalDate dateOfBirth;
     private List<RoleRegisterDto> roles;
 
     public String getFullname() {
@@ -41,5 +46,27 @@ public class UserRegisterDto {
         this.password = password;
     }
 
+    public String getEmail() {
+        return email;
+    }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+//    public LocalDateTime getCreateTime() {
+//        return createTime;
+//    }
+//
+//    public void setCreateTime(LocalDateTime createTime) {
+//        this.createTime = createTime;
+//    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
 }
