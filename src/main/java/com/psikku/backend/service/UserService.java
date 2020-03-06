@@ -1,19 +1,21 @@
 package com.psikku.backend.service;
 
+import com.psikku.backend.dto.UserDto;
 import com.psikku.backend.dto.UserRegisterResponse;
 import com.psikku.backend.entity.TokenFactory;
 import com.psikku.backend.entity.User;
 import com.psikku.backend.dto.UserRegisterDto;
-import com.psikku.backend.dto.UserRegisterAuthServerResponse;
 import org.springframework.http.ResponseEntity;
 
-import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.List;
 
 public interface UserService {
 
-    public User findUserByUsername(String username);
-    public UserRegisterResponse registerNewUserToAuthServer(UserRegisterDto userRegisterDto);
-    public TokenFactory loginExistingUser(String username, String password);
+    User findUserByUsername(String username);
+    ResponseEntity<UserRegisterResponse> registerNewUserToAuthServer(UserRegisterDto userRegisterDto);
+    TokenFactory loginExistingUser(String username, String password);
+    List<User> findAll();
+    UserDto convertToUserDto(User user);
 //    public User convertToUserEntity(UserRegisterAuthServerResponse userRegisterAuthServerResponse);
 //    public UserRegisterResponse registerResponse(UserRegisterDto userRegisterDto, boolean status);
 

@@ -1,9 +1,11 @@
 package com.psikku.backend.controller;
 
+import com.psikku.backend.dto.UserDto;
 import com.psikku.backend.dto.UserRegisterDto;
 import com.psikku.backend.dto.UserRegisterAuthServerResponse;
 import com.psikku.backend.dto.UserRegisterResponse;
 import com.psikku.backend.entity.TokenFactory;
+import com.psikku.backend.entity.User;
 import com.psikku.backend.service.CustomClientTokenService;
 import com.psikku.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +14,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
-public class HelloController {
+public class UserController {
 
     @Autowired
     CustomClientTokenService clientTokenService;
@@ -29,14 +33,24 @@ public class HelloController {
         return "HELLO!";
     }
 
+    @GetMapping()
+    public List<UserDto> getAllUser(){
+        List<User> userList = userService.findAll();
+        List<UserDto> userDtoList = new ArrayList<>();
+        for(User user : userList){
+            userDtoList.add(userService.convertToUserDto(user));
+        }
+        return userDtoList;
+    }
+
     @PostMapping("/register")
-    public UserRegisterResponse register(@RequestBody UserRegisterDto userRegisterDto) {
+    public ResponseEntity<UserRegisterResponse> register(@RequestBody UserRegisterDto userRegisterDto) {
         return userService.registerNewUserToAuthServer(userRegisterDto);
     }
 
 
     @PostMapping(value = "/login")
-    public TokenFactory successLogin3(@RequestHeader("Authorization") String header) {
+    public TokenFactory login(@RequestHeader("Authorization") String header) {
 
         String[] credential = header.split(" ");
         byte[] decoded = Base64.getDecoder().decode(credential[1]);

@@ -1,14 +1,12 @@
 package com.psikku.backend.service;
 
-import com.psikku.backend.dto.RoleRegisterDto;
-import com.psikku.backend.dto.UserRegisterDto;
-import com.psikku.backend.dto.UserRegisterAuthServerResponse;
-import com.psikku.backend.dto.UserRegisterResponse;
+import com.psikku.backend.dto.*;
 import com.psikku.backend.entity.TokenFactory;
 import com.psikku.backend.entity.User;
 import com.psikku.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -30,12 +28,17 @@ public class UserServiceImpl implements UserService {
     private String usersEndpoint;
 
     @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    @Override
     public User findUserByUsername(String username) {
         return null;
     }
 
     @Override
-    public UserRegisterResponse registerNewUserToAuthServer(UserRegisterDto userRegisterDto) {
+    public ResponseEntity<UserRegisterResponse> registerNewUserToAuthServer(UserRegisterDto userRegisterDto) {
         RestTemplate restTemplate = new RestTemplate();
         RoleRegisterDto userRole = new RoleRegisterDto();
         userRole.setName("ROLE_USER");
@@ -46,17 +49,16 @@ public class UserServiceImpl implements UserService {
 //        ResponseEntity<String> responseString = restTemplate.postForEntity(usersEndpoint,userRegisterDto, String.class);
         ResponseEntity<UserRegisterAuthServerResponse> responseJson = restTemplate.postForEntity(usersEndpoint,userRegisterDto, UserRegisterAuthServerResponse.class);
         User user =  convertToUserEntity(responseJson.getBody());
-//        System.out.println(responseString);
-        try{
-            userRepository.save(user);
-        }catch(Exception e){
+        if(user.getId()==0){
             UserRegisterResponse urr = new UserRegisterResponse();
             urr.setUsername(userRegisterDto.getUsername());
             urr.setMessage("Email or password already registered");
             urr.setStatus("Failed");
-            return urr;
+            return new ResponseEntity<>(urr, HttpStatus.BAD_REQUEST);
         }
-        return convertUserEntityToUserRegisterResponse(user);
+        userRepository.save(user);
+        UserRegisterResponse userRegisterResponse = convertUserEntityToUserRegisterResponse(user);
+        return new ResponseEntity<>(userRegisterResponse, HttpStatus.OK);
     }
 
     @Override
@@ -92,6 +94,18 @@ public class UserServiceImpl implements UserService {
         }
 
         return userRegisterResponse;
+    }
+
+    @Override
+    public UserDto convertToUserDto(User user){
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setUsername(user.getUsername());
+        userDto.setEmail(user.getEmail());
+        userDto.setFullName(user.getFullName());
+        userDto.setDateOfBirth(user.getDateOfBirth());
+        userDto.setCreateTime(user.getCreateTime());
+        return userDto;
     }
 
     //    @Override
