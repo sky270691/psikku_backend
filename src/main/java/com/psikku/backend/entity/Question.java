@@ -17,7 +17,7 @@ public class Question {
 //    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "question_id")
-    private List<Answer> answersList;
+    private List<Answer> answerList;
 
 //    @ManyToOne(fetch = FetchType.EAGER)
 //    @JoinColumn(name = "sub_test_id")
@@ -39,12 +39,12 @@ public class Question {
         this.questionContent = questionContent;
     }
 
-    public List<Answer> getAnswersList() {
-        return answersList;
+    public List<Answer> getAnswerList() {
+        return answerList;
     }
 
-    public void setAnswersList(List<Answer> answersList) {
-        this.answersList = answersList;
+    public void setAnswerList(List<Answer> answersList) {
+        this.answerList = answersList;
     }
 
 //    public Subtest getSubtest() {

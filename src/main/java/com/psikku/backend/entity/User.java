@@ -21,6 +21,9 @@ public class User {
     @Column(name = "fullname")
     String fullName;
 
+    @Column(name = "sex")
+    String sex;
+
     @Column(name = "create_time")
     LocalDateTime createTime;
 
@@ -57,6 +60,14 @@ public class User {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 
     public LocalDateTime getCreateTime() {

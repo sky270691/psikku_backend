@@ -9,6 +9,7 @@ public class UserDto {
     String username;
     String email;
     String fullName;
+    String sex;
     LocalDateTime createTime;
     LocalDate dateOfBirth;
 
@@ -42,6 +43,14 @@ public class UserDto {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 
     public LocalDateTime getCreateTime() {

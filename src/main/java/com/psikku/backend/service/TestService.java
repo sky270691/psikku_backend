@@ -1,10 +1,14 @@
 package com.psikku.backend.service;
 
+import com.psikku.backend.dto.FullTestDto;
 import com.psikku.backend.dto.TestDto;
 import com.psikku.backend.entity.Test;
-import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 public interface TestService {
-    Test addNewTest(TestDto testDto);
-    Test convertToTestEntity(TestDto testDto);
+    List<Test> findAll();
+    Test addNewTest(FullTestDto fullTestDto);
+    Test convertToTestEntity(FullTestDto fullTestDto);
+    TestDto convertToTestDto(Test test);
 }

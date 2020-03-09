@@ -32,7 +32,7 @@ public class UserController {
         return "HELLO!";
     }
 
-    @GetMapping()
+    @GetMapping
     public List<UserDto> getAllUser(){
         List<User> userList = userService.findAll();
         List<UserDto> userDtoList = new ArrayList<>();
@@ -48,7 +48,7 @@ public class UserController {
     }
 
 
-    @PostMapping(value = "/login")
+    @PostMapping("/login")
     public TokenFactory login(@RequestHeader("Authorization") String header) {
 
         String[] credential = header.split(" ");

@@ -73,6 +73,7 @@ public class UserServiceImpl implements UserService {
         user.setUsername(userRegisterAuthServerResponse.getUsername());
         user.setId(userRegisterAuthServerResponse.getId());
         user.setFullName(userRegisterAuthServerResponse.getFullname());
+        user.setSex(userRegisterAuthServerResponse.getSex());
         user.setEmail(userRegisterAuthServerResponse.getEmail());
         user.setCreateTime(userRegisterAuthServerResponse.getCreateTime());
         user.setDateOfBirth(userRegisterAuthServerResponse.getDateOfBirth());
@@ -102,6 +103,7 @@ public class UserServiceImpl implements UserService {
         userDto.setUsername(user.getUsername());
         userDto.setEmail(user.getEmail());
         userDto.setFullName(user.getFullName());
+        userDto.setSex(user.getSex());
         userDto.setDateOfBirth(user.getDateOfBirth());
         userDto.setCreateTime(user.getCreateTime());
         return userDto;

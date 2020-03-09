@@ -11,6 +11,7 @@ public class UserRegisterAuthServerResponse {
     private String message;
     private String email;
     private String fullname;
+    private String sex;
     private LocalDateTime createTime;
     private LocalDate dateOfBirth;
 
@@ -44,6 +45,14 @@ public class UserRegisterAuthServerResponse {
 
     public void setFullname(String fullname) {
         this.fullname = fullname;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 
     public String getStatus() {

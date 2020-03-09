@@ -1,9 +1,6 @@
 package com.psikku.backend.service;
 
-import com.psikku.backend.dto.AnswerDto;
-import com.psikku.backend.dto.QuestionDto;
-import com.psikku.backend.dto.SubtestDto;
-import com.psikku.backend.dto.TestDto;
+import com.psikku.backend.dto.*;
 import com.psikku.backend.entity.Answer;
 import com.psikku.backend.entity.Question;
 import com.psikku.backend.entity.Subtest;
@@ -36,15 +33,15 @@ public class TestServiceImpl implements TestService{
 
     @Transactional
     @Override
-    public Test addNewTest(TestDto testDto) {
-        Test entityTest = convertToTestEntity(testDto);
+    public Test addNewTest(FullTestDto fullTestDto) {
+        Test entityTest = convertToTestEntity(fullTestDto);
         try {
             testRepository.save(entityTest);
             for(Subtest subtest:entityTest.getSubtestList()){
                 subtestRepository.save(subtest);
                 for(Question question: subtest.getQuestionList()){
                     questionRepository.save(question);
-                    for(Answer answer: question.getAnswersList()){
+                    for(Answer answer: question.getAnswerList()){
                         answerRepository.saveAndFlush(answer);
                     }
                 }
@@ -58,11 +55,11 @@ public class TestServiceImpl implements TestService{
     }
 
     @Override
-    public Test convertToTestEntity(TestDto testDto) {
+    public Test convertToTestEntity(FullTestDto fullTestDto) {
         Test test = new Test();
-        test.setName(testDto.getName());
+        test.setName(fullTestDto.getName());
 
-        List<SubtestDto> subtestDtoList = testDto.getSubtests();
+        List<SubtestDto> subtestDtoList = fullTestDto.getSubtests();
         List<Subtest> entitySubtestList = new ArrayList<>();
         int subtestNumber = 1;
         for(SubtestDto subtestDto : subtestDtoList){
@@ -85,12 +82,57 @@ public class TestServiceImpl implements TestService{
                     answer.setIsCorrect(answerDto.getIsCorrect());
                     answerList.add(answer);
                 }
-                question.setAnswersList(answerList);
+                question.setAnswerList(answerList);
             }
             subtest.setQuestionList(questionList);
             entitySubtestList.add(subtest);
         }
         test.setSubtestList(entitySubtestList);
         return test;
+    }
+
+//    @Override
+//    public FullTestDto convertToTestDto(Test test){
+//        FullTestDto fullTestDto = new FullTestDto();
+//        fullTestDto.setName(test.getName());
+//        fullTestDto.setId(test.getId());
+//        fullTestDto.setSubtests(new ArrayList<>());
+//        for(Subtest subtest : test.getSubtestList()){
+//            SubtestDto subtestDto = new SubtestDto();
+//            subtestDto.setId(subtest.getId());
+//            subtestDto.setTestType(subtest.getTestType());
+//            subtestDto.setGuide(subtest.getGuide());
+//            subtestDto.setQuestions(new ArrayList<>());
+//            for(Question question:subtest.getQuestionList()){
+//                QuestionDto questionDto = new QuestionDto();
+//                questionDto.setId(question.getId());
+//                questionDto.setQuestionContent(question.getQuestionContent());
+//                questionDto.setAnswers(new ArrayList<>());
+//                for(Answer answer: question.getAnswersList()){
+//                    AnswerDto answerDto = new AnswerDto();
+//                    answerDto.setId(answer.getId());
+//                    answerDto.setAnswerContent(answer.getAnswerContent());
+//                    answerDto.setIsCorrect(answer.getIsCorrect());
+//                    questionDto.getAnswers().add(answerDto);
+//                }
+//                subtestDto.getQuestions().add(questionDto);
+//            }
+//            fullTestDto.getSubtests().add(subtestDto);
+//        }
+//        return fullTestDto;
+//    }
+
+
+    @Override
+    public TestDto convertToTestDto(Test test) {
+        TestDto testDto = new TestDto();
+        testDto.setId(test.getId());
+        testDto.setName(test.getName());
+        return testDto;
+    }
+
+    @Override
+    public List<Test> findAll() {
+        return testRepository.findAll();
     }
 }

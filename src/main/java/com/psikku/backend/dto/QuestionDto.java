@@ -8,17 +8,11 @@ public class QuestionDto {
 
     private String id;
 
-    @JsonProperty("question_content")
+    @JsonProperty(value = "question_content")
     private String questionContent;
+
     private List<AnswerDto> answers;
 
-    public List<AnswerDto> getAnswers() {
-        return answers;
-    }
-
-    public void setAnswers(List<AnswerDto> answers) {
-        this.answers = answers;
-    }
 
     public String getId() {
         return id;
@@ -36,5 +30,12 @@ public class QuestionDto {
         this.questionContent = questionContent;
     }
 
+    public List<AnswerDto> getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(List<AnswerDto> answers) {
+        this.answers = answers;
+    }
 
 }

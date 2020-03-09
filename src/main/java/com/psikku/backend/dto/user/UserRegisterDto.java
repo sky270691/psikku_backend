@@ -8,6 +8,7 @@ public class UserRegisterDto {
     private String username;
     private String password;
     private String fullname;
+    private String sex;
     private String email;
 //    private LocalDateTime createTime;
     private LocalDate dateOfBirth;
@@ -35,6 +36,14 @@ public class UserRegisterDto {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 
     public String getPassword() {
