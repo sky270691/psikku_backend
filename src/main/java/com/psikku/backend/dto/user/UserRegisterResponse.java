@@ -1,4 +1,4 @@
-package com.psikku.backend.dto;
+package com.psikku.backend.dto.user;
 
 public class UserRegisterResponse {
 

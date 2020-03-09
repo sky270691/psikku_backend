@@ -1,9 +1,8 @@
 package com.psikku.backend.controller;
 
-import com.psikku.backend.dto.UserDto;
-import com.psikku.backend.dto.UserRegisterDto;
-import com.psikku.backend.dto.UserRegisterAuthServerResponse;
-import com.psikku.backend.dto.UserRegisterResponse;
+import com.psikku.backend.dto.user.UserDto;
+import com.psikku.backend.dto.user.UserRegisterDto;
+import com.psikku.backend.dto.user.UserRegisterResponse;
 import com.psikku.backend.entity.TokenFactory;
 import com.psikku.backend.entity.User;
 import com.psikku.backend.service.CustomClientTokenService;

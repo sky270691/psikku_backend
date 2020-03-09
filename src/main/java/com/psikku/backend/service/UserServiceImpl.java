@@ -1,6 +1,6 @@
 package com.psikku.backend.service;
 
-import com.psikku.backend.dto.*;
+import com.psikku.backend.dto.user.*;
 import com.psikku.backend.entity.TokenFactory;
 import com.psikku.backend.entity.User;
 import com.psikku.backend.repository.UserRepository;
@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,7 +86,7 @@ public class UserServiceImpl implements UserService {
         userRegisterResponse.setUsername(user.getUsername());
         if(user != null){
             userRegisterResponse.setStatus("success");
-            userRegisterResponse.setMessage("User " + user.getUsername() +" has been succesfully registered");
+            userRegisterResponse.setMessage("User " + user.getUsername() +" has been successfully registered");
         }else{
             userRegisterResponse.setStatus("Failed");
             userRegisterResponse.setMessage("Error Registering: " + user.getUsername());

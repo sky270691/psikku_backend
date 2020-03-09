@@ -1,7 +1,6 @@
-package com.psikku.backend.dto;
+package com.psikku.backend.dto.user;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class UserRegisterDto {
