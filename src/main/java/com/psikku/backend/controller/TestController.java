@@ -1,7 +1,7 @@
 package com.psikku.backend.controller;
 
-import com.psikku.backend.dto.FullTestDto;
-import com.psikku.backend.dto.TestDto;
+import com.psikku.backend.dto.Test.FullTestDto;
+import com.psikku.backend.dto.Test.TestDto;
 import com.psikku.backend.entity.Test;
 import com.psikku.backend.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;

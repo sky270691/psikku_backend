@@ -1,6 +1,6 @@
 package com.psikku.backend.service;
 
-import com.psikku.backend.dto.*;
+import com.psikku.backend.dto.Test.*;
 import com.psikku.backend.entity.Answer;
 import com.psikku.backend.entity.Question;
 import com.psikku.backend.entity.Subtest;
@@ -72,7 +72,9 @@ public class TestServiceImpl implements TestService{
             for(QuestionDto questionDto:subtestDto.getQuestions()){
                 Question question = new Question();
                 question.setId(subtest.getId()+"_"+questionId++);
-                question.setQuestionContent(questionDto.getQuestionContent());
+                question.setQuestionContent1(questionDto.getQuestionContent1());
+                question.setQuestionContent2(questionDto.getQuestionContent2());
+                question.setQuestionContent3(questionDto.getQuestionContent3());
                 questionList.add(question);
                 List<Answer> answerList = new ArrayList<>();
                 for(AnswerDto answerDto:questionDto.getAnswers()){

@@ -6,6 +6,9 @@ import com.psikku.backend.entity.User;
 import com.psikku.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -28,6 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAll() {
+//        return userRepository.findAll(Sort.by("email").ascending());
         return userRepository.findAll();
     }
 
