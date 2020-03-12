@@ -16,6 +16,7 @@ public interface UserService {
     TokenFactory loginExistingUser(String username, String password);
     List<User> findAll();
     UserDto convertToUserDto(User user);
+    String getUserNameFromToken(String token);
 //    public User convertToUserEntity(UserRegisterAuthServerResponse userRegisterAuthServerResponse);
 //    public UserRegisterResponse registerResponse(UserRegisterDto userRegisterDto, boolean status);
 

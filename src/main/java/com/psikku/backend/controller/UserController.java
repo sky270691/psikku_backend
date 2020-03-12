@@ -27,6 +27,8 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    private TokenFactory tokenFactory;
+
     @GetMapping("/hello")
     public String hello(){
         return "HELLO!";
@@ -58,11 +60,24 @@ public class UserController {
         String username = extractedFullCredential[0];
         String password = extractedFullCredential[1];
         try {
-            return userService.loginExistingUser(username,password);
+            TokenFactory tokenFactory = userService.loginExistingUser(username,password);
+            this.tokenFactory = tokenFactory;
+            return tokenFactory;
         } catch (RuntimeException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "incorrect username or password",e);
         }
     }
+
+    @GetMapping("/info")
+    public UserDto getCurrentUserInfo(@RequestHeader("Authorization") String auth){
+        String[] authHeader = auth.split(" ");
+        String token = authHeader[1];
+        String username = userService.getUserNameFromToken(token);
+        User user = userService.findUserByUsername(username);
+        UserDto userDto = userService.convertToUserDto(user);
+        return userDto;
+    }
+
     //todo
     // tesasdjagsdljgkljasdlfjkljasdlgj
     // jalskdgjlkasjdflkjasljglasjdf

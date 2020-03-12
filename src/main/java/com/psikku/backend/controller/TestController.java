@@ -27,7 +27,6 @@ public class TestController {
     @GetMapping("/")
     public ResponseEntity<List<TestDto>> getAllTests() {
 
-         new ArrayList<>();
         List<Test> testList = testService.findAll();
         List<TestDto> testDtoList = new ArrayList<>();
 //        for (Test test : testList) {

@@ -71,18 +71,25 @@ public class TestServiceImpl implements TestService{
             int questionId = 1;
             for(QuestionDto questionDto:subtestDto.getQuestions()){
                 Question question = new Question();
-                question.setId(subtest.getId()+"_"+questionId++);
+//                System.out.println(questionDto.getId());
+                if(questionDto.getId()!=null && Integer.parseInt(questionDto.getId())<0){
+                    question.setId(subtest.getId() + "_" + questionDto.getId());
+                }else{
+                    question.setId(subtest.getId() + "_" + questionId++);
+                }
                 question.setQuestionContent1(questionDto.getQuestionContent1());
                 question.setQuestionContent2(questionDto.getQuestionContent2());
                 question.setQuestionContent3(questionDto.getQuestionContent3());
                 questionList.add(question);
                 List<Answer> answerList = new ArrayList<>();
-                for(AnswerDto answerDto:questionDto.getAnswers()){
-                    Answer answer = new Answer();
-                    answer.setId(question.getId()+"_"+answerDto.getId());
-                    answer.setAnswerContent(answerDto.getAnswerContent());
-                    answer.setIsCorrect(answerDto.getIsCorrect());
-                    answerList.add(answer);
+                if(questionDto.getAnswers() != null){
+                    for(AnswerDto answerDto:questionDto.getAnswers()){
+                        Answer answer = new Answer();
+                        answer.setId(question.getId()+"_"+answerDto.getId());
+                        answer.setAnswerContent(answerDto.getAnswerContent());
+                        answer.setIsCorrect(answerDto.getIsCorrect());
+                        answerList.add(answer);
+                    }
                 }
                 question.setAnswerList(answerList);
             }

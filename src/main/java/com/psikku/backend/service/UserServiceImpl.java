@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.jwt.Jwt;
+import org.springframework.security.jwt.JwtHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -37,7 +39,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserByUsername(String username) {
-        return null;
+        return userRepository.findUserByUsername(username);
     }
 
     @Override
@@ -52,7 +54,7 @@ public class UserServiceImpl implements UserService {
 //        ResponseEntity<String> responseString = restTemplate.postForEntity(usersEndpoint,userRegisterDto, String.class);
         ResponseEntity<UserRegisterAuthServerResponse> responseJson = restTemplate.postForEntity(usersEndpoint,userRegisterDto, UserRegisterAuthServerResponse.class);
         User user =  convertToUserEntity(responseJson.getBody());
-        if(user.getId()==0){
+        if(user.getId()==0){ // if user.getId() from auth server equals to 0 then return error response
             UserRegisterResponse urr = new UserRegisterResponse();
             urr.setUsername(userRegisterDto.getUsername());
             urr.setMessage("Email or password already registered");
@@ -111,6 +113,16 @@ public class UserServiceImpl implements UserService {
         userDto.setDateOfBirth(user.getDateOfBirth());
         userDto.setCreateTime(user.getCreateTime());
         return userDto;
+    }
+
+    @Override
+    public String getUserNameFromToken(String token){
+        Jwt jwt = JwtHelper.decode(token);
+        String[] tokenDataSplit = jwt.getClaims().split(",");
+        String userNamePair = tokenDataSplit[1];
+        String[] userNamePairSplit = userNamePair.split(":");
+        String userName = userNamePairSplit[1];
+        return userName.substring(1,userName.length()-1);
     }
 
     //    @Override
