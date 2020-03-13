@@ -9,6 +9,7 @@ import com.psikku.backend.repository.AnswerRepository;
 import com.psikku.backend.repository.QuestionRepository;
 import com.psikku.backend.repository.SubtestRepository;
 import com.psikku.backend.repository.TestRepository;
+import com.psikku.backend.utility.TestNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +53,11 @@ public class TestServiceImpl implements TestService{
             return null;
         }
         return entityTest;
+    }
+
+    @Override
+    public Test findTestById(int id){
+        return testRepository.findById(id).orElseThrow(()->new TestNotFoundException("Test not found"));
     }
 
     @Override

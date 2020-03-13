@@ -11,4 +11,5 @@ public interface TestService {
     Test addNewTest(FullTestDto fullTestDto);
     Test convertToTestEntity(FullTestDto fullTestDto);
     TestDto convertToTestDto(Test test);
+    Test findTestById(int id);
 }
