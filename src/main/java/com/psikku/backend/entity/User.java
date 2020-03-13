@@ -4,6 +4,7 @@ package com.psikku.backend.entity;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -29,6 +30,9 @@ public class User {
 
     @Column(name = "date_of_birth")
     LocalDate dateOfBirth;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    List<SubmittedAnswer> submittedAnswerList;
 
     public long getId() {
         return id;
@@ -84,6 +88,14 @@ public class User {
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public List<SubmittedAnswer> getSubmittedAnswerList() {
+        return submittedAnswerList;
+    }
+
+    public void setSubmittedAnswerList(List<SubmittedAnswer> submittedAnswerList) {
+        this.submittedAnswerList = submittedAnswerList;
     }
 
     @Override

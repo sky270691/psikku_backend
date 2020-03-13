@@ -26,12 +26,12 @@ public class TestController {
     @Autowired
     UserService userService;
 
-    @PostMapping
+    @PostMapping("/")
     public Test addNewTest(@RequestBody FullTestDto fullTestDto){
         return testService.addNewTest(fullTestDto);
     }
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<List<TestDto>> getAllTests() {
 
         List<Test> testList = testService.findAll();
@@ -41,13 +41,6 @@ public class TestController {
 //        }
         testList.forEach(test -> testDtoList.add(testService.convertToTestDto(test)));
         return new ResponseEntity<>(testDtoList, HttpStatus.OK);
-    }
-
-    @GetMapping("/{id}")
-    public TestDto getTestById(@PathVariable int id){
-        Test test =  testService.findTestById(id);
-        TestDto testDto = testService.convertToTestDto(test);
-        return testDto;
     }
 
 
