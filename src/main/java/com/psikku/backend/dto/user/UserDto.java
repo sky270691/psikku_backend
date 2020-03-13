@@ -8,7 +8,8 @@ public class UserDto {
     long id;
     String username;
     String email;
-    String fullName;
+    String firstname;
+    String lastname;
     String sex;
     LocalDateTime createTime;
     LocalDate dateOfBirth;
@@ -37,12 +38,20 @@ public class UserDto {
         this.email = email;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getSex() {

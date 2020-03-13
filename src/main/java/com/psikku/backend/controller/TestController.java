@@ -26,12 +26,12 @@ public class TestController {
     @Autowired
     UserService userService;
 
-    @PostMapping("/")
+    @PostMapping
     public Test addNewTest(@RequestBody FullTestDto fullTestDto){
         return testService.addNewTest(fullTestDto);
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<TestDto>> getAllTests() {
 
         List<Test> testList = testService.findAll();

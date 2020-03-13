@@ -19,8 +19,11 @@ public class User {
     @Column(name = "email")
     String email;
 
-    @Column(name = "fullname")
-    String fullName;
+    @Column(name = "firstname")
+    String firstname;
+
+    @Column(name = "lastname")
+    String lastname;
 
     @Column(name = "sex")
     String sex;
@@ -58,12 +61,20 @@ public class User {
         this.email = email;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setFirstname(String fullName) {
+        this.firstname = fullName;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getSex() {
@@ -100,6 +111,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "Username: " +getUsername()+ "email: " +getEmail()+ "fullname: "+getFullName();
+        return "Username: " +getUsername()+ "email: " +getEmail()+ "fullname: "+ getFirstname();
     }
 }

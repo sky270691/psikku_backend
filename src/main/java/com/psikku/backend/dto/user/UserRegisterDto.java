@@ -1,7 +1,7 @@
 package com.psikku.backend.dto.user;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -9,22 +9,31 @@ public class UserRegisterDto {
 
     private String username;
     private String password;
-    private String fullname;
+    private String firstname;
+    private String lastname;
     private String sex;
 
-    @NotBlank(message = "please insert email")
-    @Email(message = "please insert valid email format")
+    @NotBlank(message = "email shouldn't be blank")
+    @Pattern(regexp = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{1,}$",message = "email format should be valid")
     private String email;
 //    private LocalDateTime createTime;
     private LocalDate dateOfBirth;
     private List<RoleRegisterDto> roles;
 
-    public String getFullname() {
-        return fullname;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public List<RoleRegisterDto> getRoles() {
