@@ -5,12 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,15 +31,4 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(body,headers,status);
 
     }
-
-    @ExceptionHandler
-    public ResponseEntity<TestNotFoundResponse> testNotFoundException (TestNotFoundException e){
-        TestNotFoundResponse response = new TestNotFoundResponse();
-        response.setMessage(e.getMessage());
-        response.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
-        response.setTimestamp(LocalDateTime.now());
-        return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
-    }
-
-
 }
