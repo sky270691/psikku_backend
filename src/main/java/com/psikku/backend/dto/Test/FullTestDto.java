@@ -1,11 +1,13 @@
 package com.psikku.backend.dto.Test;
 
+import javax.validation.constraints.Pattern;
 import java.util.List;
 
 public class FullTestDto {
 
     private int id;
 
+    @Pattern(regexp = "[^_]+", message = "test name cannot contain '_' character")
     private String name;
 
 //    @JsonProperty(value = "subtest")
@@ -25,7 +27,7 @@ public class FullTestDto {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name.toLowerCase();
     }
 
     public List<SubtestDto> getSubtests() {

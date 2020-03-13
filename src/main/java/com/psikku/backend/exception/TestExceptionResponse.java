@@ -1,8 +1,8 @@
-package com.psikku.backend.utility;
+package com.psikku.backend.exception;
 
 import java.time.LocalDateTime;
 
-public class TestNotFoundResponse {
+public class TestExceptionResponse {
     private String status;
     private String message;
     private LocalDateTime timestamp;

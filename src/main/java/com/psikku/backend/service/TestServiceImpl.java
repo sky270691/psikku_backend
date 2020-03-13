@@ -6,7 +6,7 @@ import com.psikku.backend.repository.AnswerRepository;
 import com.psikku.backend.repository.QuestionRepository;
 import com.psikku.backend.repository.SubtestRepository;
 import com.psikku.backend.repository.TestRepository;
-import com.psikku.backend.utility.TestNotFoundException;
+import com.psikku.backend.exception.TestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,28 +33,38 @@ public class TestServiceImpl implements TestService{
     @Override
     public Test addNewTest(FullTestDto fullTestDto) {
         Test entityTest = convertToTestEntity(fullTestDto);
-        try {
-            testRepository.save(entityTest);
-            for(Subtest subtest:entityTest.getSubtestList()){
-                subtestRepository.save(subtest);
-                for(Question question: subtest.getQuestionList()){
-                    questionRepository.save(question);
-                    for(Answer answer: question.getAnswerList()){
-                        answerRepository.saveAndFlush(answer);
+        Test findTest = testRepository.findTestByName(entityTest.getName()).orElse(null);
+        if(findTest==null){
+            try {
+                testRepository.save(entityTest);
+                for(Subtest subtest:entityTest.getSubtestList()){
+                    subtestRepository.save(subtest);
+                    for(Question question: subtest.getQuestionList()){
+                        questionRepository.save(question);
+                        for(Answer answer: question.getAnswerList()){
+                            answerRepository.saveAndFlush(answer);
+                        }
                     }
                 }
-            }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+            return entityTest;
+        }else{
+            throw new TestException("Test name already exist, choose another name");
         }
-        return entityTest;
     }
 
     @Override
     public Test findTestById(int id){
-        return testRepository.findById(id).orElseThrow(()->new TestNotFoundException("Test not found"));
+        return testRepository.findById(id).orElseThrow(()->new TestException("Test not found"));
+    }
+
+    @Override
+    public Test findTestByName(String name) {
+        return  testRepository.findTestByName(name).orElseThrow(()->new TestException("Test with name: "+ name +"not found"));
     }
 
     @Override
