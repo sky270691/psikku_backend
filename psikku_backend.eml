@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component LANGUAGE_LEVEL="JDK_1_8" jdk="11" jdk_type="JavaSDK">
+<component LANGUAGE_LEVEL="JDK_1_8" inheritJdk="true">
 	<output-test url="file://$MODULE_DIR$/target/test-classes"/>
 	<contentEntry url="file://$MODULE_DIR$">
 		<testFolder url="file://$MODULE_DIR$/src/test/java"/>
@@ -36,8 +36,6 @@
 	<levels>
 		<level name="Maven: org.springframework.boot:spring-boot-starter-security:2.2.5.RELEASE" value="project"/>
 		<level name="Maven: org.springframework.boot:spring-boot-starter:2.2.5.RELEASE" value="project"/>
-		<level name="Maven: org.springframework.boot:spring-boot:2.2.5.RELEASE" value="project"/>
-		<level name="Maven: org.springframework.boot:spring-boot-autoconfigure:2.2.5.RELEASE" value="project"/>
 		<level name="Maven: org.springframework.boot:spring-boot-starter-logging:2.2.5.RELEASE" value="project"/>
 		<level name="Maven: ch.qos.logback:logback-classic:1.2.3" value="project"/>
 		<level name="Maven: ch.qos.logback:logback-core:1.2.3" value="project"/>
@@ -155,5 +153,8 @@
 		<level name="Maven: org.xmlunit:xmlunit-core:2.6.3" value="project"/>
 		<level name="Maven: org.springframework.security:spring-security-test:5.2.2.RELEASE" value="project"/>
 		<level name="Maven: org.springframework.security:spring-security-core:5.2.2.RELEASE" value="project"/>
+		<level name="Maven: org.springframework.boot:spring-boot-devtools:2.2.5.RELEASE" value="project"/>
+		<level name="Maven: org.springframework.boot:spring-boot:2.2.5.RELEASE" value="project"/>
+		<level name="Maven: org.springframework.boot:spring-boot-autoconfigure:2.2.5.RELEASE" value="project"/>
 	</levels>
 </component>

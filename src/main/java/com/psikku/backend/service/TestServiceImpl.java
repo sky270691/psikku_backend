@@ -8,6 +8,8 @@ import com.psikku.backend.repository.SubtestRepository;
 import com.psikku.backend.repository.TestRepository;
 import com.psikku.backend.exception.TestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -29,6 +31,8 @@ public class TestServiceImpl implements TestService{
     @Autowired
     AnswerRepository answerRepository;
 
+
+
     @Transactional
     @Override
     public Test addNewTest(FullTestDto fullTestDto) {
@@ -43,6 +47,7 @@ public class TestServiceImpl implements TestService{
                         questionRepository.save(question);
                         for(Answer answer: question.getAnswerList()){
                             answerRepository.saveAndFlush(answer);
+                         
                         }
                     }
                 }
@@ -63,7 +68,7 @@ public class TestServiceImpl implements TestService{
     }
 
     @Override
-    public Test findTestByName(String name) {
+    public Test findTestByName(String name) { 	
         return  testRepository.findTestByName(name).orElseThrow(()->new TestException("Test with name: "+ name +"not found"));
     }
 
@@ -71,6 +76,7 @@ public class TestServiceImpl implements TestService{
     public Test convertToTestEntity(FullTestDto fullTestDto) {
         Test test = new Test();
         test.setName(fullTestDto.getName());
+        
 
         List<SubtestDto> subtestDtoList = fullTestDto.getSubtests();
         List<Subtest> entitySubtestList = new ArrayList<>();
@@ -113,52 +119,57 @@ public class TestServiceImpl implements TestService{
         return test;
     }
 
-//    @Override
-//    public FullTestDto convertToTestDto(Test test){
-//        FullTestDto fullTestDto = new FullTestDto();
-//        fullTestDto.setName(test.getName());
-//        fullTestDto.setId(test.getId());
-//        fullTestDto.setSubtests(new ArrayList<>());
-//        for(Subtest subtest : test.getSubtestList()){
-//            SubtestDto subtestDto = new SubtestDto();
-//            subtestDto.setId(subtest.getId());
-//            subtestDto.setTestType(subtest.getTestType());
-//            subtestDto.setGuide(subtest.getGuide());
-//            subtestDto.setQuestions(new ArrayList<>());
-//            for(Question question:subtest.getQuestionList()){
-//                QuestionDto questionDto = new QuestionDto();
-//                questionDto.setId(question.getId());
-//                questionDto.setQuestionContent(question.getQuestionContent());
-//                questionDto.setAnswers(new ArrayList<>());
-//                for(Answer answer: question.getAnswersList()){
-//                    AnswerDto answerDto = new AnswerDto();
-//                    answerDto.setId(answer.getId());
-//                    answerDto.setAnswerContent(answer.getAnswerContent());
-//                    answerDto.setIsCorrect(answer.getIsCorrect());
-//                    questionDto.getAnswers().add(answerDto);
-//                }
-//                subtestDto.getQuestions().add(questionDto);
-//            }
-//            fullTestDto.getSubtests().add(subtestDto);
-//        }
-//        return fullTestDto;
-//    }
+    @Override
+    public FullTestDto convertToFullTestDto(Test test){
+        FullTestDto fullTestDto = new FullTestDto();
+        fullTestDto.setName(test.getName());
+        fullTestDto.setId(test.getId());
+        fullTestDto.setSubtests(new ArrayList<>());
+        for(Subtest subtest : test.getSubtestList()){
+            SubtestDto subtestDto = new SubtestDto();
+            subtestDto.setId(subtest.getId());
+            subtestDto.setTestType(subtest.getTestType());
+            subtestDto.setGuide(subtest.getGuide());
+            subtestDto.setQuestions(new ArrayList<>());
+            for(Question question:subtest.getQuestionList()){
+                QuestionDto questionDto = new QuestionDto();
+                questionDto.setId(question.getId());
+                questionDto.setQuestionContent1(question.getQuestionContent1());
+                questionDto.setQuestionContent2(question.getQuestionContent2());
+                questionDto.setQuestionContent3(question.getQuestionContent3());
+                questionDto.setAnswers(new ArrayList<>());
+                for(Answer answer: question.getAnswerList()){
+                    AnswerDto answerDto = new AnswerDto();
+                    answerDto.setId(answer.getId());
+                    answerDto.setAnswerContent(answer.getAnswerContent());
+                    answerDto.setIsCorrect(answer.getIsCorrect());
+                    questionDto.getAnswers().add(answerDto);
+                }
+                subtestDto.getQuestions().add(questionDto);
+            }
+            fullTestDto.getSubtests().add(subtestDto);
+        }
+        return fullTestDto;
+    }
 
 
     @Override
-    public TestDto convertToTestDto(Test test) {
+    public TestDto convertToMinimalTestDto(Test test) {
         TestDto testDto = new TestDto();
         testDto.setId(test.getId());
         testDto.setName(test.getName());
         return testDto;
     }
 
-
-
-
-
     @Override
     public List<Test> findAll() {
         return testRepository.findAll();
     }
+
+//_______________________________________________________________________________________________________________
+    @Override
+    public Subtest findSubtestById(String id) {
+        return subtestRepository.findById(id).orElseThrow(()->new TestException("Subtest not found"));
+    }
+
 }

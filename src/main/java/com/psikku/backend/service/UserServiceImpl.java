@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
         if(user.getId()==0){ // if user.getId() from auth server equals to 0 then return error response
             UserRegisterResponse urr = new UserRegisterResponse();
             urr.setUsername(userRegisterDto.getUsername());
-            urr.setMessage("Email or password already registered");
+            urr.setMessage("Email or username already registered");
             urr.setStatus("Failed");
             return new ResponseEntity<>(urr, HttpStatus.BAD_REQUEST);
         }

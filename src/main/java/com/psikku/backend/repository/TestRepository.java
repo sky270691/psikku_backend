@@ -1,10 +1,16 @@
 package com.psikku.backend.repository;
 
-import com.psikku.backend.entity.Test;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
+import com.psikku.backend.entity.Test;
 
 public interface TestRepository extends JpaRepository<Test, Integer> {
     Optional<Test> findTestByName(String name);
+//    List<Test> findAll();
+//    List<Test> findAll(Pageable pageable);
+    
+
+    
 }

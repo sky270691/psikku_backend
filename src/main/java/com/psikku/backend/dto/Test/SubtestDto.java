@@ -9,7 +9,7 @@ public class SubtestDto {
     private String id;
     private String guide;
 
-    @JsonProperty(value = "test_type")
+    @JsonProperty(value = "test-type")
     private String testType;
     private List<QuestionDto> questions;
 

@@ -1,7 +1,9 @@
 package com.psikku.backend.entity;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "submitted_answer")
@@ -18,6 +20,10 @@ public class SubmittedAnswer {
 
     @Column(name = "answer_3")
     private String answer3;
+
+    @CreationTimestamp
+    @Column(name = "create_time")
+    private LocalDateTime createTime;
 
     @ManyToOne(cascade = {CascadeType.MERGE,CascadeType.REFRESH,CascadeType.PERSIST,CascadeType.DETACH})
     @JoinColumn(name = "user_id")
@@ -57,6 +63,14 @@ public class SubmittedAnswer {
 
     public void setAnswer3(String answer3) {
         this.answer3 = answer3;
+    }
+
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
     }
 
     public User getUser() {

@@ -1,11 +1,8 @@
 package com.psikku.backend.controller;
 
 import com.psikku.backend.dto.Test.FullTestDto;
-import com.psikku.backend.dto.Test.SubmittedAnswerDto;
 import com.psikku.backend.dto.Test.TestDto;
-import com.psikku.backend.dto.user.UserDto;
 import com.psikku.backend.entity.Test;
-import com.psikku.backend.entity.User;
 import com.psikku.backend.service.TestService;
 import com.psikku.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +37,15 @@ public class TestController {
 //        for (Test test : testList) {
 //            testDtoList.add(testService.convertToTestDto(test));
 //        }
-        testList.forEach(test -> testDtoList.add(testService.convertToTestDto(test)));
+        testList.forEach(test -> testDtoList.add(testService.convertToMinimalTestDto(test)));
         return new ResponseEntity<>(testDtoList, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public TestDto getTestById(@PathVariable int id){
+        Test test =  testService.findTestById(id);
+        TestDto testDto = testService.convertToMinimalTestDto(test);
+        return testDto;
     }
 
 

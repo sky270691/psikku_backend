@@ -22,6 +22,12 @@ public class Test {
     @JoinColumn(name = "test_id")
     private List<Subtest> subtestList;
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH,CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
+    @JoinTable(name = "package_test",
+            joinColumns = @JoinColumn(name = "test_id"),
+            inverseJoinColumns = @JoinColumn(name = "package_id"))
+    private List<Package> packageList;
+
     public int getId() {
         return id;
     }
@@ -46,5 +52,11 @@ public class Test {
         this.subtestList = subtestList;
     }
 
+    public List<Package> getPackageList() {
+        return packageList;
+    }
 
+    public void setPackageList(List<Package> packageList) {
+        this.packageList = packageList;
+    }
 }
