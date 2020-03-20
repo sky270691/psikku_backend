@@ -1,9 +1,11 @@
-package com.psikku.backend.dto.Test;
+package com.psikku.backend.dto.test;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.util.List;
 
+@JsonPropertyOrder({"id","guide","test-type","questions"})
 public class SubtestDto {
 
     private String id;
@@ -11,6 +13,8 @@ public class SubtestDto {
 
     @JsonProperty(value = "test-type")
     private String testType;
+
+    private int duration;
     private List<QuestionDto> questions;
 
     public String getId() {
@@ -35,6 +39,14 @@ public class SubtestDto {
 
     public void setTestType(String testType) {
         this.testType = testType;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
 
     public List<QuestionDto> getQuestions() {

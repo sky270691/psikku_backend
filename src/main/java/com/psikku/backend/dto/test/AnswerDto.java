@@ -1,7 +1,9 @@
-package com.psikku.backend.dto.Test;
+package com.psikku.backend.dto.test;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+@JsonPropertyOrder({"id","answer_content","is_correct"})
 public class AnswerDto {
 
     private String id;

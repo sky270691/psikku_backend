@@ -1,7 +1,8 @@
 package com.psikku.backend.controller;
 
-import com.psikku.backend.dto.Test.FullTestDto;
-import com.psikku.backend.dto.Test.TestDto;
+import com.psikku.backend.dto.test.FullTestDto;
+import com.psikku.backend.dto.test.MinimalTestDto;
+import com.psikku.backend.dto.test.TestInsertResponse;
 import com.psikku.backend.entity.Test;
 import com.psikku.backend.service.TestService;
 import com.psikku.backend.service.UserService;
@@ -25,27 +26,34 @@ public class TestController {
     UserService userService;
 
     @PostMapping
-    public Test addNewTest(@RequestBody @Valid FullTestDto fullTestDto){
-        return testService.addNewTest(fullTestDto);
+    public ResponseEntity<TestInsertResponse> addNewTest(@RequestBody @Valid FullTestDto fullTestDto){
+        testService.addNewTest(fullTestDto);
+        List<Test> savedTests = testService.findAll();
+        Test insertedTest = testService.findTestById(savedTests.get(savedTests.size()-1).getId());
+        TestInsertResponse response = new TestInsertResponse();
+        response.setTestId(insertedTest.getId());
+        response.setTestName(insertedTest.getName());
+        response.setMessage("Successfully added");
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<TestDto>> getAllTests() {
+    public ResponseEntity<List<MinimalTestDto>> getAllTests() {
 
         List<Test> testList = testService.findAll();
-        List<TestDto> testDtoList = new ArrayList<>();
-//        for (Test test : testList) {
+        List<MinimalTestDto> minimalTestDtoList = new ArrayList<>();
+//        for (test test : testList) {
 //            testDtoList.add(testService.convertToTestDto(test));
 //        }
-        testList.forEach(test -> testDtoList.add(testService.convertToMinimalTestDto(test)));
-        return new ResponseEntity<>(testDtoList, HttpStatus.OK);
+        testList.forEach(test -> minimalTestDtoList.add(testService.convertToMinimalTestDto(test)));
+        return new ResponseEntity<>(minimalTestDtoList, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public TestDto getTestById(@PathVariable int id){
+    public ResponseEntity<FullTestDto> getTestById(@PathVariable int id){
         Test test =  testService.findTestById(id);
-        TestDto testDto = testService.convertToMinimalTestDto(test);
-        return testDto;
+        FullTestDto fullTestDto = testService.convertToFullTestDto(test);
+        return new ResponseEntity<>(fullTestDto,HttpStatus.OK);
     }
 
 

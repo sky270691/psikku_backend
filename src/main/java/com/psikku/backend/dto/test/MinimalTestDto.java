@@ -1,6 +1,6 @@
-package com.psikku.backend.dto.Test;
+package com.psikku.backend.dto.test;
 
-public class TestDto {
+public class MinimalTestDto {
     private int id;
     private String name;
 

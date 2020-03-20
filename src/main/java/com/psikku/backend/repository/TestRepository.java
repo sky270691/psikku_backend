@@ -8,8 +8,9 @@ import com.psikku.backend.entity.Test;
 
 public interface TestRepository extends JpaRepository<Test, Integer> {
     Optional<Test> findTestByName(String name);
-//    List<Test> findAll();
-//    List<Test> findAll(Pageable pageable);
+    Optional<Test> findById(int id);
+//    List<test> findAll();
+//    List<test> findAll(Pageable pageable);
     
 
     

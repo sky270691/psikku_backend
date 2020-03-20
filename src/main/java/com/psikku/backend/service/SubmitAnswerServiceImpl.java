@@ -1,6 +1,6 @@
 package com.psikku.backend.service;
 
-import com.psikku.backend.dto.Test.SubmittedAnswerDto;
+import com.psikku.backend.dto.test.SubmittedAnswerDto;
 import com.psikku.backend.entity.SubmittedAnswer;
 import com.psikku.backend.entity.Subtest;
 import com.psikku.backend.entity.User;

@@ -1,6 +1,6 @@
 package com.psikku.backend.service;
 
-import com.psikku.backend.dto.Test.*;
+import com.psikku.backend.dto.test.*;
 import com.psikku.backend.entity.*;
 import com.psikku.backend.repository.AnswerRepository;
 import com.psikku.backend.repository.QuestionRepository;
@@ -8,13 +8,11 @@ import com.psikku.backend.repository.SubtestRepository;
 import com.psikku.backend.repository.TestRepository;
 import com.psikku.backend.exception.TestException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TestServiceImpl implements TestService{
@@ -39,37 +37,30 @@ public class TestServiceImpl implements TestService{
         Test entityTest = convertToTestEntity(fullTestDto);
         Test findTest = testRepository.findTestByName(entityTest.getName()).orElse(null);
         if(findTest==null){
-            try {
-                testRepository.save(entityTest);
-                for(Subtest subtest:entityTest.getSubtestList()){
-                    subtestRepository.save(subtest);
-                    for(Question question: subtest.getQuestionList()){
-                        questionRepository.save(question);
-                        for(Answer answer: question.getAnswerList()){
-                            answerRepository.saveAndFlush(answer);
-                         
-                        }
+            testRepository.save(entityTest);
+            for(Subtest subtest:entityTest.getSubtestList()){
+                subtestRepository.save(subtest);
+                for(Question question: subtest.getQuestionList()){
+                    questionRepository.save(question);
+                    for(Answer answer: question.getAnswerList()){
+                        answerRepository.saveAndFlush(answer);
                     }
                 }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
             }
             return entityTest;
         }else{
-            throw new TestException("Test name already exist, choose another name");
+            throw new TestException("test name already exist, choose another name");
         }
     }
 
     @Override
     public Test findTestById(int id){
-        return testRepository.findById(id).orElseThrow(()->new TestException("Test not found"));
+        return testRepository.findById(id).orElseThrow(()->new TestException("test not found"));
     }
 
     @Override
     public Test findTestByName(String name) { 	
-        return  testRepository.findTestByName(name).orElseThrow(()->new TestException("Test with name: "+ name +"not found"));
+        return  testRepository.findTestByName(name).orElseThrow(()->new TestException("test with name: "+ name +"not found"));
     }
 
     @Override
@@ -86,6 +77,7 @@ public class TestServiceImpl implements TestService{
             subtest.setId(test.getName() + "_" + subtestNumber++);
             subtest.setGuide(subtestDto.getGuide());
             subtest.setTestType(subtestDto.getTestType());
+            subtest.setDuration(subtestDto.getDuration());
             List<Question> questionList = new ArrayList<>();
             int questionId = 1;
             for(QuestionDto questionDto:subtestDto.getQuestions()){
@@ -96,9 +88,15 @@ public class TestServiceImpl implements TestService{
                 }else{
                     question.setId(subtest.getId() + "_" + questionId++);
                 }
-                question.setQuestionContent1(questionDto.getQuestionContent1());
-                question.setQuestionContent2(questionDto.getQuestionContent2());
-                question.setQuestionContent3(questionDto.getQuestionContent3());
+                StringBuilder wholeQuestion= new StringBuilder();
+                for(int i = 0;i<questionDto.getQuestionContent().size(); i++){
+                    if(i==questionDto.getQuestionContent().size()-1){
+                        wholeQuestion.append(questionDto.getQuestionContent().get(i));
+                    }else{
+                        wholeQuestion.append(questionDto.getQuestionContent().get(i)).append(",");
+                    }
+                }
+                question.setQuestionContent(new String(wholeQuestion));
                 questionList.add(question);
                 List<Answer> answerList = new ArrayList<>();
                 if(questionDto.getAnswers() != null){
@@ -129,14 +127,17 @@ public class TestServiceImpl implements TestService{
             SubtestDto subtestDto = new SubtestDto();
             subtestDto.setId(subtest.getId());
             subtestDto.setTestType(subtest.getTestType());
+            subtestDto.setDuration(subtest.getDuration());
             subtestDto.setGuide(subtest.getGuide());
             subtestDto.setQuestions(new ArrayList<>());
             for(Question question:subtest.getQuestionList()){
                 QuestionDto questionDto = new QuestionDto();
                 questionDto.setId(question.getId());
-                questionDto.setQuestionContent1(question.getQuestionContent1());
-                questionDto.setQuestionContent2(question.getQuestionContent2());
-                questionDto.setQuestionContent3(question.getQuestionContent3());
+                questionDto.setQuestionContent(new ArrayList<>());
+                String[] questionArray = question.getQuestionContent().split(",");
+                for(String tempQuestion : questionArray){
+                    questionDto.getQuestionContent().add(tempQuestion);
+                }
                 questionDto.setAnswers(new ArrayList<>());
                 for(Answer answer: question.getAnswerList()){
                     AnswerDto answerDto = new AnswerDto();
@@ -146,19 +147,43 @@ public class TestServiceImpl implements TestService{
                     questionDto.getAnswers().add(answerDto);
                 }
                 subtestDto.getQuestions().add(questionDto);
+
+                // shuffle the question to display in the endpoint
+                Collections.shuffle(subtestDto.getQuestions());
+
+
+                // sort the questions to display with the correct order
+//                subtestDto.getQuestions().sort((x,y) -> {
+//                    String[] xId = x.getId().split("_");
+//                    String[] yId = y.getId().split("_");
+//                    Integer a = Integer.parseInt(xId[2]);
+//                    Integer b = Integer.parseInt(yId[2]);
+//                    return a.compareTo(b);
+//                });
+//                subtestDto.getQuestions().stream().map(QuestionDto::getId)
+//                                                    .forEach(System.out::println);
             }
+
             fullTestDto.getSubtests().add(subtestDto);
+            // sort the subtest to display with the correct order
+            fullTestDto.getSubtests().sort((x,y)->{
+                String[] xId = x.getId().split("_");
+                String[] yId = y.getId().split("_");
+                Integer a = Integer.parseInt(xId[1]);
+                Integer b = Integer.parseInt(yId[1]);
+                return a.compareTo(b);
+            });
         }
         return fullTestDto;
     }
 
 
     @Override
-    public TestDto convertToMinimalTestDto(Test test) {
-        TestDto testDto = new TestDto();
-        testDto.setId(test.getId());
-        testDto.setName(test.getName());
-        return testDto;
+    public MinimalTestDto convertToMinimalTestDto(Test test) {
+        MinimalTestDto minimalTestDto = new MinimalTestDto();
+        minimalTestDto.setId(test.getId());
+        minimalTestDto.setName(test.getName());
+        return minimalTestDto;
     }
 
     @Override

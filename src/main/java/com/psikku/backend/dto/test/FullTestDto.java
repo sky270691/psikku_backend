@@ -1,8 +1,11 @@
-package com.psikku.backend.dto.Test;
+package com.psikku.backend.dto.test;
+
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
+@JsonPropertyOrder({"id","name","subtests"})
 public class FullTestDto {
 
     private int id;

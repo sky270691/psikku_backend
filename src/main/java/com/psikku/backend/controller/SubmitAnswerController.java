@@ -1,20 +1,15 @@
 package com.psikku.backend.controller;
 
-import com.psikku.backend.dto.Test.SubmittedAnswerDto;
+import com.psikku.backend.dto.test.SubmittedAnswerDto;
 import com.psikku.backend.entity.SubmittedAnswer;
-import com.psikku.backend.entity.Subtest;
-import com.psikku.backend.entity.Test;
 import com.psikku.backend.entity.User;
 import com.psikku.backend.service.TestService;
 import com.psikku.backend.service.SubmitAnswerService;
 import com.psikku.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/user-answers")

@@ -19,6 +19,9 @@ public class Subtest {
     @Column(name = "test_type")
     private String testType;
 
+    @Column(name = "duration")
+    private int duration;
+
 //    @OneToMany(mappedBy = "subtest", cascade = CascadeType.ALL)
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "sub_test_id")
@@ -26,7 +29,7 @@ public class Subtest {
 
 //    @ManyToOne(fetch = FetchType.EAGER)
 //    @JoinColumn(name = "test_id")
-//    private Test test;
+//    private test test;
 
     public String getId() {
         return id;
@@ -52,6 +55,14 @@ public class Subtest {
         this.testType = testType;
     }
 
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
     public List<Question> getQuestionList() {
         return questionList;
     }
@@ -60,11 +71,11 @@ public class Subtest {
         this.questionList = questionList;
     }
 
-//    public Test getTest() {
+//    public test getTest() {
 //        return test;
 //    }
 //
-//    public void setTest(Test test) {
+//    public void setTest(test test) {
 //        this.test = test;
 //    }
 }
