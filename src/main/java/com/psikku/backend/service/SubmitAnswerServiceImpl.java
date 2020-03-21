@@ -93,68 +93,52 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
     public void calculateResultTest(List<SubmittedAnswer> submittedAnswerList) {
 
         List<Test> testList = submittedAnswerList.stream()
-                                    .map(x->{
-                                        String[] questionIdSplit = x.getQuestion().getId().split("_");
-                                        return testRepository.findTestByName(questionIdSplit[0]).orElseThrow(() -> new TestException("Test Not found"));
-                                    })
-                                    .distinct()
-                                    .collect(Collectors.toList());
+                .map(x -> {
+                    String[] questionIdSplit = x.getQuestion().getId().split("_");
+                    return testRepository.findTestByName(questionIdSplit[0]).orElseThrow(() -> new TestException("Test Not found"));
+                })
+                .distinct()
+                .collect(Collectors.toList());
 
-        List<Subtest> subtestList = submittedAnswerList.stream()
-                                        .map(submittedAnswer -> {
-                                            String[] questionIdSplit = submittedAnswer.getQuestion().getId().split("_");
-                                            return subtestRepository.findById(questionIdSplit[0]+"_"+questionIdSplit[1]).orElse(null);
-                                        })
-                                        .distinct()
-                                        .collect(Collectors.toList());
-
-        List<Question> questionList = submittedAnswerList.stream()
-                                        .map(submittedAnswer -> {
-                                            String questionId = submittedAnswer.getQuestion().getId();
-                                            return questionRepository.findQuestionByIdEquals(questionId).orElse(null);
-                                        })
-                                        .distinct()
-                                        .collect(Collectors.toList());
-
-        List<String> answer = submittedAnswerList.stream()
-                                .map(SubmittedAnswer::getAnswers)
-                                .collect(Collectors.toList());
-
-
-
-        for(Test test: testList){
+        for (Test test : testList) {
             System.out.println("Test name: " + test.getName());
-            for(Subtest subTest : subtestList){
+            for (Subtest subTest : test.getSubtestList()) {
                 int numOfCorrectAnswer = 0;
                 int numOfWrongAnswer = 0;
-                if(subTest.getId().startsWith(test.getName())){
+                if (subTest.getId().startsWith(test.getName())) {
                     String[] subtestIdSplit = subTest.getId().split("_");
                     System.out.println("subtest = " + subtestIdSplit[1]);
-                    for(SubmittedAnswer submittedAnswer : submittedAnswerList){
-                        if(submittedAnswer.getQuestion().getId().startsWith(subTest.getId())){
+                    for (SubmittedAnswer submittedAnswer : submittedAnswerList) {
+                        if (submittedAnswer.getQuestion().getId().startsWith(subTest.getId())) {
                             String[] submittedAnswerSplit = submittedAnswer.getAnswers().split(",");
-                            for(String string: submittedAnswerSplit){
-                                Answer tempAnswer = answerRepository.findById(submittedAnswer.getQuestion().getId()+"_"+string)
-                                        .orElseThrow(()->new RuntimeException("no answer found"));
-                                switch (tempAnswer.getIsCorrect()){
-                                    case 0 : numOfWrongAnswer++;
+                            int numOfAnswers = 0;
+                            for (int i = 0; i<submittedAnswerSplit.length;i++) {
+                                Answer tempAnswer = answerRepository.findById(submittedAnswer.getQuestion().getId() + "_" + submittedAnswerSplit[i])
+                                        .orElseThrow(() -> new RuntimeException("no answer found"));
+                                switch (subTest.getTestType()) {
+                                    case "right-or-wrong":
+                                        if(tempAnswer.getIsCorrect()==1){
+                                            numOfCorrectAnswer++;
+                                        }else {
+                                            numOfWrongAnswer++;
+                                        }
                                     break;
-                                    case 1 : numOfCorrectAnswer++;
-                                    break;
-                                    default :
-                                        System.out.println("no right or wrong answer");
+                                    case "two-answers":
+                                        if(tempAnswer.getIsCorrect()==1 && numOfAnswers < 1){
+                                            numOfAnswers++;
+                                        }else if(tempAnswer.getIsCorrect()==1 && numOfAnswers == 1){
+                                            numOfCorrectAnswer++;
+                                        }
+                                    default:
                                     break;
                                 }
                             }
                         }
-
                     }
-
+                    System.out.println("total correct number: " + numOfCorrectAnswer);
                 }
-                System.out.println("total correct number: " + numOfCorrectAnswer);
             }
         }
     }
-
 }
 

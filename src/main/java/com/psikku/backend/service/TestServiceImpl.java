@@ -162,7 +162,7 @@ public class TestServiceImpl implements TestService{
 //                });
 //                subtestDto.getQuestions().stream().map(QuestionDto::getId)
 //                                                    .forEach(System.out::println);
-            }
+    }
 
             fullTestDto.getSubtests().add(subtestDto);
             // sort the subtest to display with the correct order
