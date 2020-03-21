@@ -91,44 +91,6 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
 
     @Override
     public void calculateResultTest(List<SubmittedAnswer> submittedAnswerList) {
-        List<String> answersContentList = submittedAnswerList.stream()
-                .map(x-> x.getQuestion().getId())
-                .collect(Collectors.toList());
-
-        Map<String, String> result = new HashMap<>();
-        for (SubmittedAnswer z : submittedAnswerList) {
-            result.put(z.getQuestion().getId(), z.getAnswers());
-        }
-        for (String str : result.keySet()) {
-            result.get(str);
-            System.out.println(str);
-        }
-
-        Map<String, List<String>> subtestIdAnswerListPair = new HashMap<>();
-        submittedAnswerList.forEach(x -> {
-            String questionId = x.getQuestion().getId();
-            String[] questionIdSplit = questionId.split("_");
-            String subtestId = questionIdSplit[0] + "_" + questionIdSplit[1];
-            Subtest subtest = subtestRepository.findById(subtestId).orElse(new Subtest());
-            String answer = x.getAnswers();
-            if (!subtestIdAnswerListPair.containsKey(subtest.getId())) {
-                subtestIdAnswerListPair.put(subtest.getId(), new ArrayList<>());
-            }
-            subtestIdAnswerListPair.get(subtest.getId()).add(answer);
-        });
-        System.out.println("subtest id - answer list pair: " + subtestIdAnswerListPair);
-
-        Map<String,List<String>> questionIdAnswerListPair = new HashMap<>();
-        submittedAnswerList.forEach((x -> {
-            String questionId = x.getQuestion().getId();
-            String answer = x.getAnswers();
-            if(!questionIdAnswerListPair.containsKey(questionId)){
-                questionIdAnswerListPair.put(questionId,new ArrayList<>());
-            }
-            questionIdAnswerListPair.get(questionId).add(answer);
-
-        }));
-        System.out.println("Question id - answer list pair: " + questionIdAnswerListPair);
 
         List<Test> testList = submittedAnswerList.stream()
                                     .map(x->{
@@ -160,11 +122,11 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
 
 
 
-        int numOfCorrectAnswer = 0;
-        int numOfWrongAnswer = 0;
         for(Test test: testList){
             System.out.println("Test name: " + test.getName());
             for(Subtest subTest : subtestList){
+                int numOfCorrectAnswer = 0;
+                int numOfWrongAnswer = 0;
                 if(subTest.getId().startsWith(test.getName())){
                     String[] subtestIdSplit = subTest.getId().split("_");
                     System.out.println("subtest = " + subtestIdSplit[1]);
@@ -172,29 +134,25 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
                         if(submittedAnswer.getQuestion().getId().startsWith(subTest.getId())){
                             String[] submittedAnswerSplit = submittedAnswer.getAnswers().split(",");
                             for(String string: submittedAnswerSplit){
-                                Answer tempAnswer = answerRepository.findById(submittedAnswer.getQuestion().getId()+"_"+string).orElseThrow(()->new RuntimeException("no answer found"));
+                                Answer tempAnswer = answerRepository.findById(submittedAnswer.getQuestion().getId()+"_"+string)
+                                        .orElseThrow(()->new RuntimeException("no answer found"));
                                 switch (tempAnswer.getIsCorrect()){
                                     case 0 : numOfWrongAnswer++;
                                     break;
                                     case 1 : numOfCorrectAnswer++;
                                     break;
                                     default :
-                                        System.out.println("now right or wrong answer");
+                                        System.out.println("no right or wrong answer");
                                     break;
                                 }
                             }
                         }
+
                     }
 
-//                    for(Question question : questionList){
-//                        if(question.getId().startsWith(subTest.getId())){
-//                            String[] questionIdSplit = question.getId().split("_");
-//                            System.out.println("question number: " + questionIdSplit[2]);
-//                        }
-//                    }
                 }
+                System.out.println("total correct number: " + numOfCorrectAnswer);
             }
-            System.out.println("total correct number: " + numOfCorrectAnswer);
         }
     }
 
