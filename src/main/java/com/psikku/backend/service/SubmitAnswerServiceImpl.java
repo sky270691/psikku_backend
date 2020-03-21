@@ -1,6 +1,7 @@
 package com.psikku.backend.service;
 
 import com.psikku.backend.dto.test.SubmittedAnswerDto;
+import com.psikku.backend.entity.Question;
 import com.psikku.backend.entity.SubmittedAnswer;
 import com.psikku.backend.entity.Subtest;
 import com.psikku.backend.entity.User;
@@ -47,10 +48,17 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
         for(SubmittedAnswerDto answerDto : submittedAnswerDto){
             SubmittedAnswer submittedAnswer = new SubmittedAnswer();
             submittedAnswer.setId(user.getId()+ "_" +submittedAnswerId++);
-            submittedAnswer.setQuestion(questionRepository.findQuestionByIdEquals(answerDto.getQuestionId()));
-            submittedAnswer.setAnswer1(answerDto.getAnswer1());
-            submittedAnswer.setAnswer2(answerDto.getAnswer2());
-            submittedAnswer.setAnswer3(answerDto.getAnswer3());
+            submittedAnswer.setQuestion(questionRepository.findQuestionByIdEquals(answerDto.getQuestionId()).orElse(null));
+            StringBuilder stringBuilder = new StringBuilder();
+            for(int i = 0 ; i<answerDto.getAnswers().size();i++){
+                String[] answerSplit = answerDto.getAnswers().get(i).split("_");
+                if(i==answerDto.getAnswers().size()-1){
+                    stringBuilder.append(answerSplit[3]);
+                }else{
+                    stringBuilder.append(answerSplit[3]).append(",");
+                }
+            }
+            submittedAnswer.setAnswers(new String(stringBuilder));
             submittedAnswer.setUser(user);
             submittedAnswerList.add(submittedAnswer);
         }
@@ -63,9 +71,11 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
         for(SubmittedAnswer answer: submittedAnswerList){
             SubmittedAnswerDto answerDto = new SubmittedAnswerDto();
             answerDto.setId(answer.getId());
-            answerDto.setAnswer1(answer.getAnswer1());
-            answerDto.setAnswer2(answer.getAnswer2());
-            answerDto.setAnswer3(answer.getAnswer3());
+            String[] answerEntitySplit = answer.getAnswers().split(",");
+            answerDto.setAnswers(new ArrayList<>());
+            for (String answerEntSplit : answerEntitySplit) {
+                answerDto.getAnswers().add(answerEntSplit);
+            }
             answerDto.setQuestionId(answer.getQuestion().getId());
             answerDto.setUserId(answer.getUser().getId());
             submittedAnswerDtoList.add(answerDto);
@@ -83,41 +93,89 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
 
     @Override
     public void calculateResultTest(List<SubmittedAnswer> submittedAnswerList) {
-        List<String> answer1ContentList = submittedAnswerList.stream()
-                .map(SubmittedAnswer::getAnswer1)
-                .collect(Collectors.toList());
-        List<String> answer2ContentList = submittedAnswerList.stream()
-                .map(SubmittedAnswer::getAnswer2)
-                .collect(Collectors.toList());
-        List<String> answer3ContentList = submittedAnswerList.stream()
-                .map(SubmittedAnswer::getAnswer3)
+        List<String> answersContentList = submittedAnswerList.stream()
+                .map(x-> x.getQuestion().getId())
                 .collect(Collectors.toList());
 
         Map<String, String> result = new HashMap<>();
-        for (String answerContent : answer1ContentList) {
-            String[] answerContentSplitted = answerContent.split("_");
-            String questionId = answerContentSplitted[0] + "_" + answerContentSplitted[1] + "_" + answerContentSplitted[2];
-            result.put(questionId, answerContent);
+        for (SubmittedAnswer z : submittedAnswerList) {
+            result.put(z.getQuestion().getId(), z.getAnswers());
         }
         for (String str : result.keySet()) {
             result.get(str);
             System.out.println(str);
         }
 
-        Map<Subtest, List<String>> subtestIdAnswerListPair = new HashMap<>();
+        Map<String, List<String>> subtestIdAnswerListPair = new HashMap<>();
         submittedAnswerList.forEach(x -> {
             String questionId = x.getQuestion().getId();
             String[] questionIdSplit = questionId.split("_");
             String subtestId = questionIdSplit[0] + "_" + questionIdSplit[1];
             Subtest subtest = subtestRepository.findById(subtestId).orElse(new Subtest());
-            String answer = x.getAnswer1();
-            if (!subtestIdAnswerListPair.containsKey(subtest)) {
-                subtestIdAnswerListPair.put(subtest, new ArrayList<>());
+            String answer = x.getAnswers();
+            if (!subtestIdAnswerListPair.containsKey(subtest.getId())) {
+                subtestIdAnswerListPair.put(subtest.getId(), new ArrayList<>());
             }
-            subtestIdAnswerListPair.get(subtest).add(answer);
+            subtestIdAnswerListPair.get(subtest.getId()).add(answer);
         });
-
         System.out.println("subtest id - answer list pair: " + subtestIdAnswerListPair);
+
+        Map<String,List<String>> questionIdAnswerListPair = new HashMap<>();
+        submittedAnswerList.forEach((x -> {
+            String questionId = x.getQuestion().getId();
+            String answer = x.getAnswers();
+            if(!questionIdAnswerListPair.containsKey(questionId)){
+                questionIdAnswerListPair.put(questionId,new ArrayList<>());
+            }
+            questionIdAnswerListPair.get(questionId).add(answer);
+
+        }));
+        System.out.println("Question id - answer list pair: " + questionIdAnswerListPair);
+
+        List<String> testName = submittedAnswerList.stream()
+                                    .map(x->{
+                                        String[] questionIdSplit = x.getQuestion().getId().split("_");
+                                        return questionIdSplit[0];
+                                    })
+                                    .distinct()
+                                    .collect(Collectors.toList());
+
+        List<Subtest> subtestList = submittedAnswerList.stream()
+                                        .map(submittedAnswer -> {
+                                            String[] questionIdSplit = submittedAnswer.getQuestion().getId().split("_");
+                                            return subtestRepository.findById(questionIdSplit[0]+"_"+questionIdSplit[1]).orElse(null);
+                                        })
+                                        .distinct()
+                                        .collect(Collectors.toList());
+
+        List<Question> questionList = submittedAnswerList.stream()
+                                        .map(submittedAnswer -> {
+                                            String questionId = submittedAnswer.getQuestion().getId();
+                                            return questionRepository.findQuestionByIdEquals(questionId).orElse(null);
+                                        })
+                                        .distinct()
+                                        .collect(Collectors.toList());
+
+        List<String> answer = submittedAnswerList.stream()
+                                .map(SubmittedAnswer::getAnswers)
+                                .collect(Collectors.toList());
+
+
+        for(String test: testName){
+            System.out.println("Test name: " + test);
+            for(Subtest subTest : subtestList){
+                if(subTest.getId().startsWith(test)){
+                    String[] subtestIdSplit = subTest.getId().split("_");
+                    System.out.println("subtest = " + subtestIdSplit[1]);
+                    for(Question question : questionList){
+                        if(question.getId().startsWith(subTest.getId())){
+                            String[] questionIdSplit = question.getId().split("_");
+                            System.out.println("question number: " + questionIdSplit[2]);
+                        }
+                    }
+                }
+            }
+        }
     }
 
 }

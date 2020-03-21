@@ -47,6 +47,7 @@ public class SubmitAnswerController {
         String username = userService.getUserNameFromToken(token);
         User user = userService.findUserByUsername(username);
         List<SubmittedAnswer> submittedAnswerList = submitAnswerService.convertToSubmittedAnswerList(submittedAnswerDto,user);
+        submitAnswerService.saveUserAnswer(submittedAnswerList);
         submitAnswerService.calculateResultTest(submittedAnswerList);
         return new ArrayList<>();
     }

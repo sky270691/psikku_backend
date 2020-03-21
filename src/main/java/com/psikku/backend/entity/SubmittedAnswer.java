@@ -12,14 +12,8 @@ public class SubmittedAnswer {
     @Id
     private String id;
 
-    @Column(name = "answer_1")
-    private String answer1;
-
-    @Column(name = "answer_2")
-    private String answer2;
-
-    @Column(name = "answer_3")
-    private String answer3;
+    @Column(name = "answers")
+    private String answers;
 
     @CreationTimestamp
     @Column(name = "create_time")
@@ -41,28 +35,12 @@ public class SubmittedAnswer {
         this.id = id;
     }
 
-    public String getAnswer1() {
-        return answer1;
+    public String getAnswers() {
+        return answers;
     }
 
-    public void setAnswer1(String answer1) {
-        this.answer1 = answer1;
-    }
-
-    public String getAnswer2() {
-        return answer2;
-    }
-
-    public void setAnswer2(String answer2) {
-        this.answer2 = answer2;
-    }
-
-    public String getAnswer3() {
-        return answer3;
-    }
-
-    public void setAnswer3(String answer3) {
-        this.answer3 = answer3;
+    public void setAnswers(String answers) {
+        this.answers = answers;
     }
 
     public LocalDateTime getCreateTime() {
