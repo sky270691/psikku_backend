@@ -1,10 +1,8 @@
 package com.psikku.backend.service;
 
 import com.psikku.backend.dto.test.SubmittedAnswerDto;
-import com.psikku.backend.entity.Question;
-import com.psikku.backend.entity.SubmittedAnswer;
-import com.psikku.backend.entity.Subtest;
-import com.psikku.backend.entity.User;
+import com.psikku.backend.entity.*;
+import com.psikku.backend.exception.TestException;
 import com.psikku.backend.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -132,10 +130,10 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
         }));
         System.out.println("Question id - answer list pair: " + questionIdAnswerListPair);
 
-        List<String> testName = submittedAnswerList.stream()
+        List<Test> testList = submittedAnswerList.stream()
                                     .map(x->{
                                         String[] questionIdSplit = x.getQuestion().getId().split("_");
-                                        return questionIdSplit[0];
+                                        return testRepository.findTestByName(questionIdSplit[0]).orElseThrow(() -> new TestException("Test Not found"));
                                     })
                                     .distinct()
                                     .collect(Collectors.toList());
@@ -161,20 +159,42 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
                                 .collect(Collectors.toList());
 
 
-        for(String test: testName){
-            System.out.println("Test name: " + test);
+
+        int numOfCorrectAnswer = 0;
+        int numOfWrongAnswer = 0;
+        for(Test test: testList){
+            System.out.println("Test name: " + test.getName());
             for(Subtest subTest : subtestList){
-                if(subTest.getId().startsWith(test)){
+                if(subTest.getId().startsWith(test.getName())){
                     String[] subtestIdSplit = subTest.getId().split("_");
                     System.out.println("subtest = " + subtestIdSplit[1]);
-                    for(Question question : questionList){
-                        if(question.getId().startsWith(subTest.getId())){
-                            String[] questionIdSplit = question.getId().split("_");
-                            System.out.println("question number: " + questionIdSplit[2]);
+                    for(SubmittedAnswer submittedAnswer : submittedAnswerList){
+                        if(submittedAnswer.getQuestion().getId().startsWith(subTest.getId())){
+                            String[] submittedAnswerSplit = submittedAnswer.getAnswers().split(",");
+                            for(String string: submittedAnswerSplit){
+                                Answer tempAnswer = answerRepository.findById(submittedAnswer.getQuestion().getId()+"_"+string).orElseThrow(()->new RuntimeException("no answer found"));
+                                switch (tempAnswer.getIsCorrect()){
+                                    case 0 : numOfWrongAnswer++;
+                                    break;
+                                    case 1 : numOfCorrectAnswer++;
+                                    break;
+                                    default :
+                                        System.out.println("now right or wrong answer");
+                                    break;
+                                }
+                            }
                         }
                     }
+
+//                    for(Question question : questionList){
+//                        if(question.getId().startsWith(subTest.getId())){
+//                            String[] questionIdSplit = question.getId().split("_");
+//                            System.out.println("question number: " + questionIdSplit[2]);
+//                        }
+//                    }
                 }
             }
+            System.out.println("total correct number: " + numOfCorrectAnswer);
         }
     }
 
