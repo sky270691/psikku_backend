@@ -24,7 +24,6 @@ public class SubmitAnswerController {
     @Autowired
     SubmitAnswerService submitAnswerService;
 
-
 //    @PostMapping
 //    public ResponseEntity submitAnswers(@RequestBody List<SubmittedAnswerDto> submittedAnswerDto,
 //                                                @RequestHeader("Authorization") String auth){

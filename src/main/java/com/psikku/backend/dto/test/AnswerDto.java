@@ -2,6 +2,7 @@ package com.psikku.backend.dto.test;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 @JsonPropertyOrder({"id","answer_content","is_correct"})
 public class AnswerDto {
@@ -11,6 +12,8 @@ public class AnswerDto {
     private String answerContent;
     @JsonProperty(value = "is_correct")
     private int isCorrect;
+    @JsonProperty(value = "answer_category")
+    private int answerCategory;
 
     public String getId() {
         return id;
@@ -32,7 +35,13 @@ public class AnswerDto {
         return isCorrect;
     }
 
-    public void setIsCorrect(int isCorrect) {
-        this.isCorrect = isCorrect;
+    public void setIsCorrect(int isCorrect) {this.isCorrect = isCorrect;}
+
+    public int getAnswerCategory() {
+        return answerCategory;
+    }
+
+    public void setAnswerCategory(int answerCategory) {
+        this.answerCategory = answerCategory;
     }
 }

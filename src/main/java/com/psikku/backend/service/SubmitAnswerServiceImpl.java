@@ -105,6 +105,7 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
             for (Subtest subTest : test.getSubtestList()) {
                 int numOfCorrectAnswer = 0;
                 int numOfWrongAnswer = 0;
+                List<String> surveyAnswer = new ArrayList<>();
                 if (subTest.getId().startsWith(test.getName())) {
                     String[] subtestIdSplit = subTest.getId().split("_");
                     System.out.println("subtest = " + subtestIdSplit[1]);
@@ -112,30 +113,52 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
                         if (submittedAnswer.getQuestion().getId().startsWith(subTest.getId())) {
                             String[] submittedAnswerSplit = submittedAnswer.getAnswers().split(",");
                             int numOfAnswers = 0;
-                            for (int i = 0; i<submittedAnswerSplit.length;i++) {
-                                Answer tempAnswer = answerRepository.findById(submittedAnswer.getQuestion().getId() + "_" + submittedAnswerSplit[i])
+                            for (String tempSubmittedAnswer : submittedAnswerSplit) {
+                                Answer tempAnswer = answerRepository.findById(submittedAnswer.getQuestion().getId() + "_" + tempSubmittedAnswer)
                                         .orElseThrow(() -> new RuntimeException("no answer found"));
                                 switch (subTest.getTestType()) {
                                     case "right-or-wrong":
-                                        if(tempAnswer.getIsCorrect()==1){
+                                        if (tempAnswer.getIsCorrect() == 1) {
                                             numOfCorrectAnswer++;
-                                        }else {
+                                        } else {
                                             numOfWrongAnswer++;
                                         }
-                                    break;
+                                        break;
                                     case "two-answers":
-                                        if(tempAnswer.getIsCorrect()==1 && numOfAnswers < 1){
+                                        if (tempAnswer.getIsCorrect() == 1 && numOfAnswers < 1) {
                                             numOfAnswers++;
-                                        }else if(tempAnswer.getIsCorrect()==1 && numOfAnswers == 1){
+                                        } else if (tempAnswer.getIsCorrect() == 1 && numOfAnswers == 1) {
                                             numOfCorrectAnswer++;
                                         }
+                                        break;
+                                    case "three-answers":
+                                        if (tempAnswer.getIsCorrect() == 1 && numOfAnswers < 2) {
+                                            numOfAnswers++;
+                                        } else if (tempAnswer.getIsCorrect() == 1 && numOfAnswers == 2) {
+                                            numOfCorrectAnswer++;
+                                        }
+                                        break;
+                                    case "survey":
+                                        surveyAnswer.add(submittedAnswer.getQuestion().getId()+"_"+tempSubmittedAnswer);
+                                        break;
+                                    case "user-input-string":
+                                        //todo
+                                        // update this code later
+                                        break;
+                                    case "user-input-number":
+                                        //todo
+                                        // update this code after the user-input-string
+                                        break;
                                     default:
-                                    break;
+                                        break;
                                 }
                             }
                         }
                     }
                     System.out.println("total correct number: " + numOfCorrectAnswer);
+                    if(subTest.getTestType().equalsIgnoreCase("survey")){
+                        System.out.println("List of Survey answer: "+surveyAnswer);
+                    }
                 }
             }
         }

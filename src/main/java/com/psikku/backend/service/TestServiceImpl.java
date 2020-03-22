@@ -35,8 +35,8 @@ public class TestServiceImpl implements TestService{
     @Override
     public Test addNewTest(FullTestDto fullTestDto) {
         Test entityTest = convertToTestEntity(fullTestDto);
-        Test findTest = testRepository.findTestByName(entityTest.getName()).orElse(null);
-        if(findTest==null){
+        Optional<Test> findTest = testRepository.findTestByName(entityTest.getName());
+        if(!findTest.isPresent()){
             testRepository.save(entityTest);
             for(Subtest subtest:entityTest.getSubtestList()){
                 subtestRepository.save(subtest);
@@ -104,7 +104,12 @@ public class TestServiceImpl implements TestService{
                         Answer answer = new Answer();
                         answer.setId(question.getId()+"_"+answerDto.getId());
                         answer.setAnswerContent(answerDto.getAnswerContent());
-                        answer.setIsCorrect(answerDto.getIsCorrect());
+                        if(subtestDto.getTestType().equalsIgnoreCase("survey")){
+                            answer.setAnswerCategory(answerDto.getAnswerCategory());
+                            answer.setIsCorrect(-1);
+                        }else{
+                            answer.setIsCorrect(answerDto.getIsCorrect());
+                        }
                         answerList.add(answer);
                     }
                 }
@@ -144,14 +149,13 @@ public class TestServiceImpl implements TestService{
                     answerDto.setId(answer.getId());
                     answerDto.setAnswerContent(answer.getAnswerContent());
                     answerDto.setIsCorrect(answer.getIsCorrect());
+                    answerDto.setAnswerCategory(answer.getAnswerCategory());
                     questionDto.getAnswers().add(answerDto);
                 }
                 subtestDto.getQuestions().add(questionDto);
 
                 // shuffle the question to display in the endpoint
                 Collections.shuffle(subtestDto.getQuestions());
-
-
                 // sort the questions to display with the correct order
 //                subtestDto.getQuestions().sort((x,y) -> {
 //                    String[] xId = x.getId().split("_");
@@ -162,8 +166,7 @@ public class TestServiceImpl implements TestService{
 //                });
 //                subtestDto.getQuestions().stream().map(QuestionDto::getId)
 //                                                    .forEach(System.out::println);
-    }
-
+            }
             fullTestDto.getSubtests().add(subtestDto);
             // sort the subtest to display with the correct order
             fullTestDto.getSubtests().sort((x,y)->{

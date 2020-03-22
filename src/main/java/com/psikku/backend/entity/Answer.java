@@ -17,6 +17,9 @@ public class Answer {
     @Column(name = "is_correct")
     private int isCorrect;
 
+    @Column(name = "answer_category")
+    private int answerCategory;
+
 //    @ManyToOne(fetch = FetchType.EAGER)
 //    @JoinColumn(name = "question_id")
 //    private Question question;
@@ -45,7 +48,15 @@ public class Answer {
         this.isCorrect = isCorrect;
     }
 
-//    public Question getQuestion() {
+    public int getAnswerCategory() {
+        return answerCategory;
+    }
+
+    public void setAnswerCategory(int answerCategory) {
+        this.answerCategory = answerCategory;
+    }
+
+    //    public Question getQuestion() {
 //        return question;
 //    }
 //

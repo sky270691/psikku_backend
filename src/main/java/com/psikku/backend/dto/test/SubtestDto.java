@@ -11,7 +11,7 @@ public class SubtestDto {
     private String id;
     private String guide;
 
-    @JsonProperty(value = "test-type")
+    @JsonProperty(value = "test_type")
     private String testType;
 
     private int duration;
