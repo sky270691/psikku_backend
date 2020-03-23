@@ -8,11 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class SubmitAnswerServiceImpl implements SubmitAnswerService {
@@ -48,15 +46,24 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
             submittedAnswer.setId(user.getId()+ "_" +submittedAnswerId++);
             submittedAnswer.setQuestion(questionRepository.findQuestionByIdEquals(answerDto.getQuestionId()).orElse(null));
             StringBuilder stringBuilder = new StringBuilder();
-            for(int i = 0 ; i<answerDto.getAnswers().size();i++){
-                String[] answerSplit = answerDto.getAnswers().get(i).split("_");
-                if(i==answerDto.getAnswers().size()-1){
-                    stringBuilder.append(answerSplit[3]);
-                }else{
-                    stringBuilder.append(answerSplit[3]).append(",");
+
+            String[] questionIdSplit = answerDto.getQuestionId().split("_");
+            String subtestId = questionIdSplit[0]+"_"+questionIdSplit[1];
+            String testType = subtestRepository.findById(subtestId).orElseThrow(()-> new RuntimeException("Subtest Not Found")).getTestType();
+
+            if(testType.equalsIgnoreCase("user_input_string") || testType.equalsIgnoreCase("user_input_number")){
+                submittedAnswer.setAnswers(answerDto.getAnswers().get(0));
+            }else{
+                for(int i = 0 ; i<answerDto.getAnswers().size();i++){
+                    String[] answerSplit = answerDto.getAnswers().get(i).split("_");
+                    if(i==answerDto.getAnswers().size()-1){
+                        stringBuilder.append(answerSplit[3]);
+                    }else{
+                        stringBuilder.append(answerSplit[3]).append(",");
+                    }
                 }
+                submittedAnswer.setAnswers(new String(stringBuilder));
             }
-            submittedAnswer.setAnswers(new String(stringBuilder));
             submittedAnswer.setUser(user);
             submittedAnswerList.add(submittedAnswer);
         }
@@ -103,9 +110,13 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
         for (Test test : testList) {
             System.out.println("Test name: " + test.getName());
             for (Subtest subTest : test.getSubtestList()) {
+
+                // variable init for several subtest type purposes
                 int numOfCorrectAnswer = 0;
                 int numOfWrongAnswer = 0;
-                List<String> surveyAnswer = new ArrayList<>();
+                int counter = 0;
+                Map<Integer, Integer> surveyCategoryPair = new HashMap<>();
+
                 if (subTest.getId().startsWith(test.getName())) {
                     String[] subtestIdSplit = subTest.getId().split("_");
                     System.out.println("subtest = " + subtestIdSplit[1]);
@@ -114,24 +125,32 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
                             String[] submittedAnswerSplit = submittedAnswer.getAnswers().split(",");
                             int numOfAnswers = 0;
                             for (String tempSubmittedAnswer : submittedAnswerSplit) {
-                                Answer tempAnswer = answerRepository.findById(submittedAnswer.getQuestion().getId() + "_" + tempSubmittedAnswer)
-                                        .orElseThrow(() -> new RuntimeException("no answer found"));
+                                Answer tempAnswer = null;
+                                if(!((subTest.getTestType().equalsIgnoreCase("user_input_string"))||
+                                        subTest.getTestType().equalsIgnoreCase("user_input_number"))) {
+                                    tempAnswer = answerRepository.findById(submittedAnswer.getQuestion().getId() + "_" + tempSubmittedAnswer)
+                                            .orElseThrow(() -> new RuntimeException("no answer found"));
+                                }else{
+                                    String questionId = submittedAnswer.getQuestion().getId();
+                                    Question tempQuestion = questionRepository.findQuestionByIdEquals(questionId).orElseThrow(()-> new RuntimeException("question not found"));
+                                    tempAnswer = tempQuestion.getAnswerList().get(0);
+                                }
                                 switch (subTest.getTestType()) {
-                                    case "right-or-wrong":
+                                    case "right_or_wrong":
                                         if (tempAnswer.getIsCorrect() == 1) {
                                             numOfCorrectAnswer++;
                                         } else {
                                             numOfWrongAnswer++;
                                         }
                                         break;
-                                    case "two-answers":
+                                    case "two_answers":
                                         if (tempAnswer.getIsCorrect() == 1 && numOfAnswers < 1) {
                                             numOfAnswers++;
                                         } else if (tempAnswer.getIsCorrect() == 1 && numOfAnswers == 1) {
                                             numOfCorrectAnswer++;
                                         }
                                         break;
-                                    case "three-answers":
+                                    case "three_answers":
                                         if (tempAnswer.getIsCorrect() == 1 && numOfAnswers < 2) {
                                             numOfAnswers++;
                                         } else if (tempAnswer.getIsCorrect() == 1 && numOfAnswers == 2) {
@@ -139,15 +158,29 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
                                         }
                                         break;
                                     case "survey":
-                                        surveyAnswer.add(submittedAnswer.getQuestion().getId()+"_"+tempSubmittedAnswer);
+                                        List<Integer> tempAnswerList = subTest.getQuestionList().stream()
+                                                                        .flatMap(question -> question.getAnswerList().stream())
+                                                                        .map(Answer::getAnswerCategory)
+                                                                        .distinct()
+                                                                        .collect(Collectors.toList());
+                                        int maxCategory = Collections.max(tempAnswerList);
+                                        for(int i = maxCategory;i>0;i--){
+                                            if(tempAnswer.getAnswerCategory()==i){
+                                                if(surveyCategoryPair.containsKey(i)){
+                                                    counter = surveyCategoryPair.get(i)+1;
+                                                }else{
+                                                    counter = 1;
+                                                }
+                                                surveyCategoryPair.put(i,counter);
+                                            }
+                                        }
+
                                         break;
-                                    case "user-input-string":
-                                        //todo
-                                        // update this code later
-                                        break;
-                                    case "user-input-number":
-                                        //todo
-                                        // update this code after the user-input-string
+                                    case "user_input_string":
+                                    case "user_input_number":
+                                        if(tempSubmittedAnswer.equalsIgnoreCase(tempAnswer.getAnswerContent())){
+                                            numOfCorrectAnswer++;
+                                        }
                                         break;
                                     default:
                                         break;
@@ -157,7 +190,7 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
                     }
                     System.out.println("total correct number: " + numOfCorrectAnswer);
                     if(subTest.getTestType().equalsIgnoreCase("survey")){
-                        System.out.println("List of Survey answer: "+surveyAnswer);
+                        System.out.println("List of Survey answer: "+surveyCategoryPair);
                     }
                 }
             }

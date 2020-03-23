@@ -109,6 +109,7 @@ public class TestServiceImpl implements TestService{
                             answer.setIsCorrect(-1);
                         }else{
                             answer.setIsCorrect(answerDto.getIsCorrect());
+                            answer.setAnswerCategory(-1);
                         }
                         answerList.add(answer);
                     }
