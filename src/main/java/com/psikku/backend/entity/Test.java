@@ -18,9 +18,19 @@ public class Test {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "is_survey")
+    private boolean isSurvey;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "test_id")
     private List<Subtest> subtestList;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "test_id")
+    private List<SurveyCategory> surveyCategoryList;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH,CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
     @JoinTable(name = "package_test",
@@ -44,6 +54,22 @@ public class Test {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean getIsSurvey() {
+        return isSurvey;
+    }
+
+    public void setIsSurvey(boolean isSurvey) {
+        this.isSurvey = isSurvey;
+    }
+
     public List<Subtest> getSubtestList() {
         return subtestList;
     }
@@ -58,5 +84,13 @@ public class Test {
 
     public void setPackageList(List<Package> packageList) {
         this.packageList = packageList;
+    }
+
+    public List<SurveyCategory> getSurveyCategoryList() {
+        return surveyCategoryList;
+    }
+
+    public void setSurveyCategoryList(List<SurveyCategory> surveyCategoryList) {
+        this.surveyCategoryList = surveyCategoryList;
     }
 }

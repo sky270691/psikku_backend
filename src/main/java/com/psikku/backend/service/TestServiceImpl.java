@@ -2,12 +2,10 @@ package com.psikku.backend.service;
 
 import com.psikku.backend.dto.test.*;
 import com.psikku.backend.entity.*;
-import com.psikku.backend.repository.AnswerRepository;
-import com.psikku.backend.repository.QuestionRepository;
-import com.psikku.backend.repository.SubtestRepository;
-import com.psikku.backend.repository.TestRepository;
+import com.psikku.backend.repository.*;
 import com.psikku.backend.exception.TestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -19,6 +17,9 @@ public class TestServiceImpl implements TestService{
 
     @Autowired
     TestRepository testRepository;
+
+    @Autowired
+    SurveyCategoryRepository surveyCategoryRepository;
 
     @Autowired
     SubtestRepository subtestRepository;
@@ -38,6 +39,13 @@ public class TestServiceImpl implements TestService{
         Optional<Test> findTest = testRepository.findTestByName(entityTest.getName());
         if(!findTest.isPresent()){
             testRepository.save(entityTest);
+
+            // check if the question is survey or not
+            if(entityTest.getIsSurvey()){
+                for(SurveyCategory surveyCategory : entityTest.getSurveyCategoryList()){
+                    surveyCategoryRepository.save(surveyCategory);
+                }
+            }
             for(Subtest subtest:entityTest.getSubtestList()){
                 subtestRepository.save(subtest);
                 for(Question question: subtest.getQuestionList()){
@@ -67,8 +75,24 @@ public class TestServiceImpl implements TestService{
     public Test convertToTestEntity(FullTestDto fullTestDto) {
         Test test = new Test();
         test.setName(fullTestDto.getName());
-        
-
+        test.setDescription(fullTestDto.getDescription());
+        if(fullTestDto.getIsSurvey()){
+            test.setIsSurvey(true);
+            test.setSurveyCategoryList(new ArrayList<>());
+            Integer latestTestId = testRepository.findAll().stream().map(Test::getId)
+                                            .sorted((x,y)-> y.compareTo(x))
+                                            .findFirst().orElse(null);
+            for(SurveyCategoryDto surveyCategoryDto : fullTestDto.getSurveyCategoryDto()){
+                SurveyCategory tempEntitySurveyCategory = new SurveyCategory();
+                if(latestTestId==null){
+                    tempEntitySurveyCategory.setId(1+"_"+surveyCategoryDto.getCategoryNumber());
+                }else{
+                    tempEntitySurveyCategory.setId((latestTestId+1)+"_"+surveyCategoryDto.getCategoryNumber());
+                }
+                tempEntitySurveyCategory.setCategory(surveyCategoryDto.getCategory());
+                test.getSurveyCategoryList().add(tempEntitySurveyCategory);
+            }
+        }
         List<SubtestDto> subtestDtoList = fullTestDto.getSubtests();
         List<Subtest> entitySubtestList = new ArrayList<>();
         int subtestNumber = 1;

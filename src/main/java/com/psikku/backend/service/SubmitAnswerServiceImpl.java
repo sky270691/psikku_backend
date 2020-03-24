@@ -40,10 +40,10 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
     @Override
     public List<SubmittedAnswer> convertToSubmittedAnswerList(List<SubmittedAnswerDto> submittedAnswerDto, User user){
         List<SubmittedAnswer> submittedAnswerList = new ArrayList<>();
-        long submittedAnswerId = 1;
+//        long submittedAnswerId = 1;
         for(SubmittedAnswerDto answerDto : submittedAnswerDto){
             SubmittedAnswer submittedAnswer = new SubmittedAnswer();
-            submittedAnswer.setId(user.getId()+ "_" +submittedAnswerId++);
+//            submittedAnswer.setId(user.getId()+ "_" +submittedAnswerId++);
             submittedAnswer.setQuestion(questionRepository.findQuestionByIdEquals(answerDto.getQuestionId()).orElse(null));
             StringBuilder stringBuilder = new StringBuilder();
 

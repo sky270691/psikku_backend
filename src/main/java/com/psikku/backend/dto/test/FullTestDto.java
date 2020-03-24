@@ -1,5 +1,6 @@
 package com.psikku.backend.dto.test;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import javax.validation.constraints.Pattern;
@@ -12,6 +13,14 @@ public class FullTestDto {
 
     @Pattern(regexp = "[^_]+", message = "test name cannot contain '_' character")
     private String name;
+
+    private String description;
+
+    @JsonProperty("is_survey")
+    private boolean isSurvey;
+
+    @JsonProperty("survey_category")
+    private List<SurveyCategoryDto> surveyCategoryDto;
 
 //    @JsonProperty(value = "subtest")
 
@@ -31,6 +40,30 @@ public class FullTestDto {
 
     public void setName(String name) {
         this.name = name.toLowerCase();
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean getIsSurvey() {
+        return isSurvey;
+    }
+
+    public void setIsSurvey(boolean isSurvey) {
+        this.isSurvey = isSurvey;
+    }
+
+    public List<SurveyCategoryDto> getSurveyCategoryDto() {
+        return surveyCategoryDto;
+    }
+
+    public void setSurveyCategoryDto(List<SurveyCategoryDto> surveyCategoryDto) {
+        this.surveyCategoryDto = surveyCategoryDto;
     }
 
     public List<SubtestDto> getSubtests() {

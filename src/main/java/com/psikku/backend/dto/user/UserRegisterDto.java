@@ -1,22 +1,30 @@
 package com.psikku.backend.dto.user;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.List;
 
 public class UserRegisterDto {
 
+    @NotBlank(message = "username shouldn't be blank")
     private String username;
+
+    @NotBlank(message = "password shouldn't be blank")
+    @Size(min = 6, message = "password should be at least 6 character")
+    @Pattern(regexp = "\\d+[a-z]+|[a-z]+\\d+",message = "password should contain number and alphabet")
     private String password;
     private String firstname;
     private String lastname;
+
+    @NotBlank(message = "sex shouldn't be blank")
+    @Pattern(regexp = "(male)|(female)")
     private String sex;
 
     @NotBlank(message = "email shouldn't be blank")
     @Pattern(regexp = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{1,}$",message = "email format should be valid")
     private String email;
 //    private LocalDateTime createTime;
+    @Past
     private LocalDate dateOfBirth;
     private List<RoleRegisterDto> roles;
 

@@ -7,7 +7,7 @@ import java.util.List;
 public class SubmittedAnswerDto {
 
     @JsonProperty("id")
-    private String id;
+    private long id;
 
     @JsonProperty("answers")
     private List<String> answers;
@@ -18,11 +18,11 @@ public class SubmittedAnswerDto {
     @JsonProperty("question-id")
     private String questionId;
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 

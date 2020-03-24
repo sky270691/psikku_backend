@@ -10,7 +10,8 @@ import java.time.LocalDateTime;
 public class SubmittedAnswer {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     @Column(name = "answers")
     private String answers;
@@ -27,11 +28,11 @@ public class SubmittedAnswer {
     @JoinColumn(name = "question_id")
     private Question question;
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
