@@ -102,9 +102,13 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
         List<Test> testList = submittedAnswerList.stream()
                 .map(x -> {
                     String[] questionIdSplit = x.getQuestion().getId().split("_");
-                    return testRepository.findTestByName(questionIdSplit[0]).orElseThrow(() -> new TestException("Test Not found"));
+//                    return testRepository.findTestByName(questionIdSplit[0]).orElseThrow(() -> new TestException("Test Not found"));
+                    return questionIdSplit[0];
                 })
                 .distinct()
+                .map(testName->{
+                    return testRepository.findTestByName(testName).orElseThrow(() -> new TestException("Test Not found"));
+                })
                 .collect(Collectors.toList());
 
         for (Test test : testList) {
@@ -113,7 +117,7 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
 
                 // variable init for several subtest type purposes
                 int numOfCorrectAnswer = 0;
-                int numOfWrongAnswer = 0;
+//                int numOfWrongAnswer = 0;
                 int counter = 0;
                 Map<Integer, Integer> surveyCategoryPair = new HashMap<>();
 
@@ -139,9 +143,10 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
                                     case "right_or_wrong":
                                         if (tempAnswer.getIsCorrect() == 1) {
                                             numOfCorrectAnswer++;
-                                        } else {
-                                            numOfWrongAnswer++;
                                         }
+//                                        else {
+//                                            numOfWrongAnswer++;
+//                                        }
                                         break;
                                     case "two_answers":
                                         if (tempAnswer.getIsCorrect() == 1 && numOfAnswers < 1) {
