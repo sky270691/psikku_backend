@@ -39,6 +39,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 //        http.httpBasic();
         http.authorizeRequests().antMatchers("/users/hello").hasRole("ADMIN")
             .antMatchers("/register").permitAll()
+//            .antMatchers("/api/**").permitAll()
 //                .antMatchers("/api/**").hasRole("USER")
             .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

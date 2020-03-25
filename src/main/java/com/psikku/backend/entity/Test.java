@@ -38,6 +38,11 @@ public class Test {
             inverseJoinColumns = @JoinColumn(name = "package_id"))
     private List<Package> packageList;
 
+    @OneToMany(mappedBy = "user",
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private List<TestResult> testResultList;
+
     public int getId() {
         return id;
     }
@@ -92,5 +97,13 @@ public class Test {
 
     public void setSurveyCategoryList(List<SurveyCategory> surveyCategoryList) {
         this.surveyCategoryList = surveyCategoryList;
+    }
+
+    public List<TestResult> getTestResultList() {
+        return testResultList;
+    }
+
+    public void setTestResultList(List<TestResult> testResultList) {
+        this.testResultList = testResultList;
     }
 }

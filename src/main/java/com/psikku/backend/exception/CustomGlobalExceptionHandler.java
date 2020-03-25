@@ -31,9 +31,19 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(TestException.class)
     public ResponseEntity<TestExceptionResponse> testException (RuntimeException e){
         TestExceptionResponse response = new TestExceptionResponse();
+        response.setMessage(e.getMessage());
+        response.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
+        response.setTimestamp(LocalDateTime.now());
+        e.printStackTrace();
+        return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PackageException.class)
+    public ResponseEntity<PackageExceptionResponse> packageException (RuntimeException e){
+        PackageExceptionResponse response = new PackageExceptionResponse();
         response.setMessage(e.getMessage());
         response.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
         response.setTimestamp(LocalDateTime.now());

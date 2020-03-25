@@ -30,6 +30,9 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
     @Autowired
     AnswerRepository answerRepository;
 
+    @Autowired
+    TestResultRepository testResultRepository;
+
     @Transactional
     @Override
     public List<SubmittedAnswer> saveUserAnswer(List<SubmittedAnswer> answerList) {
@@ -110,6 +113,13 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
                     return testRepository.findTestByName(testName).orElseThrow(() -> new TestException("Test Not found"));
                 })
                 .collect(Collectors.toList());
+
+        User user = submittedAnswerList.stream()
+                        .map(SubmittedAnswer::getUser)
+                        .findFirst().orElse(null);
+
+        int totalNumOfCorrectAnswer = 0;
+        Map<Integer, Integer> totalSurveyCategoryPair = new HashMap<>();
 
         for (Test test : testList) {
             System.out.println("Test name: " + test.getName());
@@ -193,11 +203,36 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
                             }
                         }
                     }
+//                    TestResult testResult = new TestResult();
+//                    testResult.setTest(test);
+//                    testResult.setTotalRightAnswer(numOfCorrectAnswer);
                     System.out.println("total correct number: " + numOfCorrectAnswer);
+                    totalNumOfCorrectAnswer += numOfCorrectAnswer;
                     if(subTest.getTestType().equalsIgnoreCase("survey")){
+//                        testResult.setSurveyCategoryAnswer(surveyCategoryPair.toString());
+                        for(int key : surveyCategoryPair.keySet()){
+                            totalSurveyCategoryPair.put(key,surveyCategoryPair.get(key));
+                        }
                         System.out.println("List of Survey answer: "+surveyCategoryPair);
                     }
+//                    testResult.setUser(user);
                 }
+                System.out.println("===================================================================================");
+                TestResult testResult = new TestResult();
+                testResult.setTest(test);
+                System.out.println("total correct number: " + totalNumOfCorrectAnswer);
+                if(subTest.getTestType().equalsIgnoreCase("survey")){
+                    testResult.setSurveyCategoryAnswer(surveyCategoryPair.toString());
+                    System.out.println("List of Survey answer: "+surveyCategoryPair);
+                }else{
+                    testResult.setTotalRightAnswer(totalNumOfCorrectAnswer);
+                }
+                testResult.setUser(user);
+                testResultRepository.save(testResult);
+                testResultRepository.findAllByUser_Username("komo").stream()
+                                                    .map(TestResult::getTest)
+                                                    .map(Test::getName)
+                                                    .forEach(System.out::println);
             }
         }
     }

@@ -1,16 +1,15 @@
 package com.psikku.backend.service;
 
 import com.psikku.backend.dto.test.*;
+import com.psikku.backend.dto.test.MinimalTestDto;
 import com.psikku.backend.entity.*;
 import com.psikku.backend.repository.*;
 import com.psikku.backend.exception.TestException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class TestServiceImpl implements TestService{
@@ -107,7 +106,7 @@ public class TestServiceImpl implements TestService{
             for(QuestionDto questionDto:subtestDto.getQuestions()){
                 Question question = new Question();
 //                System.out.println(questionDto.getId());
-                if(questionDto.getId()!=null && Integer.parseInt(questionDto.getId())<0){
+                if(questionDto.getId()!=null && java.lang.Integer.parseInt(questionDto.getId())<0){
                     question.setId(subtest.getId() + "_" + questionDto.getId());
                 }else{
                     question.setId(subtest.getId() + "_" + questionId++);
@@ -197,8 +196,8 @@ public class TestServiceImpl implements TestService{
             fullTestDto.getSubtests().sort((x,y)->{
                 String[] xId = x.getId().split("_");
                 String[] yId = y.getId().split("_");
-                Integer a = Integer.parseInt(xId[1]);
-                Integer b = Integer.parseInt(yId[1]);
+                java.lang.Integer a = java.lang.Integer.parseInt(xId[1]);
+                java.lang.Integer b = java.lang.Integer.parseInt(yId[1]);
                 return a.compareTo(b);
             });
         }

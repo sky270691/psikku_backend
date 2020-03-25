@@ -37,6 +37,10 @@ public class User {
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     List<SubmittedAnswer> submittedAnswerList;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    public List<TestResult> testResultList;
+
     public long getId() {
         return id;
     }
@@ -107,6 +111,14 @@ public class User {
 
     public void setSubmittedAnswerList(List<SubmittedAnswer> submittedAnswerList) {
         this.submittedAnswerList = submittedAnswerList;
+    }
+
+    public List<TestResult> getTestResult() {
+        return testResultList;
+    }
+
+    public void setTestResult(List<TestResult> testResultList) {
+        this.testResultList = testResultList;
     }
 
     @Override
