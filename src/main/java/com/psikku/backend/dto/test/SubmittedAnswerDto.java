@@ -12,10 +12,10 @@ public class SubmittedAnswerDto {
     @JsonProperty("answers")
     private List<String> answers;
 
-    @JsonProperty("user-id")
+    @JsonProperty("user_id")
     private long userId;
 
-    @JsonProperty("question-id")
+    @JsonProperty("question_id")
     private String questionId;
 
     public long getId() {

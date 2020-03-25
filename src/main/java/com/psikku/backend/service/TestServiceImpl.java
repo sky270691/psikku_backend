@@ -79,16 +79,16 @@ public class TestServiceImpl implements TestService{
         if(fullTestDto.getIsSurvey()){
             test.setIsSurvey(true);
             test.setSurveyCategoryList(new ArrayList<>());
-            Integer latestTestId = testRepository.findAll().stream().map(Test::getId)
-                                            .sorted((x,y)-> y.compareTo(x))
-                                            .findFirst().orElse(null);
+//            Integer latestTestId = testRepository.findAll().stream().map(Test::getId)
+//                                            .min(Comparator.comparing(Integer::intValue))
+//                                            .orElse(null);
             for(SurveyCategoryDto surveyCategoryDto : fullTestDto.getSurveyCategoryDto()){
                 SurveyCategory tempEntitySurveyCategory = new SurveyCategory();
-                if(latestTestId==null){
-                    tempEntitySurveyCategory.setId(1+"_"+surveyCategoryDto.getCategoryNumber());
-                }else{
-                    tempEntitySurveyCategory.setId((latestTestId+1)+"_"+surveyCategoryDto.getCategoryNumber());
-                }
+//                if(latestTestId==null){
+//                    tempEntitySurveyCategory.setId(1+"_"+surveyCategoryDto.getCategoryNumber());
+//                }else{
+                    tempEntitySurveyCategory.setId(surveyCategoryDto.getCategoryNumber());
+//                }
                 tempEntitySurveyCategory.setCategory(surveyCategoryDto.getCategory());
                 test.getSurveyCategoryList().add(tempEntitySurveyCategory);
             }

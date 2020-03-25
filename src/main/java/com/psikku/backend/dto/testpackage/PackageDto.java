@@ -13,7 +13,7 @@ public class PackageDto {
 
     private int price;
 
-    @JsonProperty("test-list")
+    @JsonProperty("test_list")
     private List<MinimalTestDto> testList;
 
     public int getId() {

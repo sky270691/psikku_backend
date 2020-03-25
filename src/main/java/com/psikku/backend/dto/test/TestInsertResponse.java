@@ -4,10 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TestInsertResponse {
 
-    @JsonProperty("test-id")
+    @JsonProperty("test_id")
     private int testId;
 
-    @JsonProperty("test-name")
+    @JsonProperty("test_name")
     private String testName;
 
     @JsonProperty("message")
