@@ -151,6 +151,7 @@ public class TestServiceImpl implements TestService{
         FullTestDto fullTestDto = new FullTestDto();
         fullTestDto.setName(test.getName());
         fullTestDto.setId(test.getId());
+        fullTestDto.setDescription(test.getDescription());
         fullTestDto.setSubtests(new ArrayList<>());
         for(Subtest subtest : test.getSubtestList()){
             SubtestDto subtestDto = new SubtestDto();

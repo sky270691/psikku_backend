@@ -1,5 +1,8 @@
 package com.psikku.backend.dto.user;
 
+import com.psikku.backend.validation.MyCustomValidation;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -17,15 +20,19 @@ public class UserRegisterDto {
     private String lastname;
 
     @NotBlank(message = "sex shouldn't be blank")
-    @Pattern(regexp = "(male)|(female)")
+    @Pattern(regexp = "(male)|(female)", message = "should be either `male` or `female`")
     private String sex;
 
     @NotBlank(message = "email shouldn't be blank")
-    @Pattern(regexp = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{1,}$",message = "email format should be valid")
+    @Pattern(regexp = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{1,}$", message = "email format should be valid")
     private String email;
 //    private LocalDateTime createTime;
-    @Past
+
+    @Past(message = "so lahir so bro?")
+    @MyCustomValidation(message = "blum 17 taong bro")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     private LocalDate dateOfBirth;
+
     private List<RoleRegisterDto> roles;
 
     public String getFirstname() {
@@ -83,14 +90,6 @@ public class UserRegisterDto {
     public void setEmail(String email) {
         this.email = email;
     }
-
-//    public LocalDateTime getCreateTime() {
-//        return createTime;
-//    }
-//
-//    public void setCreateTime(LocalDateTime createTime) {
-//        this.createTime = createTime;
-//    }
 
     public LocalDate getDateOfBirth() {
         return dateOfBirth;

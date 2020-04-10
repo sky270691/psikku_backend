@@ -39,4 +39,14 @@ public class UserRegisterResponse {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    @Override
+    public String toString() {
+        return "UserRegisterResponse{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", status='" + status + '\'' +
+                ", message='" + message + '\'' +
+                '}';
+    }
 }

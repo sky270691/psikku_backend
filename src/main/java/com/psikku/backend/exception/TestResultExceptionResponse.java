@@ -6,9 +6,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.time.LocalDateTime;
 
 @JsonPropertyOrder({"status","exception","message","timestamp"})
-public class PackageExceptionResponse {
+public class TestResultExceptionResponse {
     @JsonProperty("exception")
-    private final String exceptionName = "Package Exception Error";
+    private final String exceptionName = "Test Result Exception";
     private String status;
     private String message;
     private LocalDateTime timestamp;

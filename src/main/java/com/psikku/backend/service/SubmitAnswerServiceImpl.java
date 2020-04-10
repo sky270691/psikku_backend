@@ -109,9 +109,7 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
                     return questionIdSplit[0];
                 })
                 .distinct()
-                .map(testName->{
-                    return testRepository.findTestByName(testName).orElseThrow(() -> new TestException("Test Not found"));
-                })
+                .map(testName-> testRepository.findTestByName(testName).orElseThrow(() -> new TestException("Test Not found")))
                 .collect(Collectors.toList());
 
         User user = submittedAnswerList.stream()
@@ -119,6 +117,7 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
                         .findFirst().orElse(null);
 
         int totalNumOfCorrectAnswer = 0;
+        Map<Integer, Integer> surveyCategoryPair = new HashMap<>();
         Map<Integer, Integer> totalSurveyCategoryPair = new HashMap<>();
 
         for (Test test : testList) {
@@ -127,9 +126,7 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
 
                 // variable init for several subtest type purposes
                 int numOfCorrectAnswer = 0;
-//                int numOfWrongAnswer = 0;
                 int counter = 0;
-                Map<Integer, Integer> surveyCategoryPair = new HashMap<>();
 
                 if (subTest.getId().startsWith(test.getName())) {
                     String[] subtestIdSplit = subTest.getId().split("_");
@@ -154,9 +151,6 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
                                         if (tempAnswer.getIsCorrect() == 1) {
                                             numOfCorrectAnswer++;
                                         }
-//                                        else {
-//                                            numOfWrongAnswer++;
-//                                        }
                                         break;
                                     case "two_answers":
                                         if (tempAnswer.getIsCorrect() == 1 && numOfAnswers < 1) {
@@ -189,7 +183,6 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
                                                 surveyCategoryPair.put(i,counter);
                                             }
                                         }
-
                                         break;
                                     case "user_input_string":
                                     case "user_input_number":
@@ -203,37 +196,33 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
                             }
                         }
                     }
-//                    TestResult testResult = new TestResult();
-//                    testResult.setTest(test);
-//                    testResult.setTotalRightAnswer(numOfCorrectAnswer);
                     System.out.println("total correct number: " + numOfCorrectAnswer);
                     totalNumOfCorrectAnswer += numOfCorrectAnswer;
                     if(subTest.getTestType().equalsIgnoreCase("survey")){
-//                        testResult.setSurveyCategoryAnswer(surveyCategoryPair.toString());
                         for(int key : surveyCategoryPair.keySet()){
                             totalSurveyCategoryPair.put(key,surveyCategoryPair.get(key));
                         }
                         System.out.println("List of Survey answer: "+surveyCategoryPair);
                     }
-//                    testResult.setUser(user);
                 }
-                System.out.println("===================================================================================");
-                TestResult testResult = new TestResult();
-                testResult.setTest(test);
-                System.out.println("total correct number: " + totalNumOfCorrectAnswer);
-                if(subTest.getTestType().equalsIgnoreCase("survey")){
-                    testResult.setSurveyCategoryAnswer(surveyCategoryPair.toString());
-                    System.out.println("List of Survey answer: "+surveyCategoryPair);
-                }else{
-                    testResult.setTotalRightAnswer(totalNumOfCorrectAnswer);
-                }
-                testResult.setUser(user);
-                testResultRepository.save(testResult);
-                testResultRepository.findAllByUser_Username("komo").stream()
-                                                    .map(TestResult::getTest)
-                                                    .map(Test::getName)
-                                                    .forEach(System.out::println);
             }
+            System.out.println("===================================================================================");
+            TestResult testResult = new TestResult();
+            testResult.setTest(test);
+            System.out.println("total correct number: " + totalNumOfCorrectAnswer);
+            if(test.getIsSurvey()){
+                testResult.setSurveyCategoryAnswer(surveyCategoryPair.toString());
+                System.out.println("List of Survey answer: "+surveyCategoryPair);
+            }else{
+                testResult.setTotalRightAnswer(totalNumOfCorrectAnswer);
+            }
+            testResult.setUser(user);
+            testResultRepository.save(testResult);
+//            testResultRepository.findAllByUser_UsernameStartingWith("ko").stream()
+//                    .map(TestResult::getTest)
+//                    .map(Test::getName)
+//                    .distinct()
+//                    .forEach(System.out::println);
         }
     }
 }

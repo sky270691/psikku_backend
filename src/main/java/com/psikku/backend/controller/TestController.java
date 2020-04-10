@@ -2,7 +2,7 @@ package com.psikku.backend.controller;
 
 import com.psikku.backend.dto.test.FullTestDto;
 import com.psikku.backend.dto.test.MinimalTestDto;
-import com.psikku.backend.dto.test.TestInsertResponse;
+import com.psikku.backend.dto.test.TestInsertResponseDto;
 import com.psikku.backend.entity.Test;
 import com.psikku.backend.service.TestService;
 import com.psikku.backend.service.UserService;
@@ -26,11 +26,11 @@ public class TestController {
     UserService userService;
 
     @PostMapping
-    public ResponseEntity<TestInsertResponse> addNewTest(@RequestBody @Valid FullTestDto fullTestDto){
+    public ResponseEntity<TestInsertResponseDto> addNewTest(@RequestBody @Valid FullTestDto fullTestDto){
         testService.addNewTest(fullTestDto);
         List<Test> savedTests = testService.findAll();
         Test insertedTest = testService.findTestById(savedTests.get(savedTests.size()-1).getId());
-        TestInsertResponse response = new TestInsertResponse();
+        TestInsertResponseDto response = new TestInsertResponseDto();
         response.setTestId(insertedTest.getId());
         response.setTestName(insertedTest.getName());
         response.setMessage("Successfully added");

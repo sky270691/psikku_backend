@@ -38,7 +38,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
 //        http.httpBasic();
         http.authorizeRequests().antMatchers("/users/hello").hasRole("ADMIN")
-            .antMatchers("/register").permitAll()
+            .antMatchers("/api/users/**").permitAll()
+//                .antMatchers("/api/users/login").permitAll()
 //            .antMatchers("/api/**").permitAll()
 //                .antMatchers("/api/**").hasRole("USER")
             .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

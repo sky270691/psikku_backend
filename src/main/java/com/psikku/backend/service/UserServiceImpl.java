@@ -50,6 +50,7 @@ public class UserServiceImpl implements UserService {
         userRegisterDto.setRoles(roleRegisterDtoList);
 //        ResponseEntity<String> responseString = restTemplate.postForEntity(usersEndpoint,userRegisterDto, String.class);
         ResponseEntity<UserRegisterAuthServerResponse> responseJson = restTemplate.postForEntity(usersEndpoint,userRegisterDto, UserRegisterAuthServerResponse.class);
+        
         User user =  convertToUserEntity(responseJson.getBody());
         if(user.getId()==0){ // if user.getId() from auth server equals to 0 then return error response
             UserRegisterResponse urr = new UserRegisterResponse();

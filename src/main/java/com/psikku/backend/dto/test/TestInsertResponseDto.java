@@ -2,7 +2,7 @@ package com.psikku.backend.dto.test;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class TestInsertResponse {
+public class TestInsertResponseDto {
 
     @JsonProperty("test_id")
     private int testId;

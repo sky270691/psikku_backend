@@ -3,8 +3,6 @@ package com.psikku.backend.service;
 import com.psikku.backend.entity.TokenFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
-import org.springframework.security.jwt.Jwt;
-import org.springframework.security.jwt.JwtHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -27,12 +25,12 @@ public class CustomClientTokenService {
         String encodedString = Base64.getEncoder().encodeToString(originalString.getBytes());
         headers.set("Authorization", "Basic "+encodedString);
 
+        // request body
         MultiValueMap<String,String> map = new LinkedMultiValueMap<>();
         map.add("scope","write");
         map.add("grant_type","password");
         map.add("username", username);
         map.add("password",password);
-
 
 //        dataToPost.setScope("write");
 //        dataToPost.setGrant_type("password");
