@@ -9,8 +9,8 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = MyCustomValidator.class)
-public @interface MyCustomValidation {
+@Constraint(validatedBy = AgeValidator.class)
+public @interface AgeValidation {
 
     String message() default "{com.psikku.backend.testtype.message}";
     Class<?>[] groups() default {};

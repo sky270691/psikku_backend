@@ -91,6 +91,7 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
         return submittedAnswerDtoList;
     }
 
+    @Transactional
     public String getTestType(SubmittedAnswer submittedAnswer){
         System.out.println(submittedAnswer.getQuestion().getId());
         String[] answerId = submittedAnswer.getQuestion().getId().split("_");
@@ -99,6 +100,7 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
         return testType;
     }
 
+    @Transactional
     @Override
     public void calculateResultTest(List<SubmittedAnswer> submittedAnswerList) {
 

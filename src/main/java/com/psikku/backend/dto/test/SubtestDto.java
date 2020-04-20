@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
-@JsonPropertyOrder({"id","guide","test_type","questions"})
+@JsonPropertyOrder({"id","guide","test_type","duration","questions"})
 public class SubtestDto {
 
     private String id;
@@ -14,11 +14,12 @@ public class SubtestDto {
 
     @JsonProperty(value = "test_type")
     @Pattern(regexp = "(right_or_wrong)|(two_answers)|(three_answers)|(survey)|(user_input_string)|(user_input_number)",
-                    message = "test type should be one of these ('right_or_wrong', 'two_answers', 'three_answers', 'survey'," +
+                    message = "test type should be one of these ('right_or_wrong', 'two_answers', 'three_answers', 'survey', " +
                                 "'user_input_string', 'user_input_number'")
     private String testType;
 
     private int duration;
+
     private List<QuestionDto> questions;
 
     public String getId() {

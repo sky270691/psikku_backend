@@ -6,6 +6,7 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Base64;
@@ -15,7 +16,7 @@ public class CustomClientTokenService {
     @Value(value = "${auth-server.endpoint.tokensource}")
     private String endpoint;
 
-    public ResponseEntity<TokenFactory> getToken(String username, String password){
+    public ResponseEntity<TokenFactory> getToken(String username, String password) {
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -41,8 +42,12 @@ public class CustomClientTokenService {
         HttpEntity<MultiValueMap<String,String>> entity = new HttpEntity<>(map,headers);
 
         // response
-        ResponseEntity<TokenFactory> responseEntity=  restTemplate.postForEntity(endpoint,entity,TokenFactory.class);
-
+        ResponseEntity<TokenFactory> responseEntity= null;
+        try {
+            responseEntity = restTemplate.postForEntity(endpoint,entity, TokenFactory.class);
+        } catch (RestClientException e) {
+            System.out.println(e);;
+        }
 
         return responseEntity;
     }

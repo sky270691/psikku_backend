@@ -6,6 +6,7 @@ import com.psikku.backend.entity.User;
 import com.psikku.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.jwt.Jwt;
@@ -13,6 +14,7 @@ import org.springframework.security.jwt.JwtHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,11 +37,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User findUserByUsername(String username) {
         return userRepository.findUserByUsername(username);
     }
 
     @Override
+    @Transactional
     public ResponseEntity<UserRegisterResponse> registerNewUserToAuthServer(UserRegisterDto userRegisterDto) {
         RestTemplate restTemplate = new RestTemplate();
         RoleRegisterDto userRole = new RoleRegisterDto();
@@ -66,9 +70,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TokenFactory loginExistingUser(String username, String password) {
-        TokenFactory tf = clientTokenService.getToken(username,password).getBody();
-        tf.setStatus("Success");
-        return tf;
+        ResponseEntity<TokenFactory> responseEntity = clientTokenService.getToken(username,password);
+        if(responseEntity.getStatusCode().equals(HttpStatus.OK)){
+            TokenFactory tf = responseEntity.getBody();
+            tf.setStatus("Success");
+            return tf;
+        }
+        throw new RuntimeException();
     }
 
     private User convertToUserEntity(UserRegisterAuthServerResponse userRegisterAuthServerResponse) {

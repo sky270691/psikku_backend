@@ -24,6 +24,14 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    private final String DATE_TIME_FORMAT = "yyyy-MM-dd HH-mm-ss";
+
+    public DateTimeFormatter getDtf() {
+        return DateTimeFormatter.ofPattern(DATE_TIME_FORMAT);
+    }
+
+
+
     //==========================================================================================
     //==========================override response entity exception handler======================
 
@@ -33,8 +41,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         Map<String, Object> body = new LinkedHashMap();
         body.put("status", status.value());
         body.put("exception","payload exception");
-        body.put("timestamp", LocalDateTime.now());
-
+        body.put("timestamp", LocalDateTime.now().format(getDtf()));
         List<String> errors = ex.getBindingResult().getFieldErrors().stream()
                                 .map(x->x.getDefaultMessage())
                                 .collect(Collectors.toList());
@@ -48,7 +55,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         Map<String, Object> body = new LinkedHashMap();
         body.put("status", status.value());
         body.put("exception","path variable exception");
-        body.put("timestamp", LocalDateTime.now());
+        body.put("timestamp", LocalDateTime.now().format(getDtf()));
         String endpoint = request.getDescription(false);
         String error = "'"+ex.getValue()+"' "+"is not a valid path variable at the endpoint: "+endpoint.substring(4 ,(endpoint.length()-ex.getValue().toString().length()));
         body.put("errors",error);
@@ -58,12 +65,10 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 
     @Override
     protected ResponseEntity<Object> handleBindException(BindException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        Map<String, Object> body = new LinkedHashMap();
+        Map<String, Object> body = new LinkedHashMap<>();
         body.put("status", status.value());
         body.put("exception","validation exception");
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-//        LocalDateTime ldt = LocalDateTime.parse("01-05-1992 02:10:15",dtf);
-        body.put("timestamp", LocalDateTime.now().format(dtf));
+        body.put("timestamp", LocalDateTime.now().format(getDtf()));
         List<String> errors = ex.getBindingResult().getFieldErrors().stream()
                                 .map(x->x.getDefaultMessage())
                                 .collect(Collectors.toList());

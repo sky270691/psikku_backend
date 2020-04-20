@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
-@JsonPropertyOrder({"id","name","description","is_survey","subtests"})
+@JsonPropertyOrder({"id","name","description","is_survey","survey_category","subtests"})
 public class FullTestDto {
 
     private int id;

@@ -38,7 +38,6 @@ public class TestServiceImpl implements TestService{
         Optional<Test> findTest = testRepository.findTestByName(entityTest.getName());
         if(!findTest.isPresent()){
             testRepository.save(entityTest);
-
             // check if the question is survey or not
             if(entityTest.getIsSurvey()){
                 for(SurveyCategory surveyCategory : entityTest.getSurveyCategoryList()){
@@ -61,11 +60,13 @@ public class TestServiceImpl implements TestService{
     }
 
     @Override
+    @Transactional
     public Test findTestById(int id){
         return testRepository.findById(id).orElseThrow(()->new TestException("test not found"));
     }
 
     @Override
+    @Transactional
     public Test findTestByName(String name) { 	
         return  testRepository.findTestByName(name).orElseThrow(()->new TestException("test with name: "+ name +"not found"));
     }
@@ -215,12 +216,14 @@ public class TestServiceImpl implements TestService{
     }
 
     @Override
+    @Transactional
     public List<Test> findAll() {
         return testRepository.findAll();
     }
 
 //_______________________________________________________________________________________________________________
     @Override
+    @Transactional
     public Subtest findSubtestById(String id) {
         return subtestRepository.findById(id).orElseThrow(()->new TestException("Subtest not found"));
     }

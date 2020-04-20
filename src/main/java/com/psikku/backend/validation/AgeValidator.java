@@ -5,13 +5,13 @@ import javax.validation.ConstraintValidatorContext;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-public class MyCustomValidator implements ConstraintValidator<MyCustomValidation, LocalDate> {
+public class AgeValidator implements ConstraintValidator<AgeValidation, LocalDate> {
 
     private final double YEARS = 17;
     private final double TOTAL_DAYS_PER_YEAR = 365.25;
 
     @Override
-    public void initialize(MyCustomValidation constraintAnnotation) {
+    public void initialize(AgeValidation constraintAnnotation) {
     }
 
     @Override

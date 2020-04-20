@@ -37,7 +37,7 @@ public class TestResultServiceImpl implements TestResultService {
 
     @Override
     public List<TestResult> findAllResultByUserIdAndDateOfTest(long userId, String date, String time) {
-        String completeDateTime = date +" "+time;
+        String completeDateTime = date+" "+time;
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         LocalDateTime ldt = LocalDateTime.parse(completeDateTime,dtf);
         List<TestResult> testResultList = testResultRepository.findAllByUser_idAndDateOfTest(userId, ldt);

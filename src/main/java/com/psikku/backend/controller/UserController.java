@@ -102,9 +102,7 @@ public class UserController {
 
     @PostMapping("/login")
     public TokenFactory login(@RequestHeader("Authorization") String header) {
-
-        String[] credential = header.split(" ");
-        byte[] decoded = Base64.getDecoder().decode(credential[1]);
+        byte[] decoded = Base64.getDecoder().decode(header);
         String fullCredential = new String(decoded);
         String[] extractedFullCredential = fullCredential.split(":");
         String username = extractedFullCredential[0];
@@ -148,10 +146,5 @@ public class UserController {
         UserDto userDto = userService.convertToUserDto(user);
         return userDto;
     }
-
-    //todo
-    // tesasdjagsdljgkljasdlfjkljasdlgj
-    // jalskdgjlkasjdflkjasljglasjdf
-    // jadlkgjasldfjlsadjfl
 
 }

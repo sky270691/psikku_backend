@@ -1,6 +1,6 @@
 package com.psikku.backend.dto.user;
 
-import com.psikku.backend.validation.MyCustomValidation;
+import com.psikku.backend.validation.AgeValidation;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;
@@ -29,8 +29,8 @@ public class UserRegisterDto {
 //    private LocalDateTime createTime;
 
     @Past(message = "so lahir so bro?")
-    @MyCustomValidation(message = "blum 17 taong bro")
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @AgeValidation(message = "blum 17 taong bro")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
     private List<RoleRegisterDto> roles;

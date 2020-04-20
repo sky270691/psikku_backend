@@ -7,10 +7,15 @@ import com.psikku.backend.entity.Test;
 import com.psikku.backend.service.TestService;
 import com.psikku.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,15 +43,15 @@ public class TestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MinimalTestDto>> getAllTests() {
+    public ResponseEntity<List<FullTestDto>> getAllTests() {
 
         List<Test> testList = testService.findAll();
-        List<MinimalTestDto> minimalTestDtoList = new ArrayList<>();
+        List<FullTestDto> fullTestDtoList = new ArrayList<>();
 //        for (test test : testList) {
 //            testDtoList.add(testService.convertToTestDto(test));
 //        }
-        testList.forEach(test -> minimalTestDtoList.add(testService.convertToMinimalTestDto(test)));
-        return new ResponseEntity<>(minimalTestDtoList, HttpStatus.OK);
+        testList.forEach(test -> fullTestDtoList.add(testService.convertToFullTestDto(test)));
+        return new ResponseEntity<>(fullTestDtoList, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
