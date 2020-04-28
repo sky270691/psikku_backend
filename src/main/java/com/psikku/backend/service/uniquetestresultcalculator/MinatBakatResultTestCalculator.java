@@ -9,16 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
 
 @Service
-public class MinatBakatResultCalculator implements UniqueResultCalculator {
+public class MinatBakatResultTestCalculator implements UniqueResultTestCalculator {
 
     //Todo
     // Make it same with the minat bakat test name

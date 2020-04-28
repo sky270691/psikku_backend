@@ -17,14 +17,24 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class CfitResultCalculator implements UniqueResultCalculator {
+public class CfitResultTestCalculator implements UniqueResultTestCalculator {
 
+    private String result;
 
     @Autowired
     UserService userService;
 
     @Autowired
     AnswerRepository answerRepository;
+
+    public String getResult() {
+        return this.result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
 
     //ToDo
     // testing the output with the real test
@@ -51,7 +61,8 @@ public class CfitResultCalculator implements UniqueResultCalculator {
 
         // subtest 1 3 4 calculation
         cfitAnswer.forEach(answerSub134Dto -> {
-            Answer tempAnswer = answerRepository.findById(answerSub134Dto.getAnswers().get(0)).orElse(null);
+            Answer tempAnswer = answerRepository.findById(answerSub134Dto.getAnswers().get(0)).orElseThrow(()->
+                    new RuntimeException("tempAnswer not Found"));
             Answer[] answers = {tempAnswer};
             if(tempAnswer.getIsCorrect() == 1){
                 correctAnswer.add(answers);
@@ -92,6 +103,7 @@ public class CfitResultCalculator implements UniqueResultCalculator {
 
         // the result output(iq)
         int iq = resultMapping.get(correctAnswer.size());
+        setResult("hasil test iq: " + iq +"\nusia: "+ (ageInMonth));
         System.out.println("iq");
     }
 

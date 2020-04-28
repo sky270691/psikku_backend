@@ -11,6 +11,6 @@ public interface SubmitAnswerService {
     List<SubmittedAnswer> saveUserAnswer(List<SubmittedAnswer> answerList);
     List<SubmittedAnswer> convertToSubmittedAnswerList(List<SubmittedAnswerDto> submittedAnswerDto, User user);
     List<SubmittedAnswerDto> convertToSubmittedAnswerDtoList(List<SubmittedAnswer> submittedAnswerList);
-    void calculateResultTest(List<SubmittedAnswer> submittedAnswerList);
+    String calculateResultTest(List<SubmittedAnswerDto> submittedAnswerList);
 //    void getListTest(List<SubmittedAnswer> submittedAnswerList);
 }

@@ -79,22 +79,22 @@ public class TestServiceImpl implements TestService{
         Test test = new Test();
         test.setName(fullTestDto.getName());
         test.setDescription(fullTestDto.getDescription());
-        List<Test> testList = testRepository.findAll();
-        int maxTestId = testList.stream()
-                                .map(Test::getId)
-                                .max(Comparator.naturalOrder())
-                                .orElse(0);
+//        List<Test> testList = testRepository.findAll();
+//        int maxTestId = testList.stream()
+//                                .map(Test::getId)
+//                                .max(Comparator.naturalOrder())
+//                                .orElse(0);
 
-        if(fullTestDto.getIsSurvey()){
-            test.setIsSurvey(true);
-            test.setSurveyCategoryList(new ArrayList<>());
-            for(SurveyCategoryDto surveyCategoryDto : fullTestDto.getSurveyCategoryDto()){
-                SurveyCategory tempEntitySurveyCategory = new SurveyCategory();
-                tempEntitySurveyCategory.setId((maxTestId+1)+"_"+surveyCategoryDto.getCategoryNumber());
-                tempEntitySurveyCategory.setCategory(surveyCategoryDto.getCategory());
-                test.getSurveyCategoryList().add(tempEntitySurveyCategory);
-            }
-        }
+//        if(fullTestDto.getIsSurvey()){
+//            test.setIsSurvey(true);
+//            test.setSurveyCategoryList(new ArrayList<>());
+//            for(SurveyCategoryDto surveyCategoryDto : fullTestDto.getSurveyCategoryDto()){
+//                SurveyCategory tempEntitySurveyCategory = new SurveyCategory();
+//                tempEntitySurveyCategory.setId((maxTestId+1)+"_"+surveyCategoryDto.getCategoryNumber());
+//                tempEntitySurveyCategory.setCategory(surveyCategoryDto.getCategory());
+//                test.getSurveyCategoryList().add(tempEntitySurveyCategory);
+//            }
+//        }
         List<SubtestDto> subtestDtoList = fullTestDto.getSubtests();
         List<Subtest> entitySubtestList = new ArrayList<>();
         int subtestNumber = 1;
@@ -116,12 +116,18 @@ public class TestServiceImpl implements TestService{
             subtest.setTestType(subtestDto.getTestType());
             subtest.setDuration(subtestDto.getDuration());
             List<Question> questionList = new ArrayList<>();
-            int questionId = 1;
+            int questionId = 0;
             for(QuestionDto questionDto:subtestDto.getQuestions()){
                 Question question = new Question();
+                if(fullTestDto.getIsSurvey()){
+                    question.setQuestionCategory(questionDto.getQuestionCategory());
+                }else{
+                    question.setQuestionCategory("");
+                }
 //                System.out.println(questionDto.getId());
-                if(questionDto.getId()!=null && Integer.parseInt(questionDto.getId())<0){
-                    question.setId(subtest.getId() + "_" + questionDto.getId());
+                String[] questionDtoIdSplit = questionDto.getId().split("_");
+                if(questionDto.getId()!=null && Integer.parseInt(questionDtoIdSplit[2])<0){
+                    question.setId(subtest.getId() + "_" + questionDtoIdSplit[2]);
                 }else{
                     question.setId(subtest.getId() + "_" + questionId++);
                 }
@@ -145,14 +151,14 @@ public class TestServiceImpl implements TestService{
                 if(questionDto.getAnswers() != null){
                     for(AnswerDto answerDto:questionDto.getAnswers()){
                         Answer answer = new Answer();
-                        answer.setId(question.getId()+"_"+answerDto.getId());
+                        answer.setId(answerDto.getId());
                         answer.setAnswerContent(answerDto.getAnswerContent());
                         if(subtestDto.getTestType().equalsIgnoreCase("survey")){
                             answer.setAnswerCategory(answerDto.getAnswerCategory());
                             answer.setIsCorrect(-1);
                         }else{
                             answer.setIsCorrect(answerDto.getIsCorrect());
-                            answer.setAnswerCategory(fullTestDto.getId()+"_"+"-1");
+//                            answer.setAnswerCategory("");
                         }
                         answerList.add(answer);
                     }

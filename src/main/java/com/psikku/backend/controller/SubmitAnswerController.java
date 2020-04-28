@@ -40,12 +40,12 @@ public class SubmitAnswerController {
 //    }
 
     @PostMapping
-    public List<String> submitAnswers(@RequestBody List<SubmittedAnswerDto> submittedAnswerDto){
-        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        User user = userService.findByUsername(username);
-        List<SubmittedAnswer> submittedAnswerList = submitAnswerService.convertToSubmittedAnswerList(submittedAnswerDto,user);
-        submitAnswerService.saveUserAnswer(submittedAnswerList);
-        submitAnswerService.calculateResultTest(submittedAnswerList);
-        return new ArrayList<>();
+    public String submitAnswers(@RequestBody List<SubmittedAnswerDto> submittedAnswerDto){
+//        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+//        User user = userService.findByUsername(username);
+//        List<SubmittedAnswer> submittedAnswerList = submitAnswerService.convertToSubmittedAnswerList(submittedAnswerDto,user);
+//        submitAnswerService.saveUserAnswer(submittedAnswerList);
+        return submitAnswerService.calculateResultTest(submittedAnswerDto);
+//        return new ArrayList<>();
     }
 }

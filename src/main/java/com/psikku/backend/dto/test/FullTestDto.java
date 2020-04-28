@@ -19,8 +19,8 @@ public class FullTestDto {
     @JsonProperty("is_survey")
     private boolean isSurvey;
 
-    @JsonProperty("survey_category")
-    private List<SurveyCategoryDto> surveyCategoryDto;
+//    @JsonProperty("survey_category")
+//    private List<SurveyCategoryDto> surveyCategoryDto;
 
 //    @JsonProperty(value = "subtest")
 
@@ -58,13 +58,13 @@ public class FullTestDto {
         this.isSurvey = isSurvey;
     }
 
-    public List<SurveyCategoryDto> getSurveyCategoryDto() {
-        return surveyCategoryDto;
-    }
-
-    public void setSurveyCategoryDto(List<SurveyCategoryDto> surveyCategoryDto) {
-        this.surveyCategoryDto = surveyCategoryDto;
-    }
+//    public List<SurveyCategoryDto> getSurveyCategoryDto() {
+//        return surveyCategoryDto;
+//    }
+//
+//    public void setSurveyCategoryDto(List<SurveyCategoryDto> surveyCategoryDto) {
+//        this.surveyCategoryDto = surveyCategoryDto;
+//    }
 
     public List<SubtestDto> getSubtests() {
         return subtests;

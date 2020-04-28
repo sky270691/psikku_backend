@@ -128,7 +128,7 @@ public class User {
     }
 
     public int getAge(LocalDate dateOftest){
-        long age = ChronoUnit.MONTHS.between(this.dateOfBirth,LocalDate.now())/12;
+        long age = ChronoUnit.MONTHS.between(this.dateOfBirth,LocalDate.now());
         return (int) age;
     }
 
