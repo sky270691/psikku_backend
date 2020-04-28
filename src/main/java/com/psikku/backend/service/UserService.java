@@ -11,7 +11,8 @@ import java.util.List;
 
 public interface UserService {
 
-    User findUserByUsername(String username);
+    User findById(long id);
+    User findByUsername(String username);
     ResponseEntity<UserRegisterResponse> registerNewUserToAuthServer(UserRegisterDto userRegisterDto);
     TokenFactory loginExistingUser(String username, String password);
     List<User> findAll();

@@ -6,11 +6,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
-@JsonPropertyOrder({"id","guide","test_type","duration","questions"})
+@JsonPropertyOrder({"id","guides","test_type","duration","questions"})
 public class SubtestDto {
 
     private String id;
-    private String guide;
+    private List<String> guides;
 
     @JsonProperty(value = "test_type")
     @Pattern(regexp = "(right_or_wrong)|(two_answers)|(three_answers)|(survey)|(user_input_string)|(user_input_number)",
@@ -30,12 +30,12 @@ public class SubtestDto {
         this.id = id;
     }
 
-    public String getGuide() {
-        return guide;
+    public List<String> getGuides() {
+        return guides;
     }
 
-    public void setGuide(String guide) {
-        this.guide = guide;
+    public void setGuides(List<String> guides) {
+        this.guides = guides;
     }
 
     public String getTestType() {

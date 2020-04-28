@@ -12,7 +12,7 @@ public class PackageDto {
 
     private int price;
 
-    @JsonProperty("test_list")
+    @JsonProperty("tests")
     private List<Integer> testIdList;
 
     public int getId() {

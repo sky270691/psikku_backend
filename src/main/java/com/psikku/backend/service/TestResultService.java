@@ -10,7 +10,7 @@ public interface TestResultService  {
     //--------------------repository method-----------------------------------------
     boolean saveTestResult(TestResult testResult);
     List<TestResult> findAllResultByUserId(long userId);
-    List<TestResult> findAllResultByUserIdAndDateOfTest(long userId, String date, String time);
+    List<TestResult> findAllResultByUserNameAndDateOfTest(String username, String date, String time);
 
     //-------------converter method-------------------------------------------------
     TestResultDto convertToTestResultDto(TestResult testResult);

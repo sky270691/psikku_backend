@@ -161,30 +161,30 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
                                             numOfCorrectAnswer++;
                                         }
                                         break;
-                                    case "three_answers":
-                                        if (tempAnswer.getIsCorrect() == 1 && numOfAnswers < 2) {
-                                            numOfAnswers++;
-                                        } else if (tempAnswer.getIsCorrect() == 1 && numOfAnswers == 2) {
-                                            numOfCorrectAnswer++;
-                                        }
-                                        break;
+//                                    case "three_answers":
+//                                        if (tempAnswer.getIsCorrect() == 1 && numOfAnswers < 2) {
+//                                            numOfAnswers++;
+//                                        } else if (tempAnswer.getIsCorrect() == 1 && numOfAnswers == 2) {
+//                                            numOfCorrectAnswer++;
+//                                        }
+//                                        break;
                                     case "survey":
-                                        List<Integer> tempAnswerList = subTest.getQuestionList().stream()
-                                                                        .flatMap(question -> question.getAnswerList().stream())
-                                                                        .map(Answer::getAnswerCategory)
-                                                                        .distinct()
-                                                                        .collect(Collectors.toList());
-                                        int maxCategory = Collections.max(tempAnswerList);
-                                        for(int i = maxCategory;i>0;i--){
-                                            if(tempAnswer.getAnswerCategory()==i){
-                                                if(surveyCategoryPair.containsKey(i)){
-                                                    counter = surveyCategoryPair.get(i)+1;
-                                                }else{
-                                                    counter = 1;
-                                                }
-                                                surveyCategoryPair.put(i,counter);
-                                            }
-                                        }
+//                                        List<Integer> answerCategoryList = subTest.getQuestionList().stream()
+//                                                                        .flatMap(question -> question.getAnswerList().stream())
+//                                                                        .map(Answer::getAnswerCategory)
+//                                                                        .distinct()
+//                                                                        .collect(Collectors.toList());
+//                                        int maxCategory = Collections.max(answerCategoryList);
+//                                        for(int i = maxCategory;i>0;i--){
+//                                            if(tempAnswer.getAnswerCategory()==i){
+//                                                if(surveyCategoryPair.containsKey(i)){
+//                                                    counter = surveyCategoryPair.get(i)+1;
+//                                                }else{
+//                                                    counter = 1;
+//                                                }
+//                                                surveyCategoryPair.put(i,counter);
+//                                            }
+//                                        }
                                         break;
                                     case "user_input_string":
                                     case "user_input_number":
@@ -220,11 +220,6 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
             }
             testResult.setUser(user);
             testResultRepository.save(testResult);
-//            testResultRepository.findAllByUser_UsernameStartingWith("ko").stream()
-//                    .map(TestResult::getTest)
-//                    .map(Test::getName)
-//                    .distinct()
-//                    .forEach(System.out::println);
         }
     }
 }

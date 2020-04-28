@@ -5,12 +5,14 @@ import com.psikku.backend.entity.TestResult;
 import com.psikku.backend.exception.TestResultException;
 import com.psikku.backend.repository.TestResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Service
@@ -36,11 +38,16 @@ public class TestResultServiceImpl implements TestResultService {
     }
 
     @Override
-    public List<TestResult> findAllResultByUserIdAndDateOfTest(long userId, String date, String time) {
+    public List<TestResult> findAllResultByUserNameAndDateOfTest(String username, String date, String time) {
         String completeDateTime = date+" "+time;
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        LocalDateTime ldt = LocalDateTime.parse(completeDateTime,dtf);
-        List<TestResult> testResultList = testResultRepository.findAllByUser_idAndDateOfTest(userId, ldt);
+        LocalDateTime ldt;
+        try {
+            ldt = LocalDateTime.parse(completeDateTime,dtf);
+        } catch (DateTimeParseException e) {
+            throw new TestResultException("date or time format is not valid (date -> 'dd-MM-yyyy' time -> 'HH:mm:ss')");
+        }
+        List<TestResult> testResultList = testResultRepository.findAllByUser_usernameAndDateOfTest(username, ldt);
         if(!testResultList.isEmpty()){
             return testResultList;
         }else{

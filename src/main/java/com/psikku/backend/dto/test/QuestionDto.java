@@ -1,5 +1,6 @@
 package com.psikku.backend.dto.test;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -12,6 +13,9 @@ public class QuestionDto{
 
     @JsonProperty(value = "question_content")
     private List<String> questionContent;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String questionCategory;
 
     private List<AnswerDto> answers;
 
@@ -30,6 +34,14 @@ public class QuestionDto{
 
     public void setQuestionContent(List<String> questionContent) {
         this.questionContent = questionContent;
+    }
+
+    public String getQuestionCategory() {
+        return questionCategory;
+    }
+
+    public void setQuestionCategory(String questionCategory) {
+        this.questionCategory = questionCategory;
     }
 
     public List<AnswerDto> getAnswers() {

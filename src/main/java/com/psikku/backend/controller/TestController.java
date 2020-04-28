@@ -1,21 +1,15 @@
 package com.psikku.backend.controller;
 
 import com.psikku.backend.dto.test.FullTestDto;
-import com.psikku.backend.dto.test.MinimalTestDto;
 import com.psikku.backend.dto.test.TestInsertResponseDto;
 import com.psikku.backend.entity.Test;
 import com.psikku.backend.service.TestService;
 import com.psikku.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,12 +38,8 @@ public class TestController {
 
     @GetMapping
     public ResponseEntity<List<FullTestDto>> getAllTests() {
-
         List<Test> testList = testService.findAll();
         List<FullTestDto> fullTestDtoList = new ArrayList<>();
-//        for (test test : testList) {
-//            testDtoList.add(testService.convertToTestDto(test));
-//        }
         testList.forEach(test -> fullTestDtoList.add(testService.convertToFullTestDto(test)));
         return new ResponseEntity<>(fullTestDtoList, HttpStatus.OK);
     }

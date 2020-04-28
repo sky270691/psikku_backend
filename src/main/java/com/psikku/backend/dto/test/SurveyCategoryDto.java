@@ -5,14 +5,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class SurveyCategoryDto {
 
     @JsonProperty("category_number")
-    private int categoryNumber;
+    private String categoryNumber;
     private String category;
 
-    public int getCategoryNumber() {
+    public String getCategoryNumber() {
         return categoryNumber;
     }
 
-    public void setCategoryNumber(int categoryNumber) {
+    public void setCategoryNumber(String categoryNumber) {
         this.categoryNumber = categoryNumber;
     }
 

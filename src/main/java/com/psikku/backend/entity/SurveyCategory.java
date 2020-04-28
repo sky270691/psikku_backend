@@ -10,16 +10,16 @@ import javax.persistence.Table;
 public class SurveyCategory {
 
     @Id
-    private int id;
+    private String id;
 
     @Column(name = "category")
     private String category;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

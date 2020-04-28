@@ -7,6 +7,7 @@ import com.psikku.backend.service.TestService;
 import com.psikku.backend.service.SubmitAnswerService;
 import com.psikku.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -39,12 +40,9 @@ public class SubmitAnswerController {
 //    }
 
     @PostMapping
-    public List<String> submitAnswers(@RequestBody List<SubmittedAnswerDto> submittedAnswerDto,
-                                        @RequestHeader("Authorization") String auth){
-        String[] authHeader = auth.split(" ");
-        String token = authHeader[1];
-        String username = userService.getUserNameFromToken(token);
-        User user = userService.findUserByUsername(username);
+    public List<String> submitAnswers(@RequestBody List<SubmittedAnswerDto> submittedAnswerDto){
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        User user = userService.findByUsername(username);
         List<SubmittedAnswer> submittedAnswerList = submitAnswerService.convertToSubmittedAnswerList(submittedAnswerDto,user);
         submitAnswerService.saveUserAnswer(submittedAnswerList);
         submitAnswerService.calculateResultTest(submittedAnswerList);

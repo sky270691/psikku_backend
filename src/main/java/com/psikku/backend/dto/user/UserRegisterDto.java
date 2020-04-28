@@ -29,7 +29,7 @@ public class UserRegisterDto {
 //    private LocalDateTime createTime;
 
     @Past(message = "so lahir so bro?")
-    @AgeValidation(message = "blum 17 taong bro")
+//    @AgeValidation(message = "blum 17 taong bro")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 

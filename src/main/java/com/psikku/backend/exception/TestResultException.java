@@ -6,11 +6,4 @@ public class TestResultException extends RuntimeException {
         super(message);
     }
 
-    public TestResultException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public TestResultException(Throwable cause) {
-        super(cause);
-    }
 }

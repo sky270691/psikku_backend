@@ -6,24 +6,22 @@ import java.util.List;
 
 public class SubmittedAnswerDto {
 
-    @JsonProperty("id")
     private long id;
-
-    @JsonProperty("answers")
-    private List<String> answers;
-
-    @JsonProperty("user_id")
-    private long userId;
 
     @JsonProperty("question_id")
     private String questionId;
 
-    public long getId() {
-        return id;
+    @JsonProperty("answers")
+    private List<String> answers;
+
+    private long userId;
+
+    public String getQuestionId() {
+        return questionId;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setQuestionId(String questionId) {
+        this.questionId = questionId;
     }
 
     public List<String> getAnswers() {
@@ -34,19 +32,19 @@ public class SubmittedAnswerDto {
         this.answers = answers;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public long getUserId() {
         return userId;
     }
 
     public void setUserId(long userId) {
         this.userId = userId;
-    }
-
-    public String getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(String questionId) {
-        this.questionId = questionId;
     }
 }

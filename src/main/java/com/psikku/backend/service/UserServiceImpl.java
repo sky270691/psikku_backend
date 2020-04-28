@@ -6,7 +6,6 @@ import com.psikku.backend.entity.User;
 import com.psikku.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.jwt.Jwt;
@@ -22,24 +21,31 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    CustomClientTokenService clientTokenService;
+    TokenService clientTokenService;
 
     @Autowired
     UserRepository userRepository;
 
-    @Value(value = "${auth-server.enpdoint.users}")
+    @Value(value = "${auth-server.endpoint.users}")
     private String usersEndpoint;
 
     @Override
     public List<User> findAll() {
 //        return userRepository.findAll(Sort.by("email").ascending());
+
         return userRepository.findAll();
     }
 
     @Override
     @Transactional
-    public User findUserByUsername(String username) {
+    public User findByUsername(String username) {
         return userRepository.findUserByUsername(username);
+    }
+
+    @Override
+    @Transactional
+    public User findById(long id) {
+        return userRepository.findById(id);
     }
 
     @Override
@@ -52,7 +58,6 @@ public class UserServiceImpl implements UserService {
         roleRegisterDtoList.add(userRole);
 
         userRegisterDto.setRoles(roleRegisterDtoList);
-//        ResponseEntity<String> responseString = restTemplate.postForEntity(usersEndpoint,userRegisterDto, String.class);
         ResponseEntity<UserRegisterAuthServerResponse> responseJson = restTemplate.postForEntity(usersEndpoint,userRegisterDto, UserRegisterAuthServerResponse.class);
         
         User user =  convertToUserEntity(responseJson.getBody());
@@ -69,14 +74,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public TokenFactory loginExistingUser(String username, String password) {
-        ResponseEntity<TokenFactory> responseEntity = clientTokenService.getToken(username,password);
-        if(responseEntity.getStatusCode().equals(HttpStatus.OK)){
-            TokenFactory tf = responseEntity.getBody();
-            tf.setStatus("Success");
-            return tf;
-        }
-        throw new RuntimeException();
+        TokenFactory tf = clientTokenService.getToken(username,password).getBody();
+        tf.setStatus("Success");
+//        Authentication
+        return tf;
     }
 
     private User convertToUserEntity(UserRegisterAuthServerResponse userRegisterAuthServerResponse) {
@@ -133,19 +136,4 @@ public class UserServiceImpl implements UserService {
         return userName.substring(1,userName.length()-1);
     }
 
-    //    @Override
-//    public UserRegisterResponse registerResponse(UserRegisterDto userRegisterDto, boolean status) {
-//        UserRegisterResponse response = new UserRegisterResponse();
-//        response.setUserdataRegisterUsername(userRegisterDto.getUsername());
-//        if(status){
-//            long id = findUserdataByUsername(userRegisterDto.getUsername()).getId();
-//            response.setId(id);
-//            response.setMessage("User: " + userRegisterDto.getUsername() + " successfully registered");
-//            response.setStatus("success");
-//        }else{
-//            response.setMessage("User: " + userRegisterDto.getUsername() + " failed to register");
-//            response.setStatus("failed");
-//        }
-//        return response;
-//    }
 }

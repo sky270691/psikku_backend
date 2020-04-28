@@ -14,6 +14,8 @@ public class Question {
     @Column(name = "question_content")
     private String questionContent;
 
+    @Column(name = "question_category")
+    private String questionCategory;
 
 //    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     @OneToMany(cascade = CascadeType.ALL)
@@ -38,6 +40,14 @@ public class Question {
 
     public void setQuestionContent(String questionContent) {
         this.questionContent = questionContent;
+    }
+
+    public String getQuestionCategory() {
+        return questionCategory;
+    }
+
+    public void setQuestionCategory(String questionCategory) {
+        this.questionCategory = questionCategory;
     }
 
     public List<Answer> getAnswerList() {

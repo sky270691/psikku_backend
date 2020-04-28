@@ -4,6 +4,7 @@ package com.psikku.backend.entity;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Entity
@@ -125,4 +126,10 @@ public class User {
     public String toString() {
         return "Username: " +getUsername()+ "email: " +getEmail()+ "fullname: "+ getFirstname();
     }
+
+    public int getAge(LocalDate dateOftest){
+        long age = ChronoUnit.MONTHS.between(this.dateOfBirth,LocalDate.now())/12;
+        return (int) age;
+    }
+
 }

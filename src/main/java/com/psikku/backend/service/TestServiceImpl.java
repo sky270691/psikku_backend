@@ -18,6 +18,9 @@ public class TestServiceImpl implements TestService{
     TestRepository testRepository;
 
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     SurveyCategoryRepository surveyCategoryRepository;
 
     @Autowired
@@ -49,7 +52,7 @@ public class TestServiceImpl implements TestService{
                 for(Question question: subtest.getQuestionList()){
                     questionRepository.save(question);
                     for(Answer answer: question.getAnswerList()){
-                        answerRepository.saveAndFlush(answer);
+                        answerRepository.save(answer);
                     }
                 }
             }
@@ -76,19 +79,18 @@ public class TestServiceImpl implements TestService{
         Test test = new Test();
         test.setName(fullTestDto.getName());
         test.setDescription(fullTestDto.getDescription());
+        List<Test> testList = testRepository.findAll();
+        int maxTestId = testList.stream()
+                                .map(Test::getId)
+                                .max(Comparator.naturalOrder())
+                                .orElse(0);
+
         if(fullTestDto.getIsSurvey()){
             test.setIsSurvey(true);
             test.setSurveyCategoryList(new ArrayList<>());
-//            Integer latestTestId = testRepository.findAll().stream().map(Test::getId)
-//                                            .min(Comparator.comparing(Integer::intValue))
-//                                            .orElse(null);
             for(SurveyCategoryDto surveyCategoryDto : fullTestDto.getSurveyCategoryDto()){
                 SurveyCategory tempEntitySurveyCategory = new SurveyCategory();
-//                if(latestTestId==null){
-//                    tempEntitySurveyCategory.setId(1+"_"+surveyCategoryDto.getCategoryNumber());
-//                }else{
-                    tempEntitySurveyCategory.setId(surveyCategoryDto.getCategoryNumber());
-//                }
+                tempEntitySurveyCategory.setId((maxTestId+1)+"_"+surveyCategoryDto.getCategoryNumber());
                 tempEntitySurveyCategory.setCategory(surveyCategoryDto.getCategory());
                 test.getSurveyCategoryList().add(tempEntitySurveyCategory);
             }
@@ -99,7 +101,18 @@ public class TestServiceImpl implements TestService{
         for(SubtestDto subtestDto : subtestDtoList){
             Subtest subtest = new Subtest();
             subtest.setId(test.getName() + "_" + subtestNumber++);
-            subtest.setGuide(subtestDto.getGuide());
+
+            // list of guide convert to whole string to save in db
+            StringBuilder guideSb = new StringBuilder();
+            for(int i = 0; i<subtestDto.getGuides().size(); i++){
+                if(i == subtestDto.getGuides().size()-1){
+                    guideSb.append(subtestDto.getGuides().get(i));
+                }else{
+                    guideSb.append(subtestDto.getGuides().get(i)).append(";");
+                }
+            }
+
+            subtest.setGuide(guideSb.toString());
             subtest.setTestType(subtestDto.getTestType());
             subtest.setDuration(subtestDto.getDuration());
             List<Question> questionList = new ArrayList<>();
@@ -107,7 +120,7 @@ public class TestServiceImpl implements TestService{
             for(QuestionDto questionDto:subtestDto.getQuestions()){
                 Question question = new Question();
 //                System.out.println(questionDto.getId());
-                if(questionDto.getId()!=null && java.lang.Integer.parseInt(questionDto.getId())<0){
+                if(questionDto.getId()!=null && Integer.parseInt(questionDto.getId())<0){
                     question.setId(subtest.getId() + "_" + questionDto.getId());
                 }else{
                     question.setId(subtest.getId() + "_" + questionId++);
@@ -121,6 +134,12 @@ public class TestServiceImpl implements TestService{
                     }
                 }
                 question.setQuestionContent(new String(wholeQuestion));
+
+                if(subtestDto.getTestType().equalsIgnoreCase("survey")){
+                    question.setQuestionCategory(fullTestDto.getId()+"_"+questionDto.getQuestionCategory());
+                }else{
+                    question.setQuestionCategory(fullTestDto.getId()+"_"+-1);
+                }
                 questionList.add(question);
                 List<Answer> answerList = new ArrayList<>();
                 if(questionDto.getAnswers() != null){
@@ -133,7 +152,7 @@ public class TestServiceImpl implements TestService{
                             answer.setIsCorrect(-1);
                         }else{
                             answer.setIsCorrect(answerDto.getIsCorrect());
-                            answer.setAnswerCategory(-1);
+                            answer.setAnswerCategory(fullTestDto.getId()+"_"+"-1");
                         }
                         answerList.add(answer);
                     }
@@ -159,7 +178,11 @@ public class TestServiceImpl implements TestService{
             subtestDto.setId(subtest.getId());
             subtestDto.setTestType(subtest.getTestType());
             subtestDto.setDuration(subtest.getDuration());
-            subtestDto.setGuide(subtest.getGuide());
+            String[] guideArray = subtest.getGuide().split(";");
+            subtestDto.setGuides(new ArrayList<>());
+            for(String tempGuide :guideArray){
+                subtestDto.getGuides().add(tempGuide);
+            }
             subtestDto.setQuestions(new ArrayList<>());
             for(Question question:subtest.getQuestionList()){
                 QuestionDto questionDto = new QuestionDto();
@@ -169,6 +192,7 @@ public class TestServiceImpl implements TestService{
                 for(String tempQuestion : questionArray){
                     questionDto.getQuestionContent().add(tempQuestion);
                 }
+                questionDto.setQuestionCategory(question.getQuestionCategory());
                 questionDto.setAnswers(new ArrayList<>());
                 for(Answer answer: question.getAnswerList()){
                     AnswerDto answerDto = new AnswerDto();

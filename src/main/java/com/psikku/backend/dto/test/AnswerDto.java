@@ -12,7 +12,7 @@ public class AnswerDto {
     @JsonProperty(value = "is_correct")
     private int isCorrect;
     @JsonProperty(value = "answer_category")
-    private int answerCategory;
+    private String answerCategory;
 
     public String getId() {
         return id;
@@ -36,11 +36,11 @@ public class AnswerDto {
 
     public void setIsCorrect(int isCorrect) {this.isCorrect = isCorrect;}
 
-    public int getAnswerCategory() {
+    public String getAnswerCategory() {
         return answerCategory;
     }
 
-    public void setAnswerCategory(int answerCategory) {
+    public void setAnswerCategory(String answerCategory) {
         this.answerCategory = answerCategory;
     }
 }
