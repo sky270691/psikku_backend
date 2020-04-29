@@ -2,13 +2,18 @@ package com.psikku.backend.service.uniquetestresultcalculator;
 
 import com.psikku.backend.dto.test.SubmittedAnswerDto;
 import com.psikku.backend.entity.Answer;
+import com.psikku.backend.entity.TestResult;
 import com.psikku.backend.entity.User;
 import com.psikku.backend.repository.AnswerRepository;
+import com.psikku.backend.repository.TestRepository;
+import com.psikku.backend.repository.TestResultRepository;
+import com.psikku.backend.repository.UserRepository;
 import com.psikku.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -27,6 +32,15 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
     @Autowired
     AnswerRepository answerRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    TestRepository testRepository;
+
+    @Autowired
+    TestResultRepository testResultRepository;
+
     public String getResult() {
         return this.result;
     }
@@ -39,11 +53,9 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
     //ToDo
     // testing the output with the real test
 
+    @Transactional
     @Override
-    public void calculateNewResult(List<SubmittedAnswerDto> submittedAnswerDtoList) {
-        List<SubmittedAnswerDto> cfitAnswer = submittedAnswerDtoList.stream()
-                                                                  .filter(answer -> answer.getQuestionId().contains("cfit"))
-                                                                  .collect(Collectors.toList());
+    public void calculateNewResult(List<SubmittedAnswerDto> cfitAnswer) {
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         User user = userService.findByUsername(username);
         int ageInMonth = user.getAge(LocalDate.now());
@@ -58,6 +70,9 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
                                                       }).collect(Collectors.toList());
         // cfitAnswer contains only subtest 1, 3, 4
         cfitAnswer.removeAll(subtest2);
+        for (SubmittedAnswerDto answerDto : cfitAnswer) {
+            System.out.println(answerDto.getAnswers());
+        }
 
         // subtest 1 3 4 calculation
         cfitAnswer.forEach(answerSub134Dto -> {
@@ -103,8 +118,40 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
 
         // the result output(iq)
         int iq = resultMapping.get(correctAnswer.size());
-        setResult("hasil test iq: " + iq +"\nusia: "+ (ageInMonth));
-        System.out.println("iq");
+
+        String predicate;
+        if(iq>170){
+            predicate = "genius";
+        }else if(iq>139){
+            predicate = "very superior";
+        }else if(iq>119){
+            predicate = "superior";
+        }else if(iq>109){
+            predicate = "high average";
+        }else if(iq>89){
+            predicate = "average";
+        }else if(iq>79){
+            predicate = "below average";
+        }else if(iq>67){
+            predicate = "boderlinemental retardation";
+        }else if(iq>51){
+            predicate = "mild mental retardation";
+        }else if(iq>19){
+            predicate = "mentally defective";
+        }else{
+            predicate = "profund mental retardation";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("iq: ").append(iq).append(",");
+        sb.append("predicate: ").append(predicate);
+        setResult(sb.toString());
+
+        TestResult testResult = new TestResult();
+        testResult.setUser(user);
+        testResult.setTest(testRepository.findTestByName("cfit3").orElseThrow(()->new RuntimeException(getClass().getSimpleName()+" Test not found")));
+        testResult.setResult(getResult());
+        testResultRepository.save(testResult);
     }
 
     private Map<Integer,Integer> getAgeResultKeyValue(String ageRange){

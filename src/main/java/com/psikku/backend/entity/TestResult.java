@@ -23,10 +23,7 @@ public class TestResult {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private int totalRightAnswer;
-
-    private String surveyCategoryAnswer;
-
+    private String result;
 
     @CreationTimestamp
     @Column(name = "creation_date")
@@ -48,20 +45,12 @@ public class TestResult {
         this.test = test;
     }
 
-    public int getTotalRightAnswer() {
-        return totalRightAnswer;
+    public String getResult() {
+        return result;
     }
 
-    public void setTotalRightAnswer(int totalRightAnswer) {
-        this.totalRightAnswer = totalRightAnswer;
-    }
-
-    public String getSurveyCategoryAnswer() {
-        return surveyCategoryAnswer;
-    }
-
-    public void setSurveyCategoryAnswer(String surveyCategoryAnswer) {
-        this.surveyCategoryAnswer = surveyCategoryAnswer;
+    public void setResult(String result) {
+        this.result = result;
     }
 
     public LocalDateTime getDateOfTest() {

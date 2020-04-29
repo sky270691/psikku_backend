@@ -7,6 +7,8 @@ import com.psikku.backend.service.TestService;
 import com.psikku.backend.service.SubmitAnswerService;
 import com.psikku.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,12 +42,13 @@ public class SubmitAnswerController {
 //    }
 
     @PostMapping
-    public String submitAnswers(@RequestBody List<SubmittedAnswerDto> submittedAnswerDto){
+    public ResponseEntity<String> submitAnswers(@RequestBody List<SubmittedAnswerDto> submittedAnswerDto){
 //        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
 //        User user = userService.findByUsername(username);
 //        List<SubmittedAnswer> submittedAnswerList = submitAnswerService.convertToSubmittedAnswerList(submittedAnswerDto,user);
 //        submitAnswerService.saveUserAnswer(submittedAnswerList);
-        return submitAnswerService.calculateResultTest(submittedAnswerDto);
+         submitAnswerService.calculateResultTest(submittedAnswerDto);
 //        return new ArrayList<>();
+        return new ResponseEntity<>("answer submitted successfully",HttpStatus.OK);
     }
 }

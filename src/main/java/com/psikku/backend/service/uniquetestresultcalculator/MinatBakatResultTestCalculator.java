@@ -2,8 +2,11 @@ package com.psikku.backend.service.uniquetestresultcalculator;
 
 import com.psikku.backend.dto.test.SubmittedAnswerDto;
 import com.psikku.backend.entity.Answer;
+import com.psikku.backend.entity.TestResult;
 import com.psikku.backend.entity.User;
 import com.psikku.backend.repository.AnswerRepository;
+import com.psikku.backend.repository.TestRepository;
+import com.psikku.backend.repository.TestResultRepository;
 import com.psikku.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,13 +22,21 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
 
     //Todo
     // Make it same with the minat bakat test name
-    private final String MINATBAKAT_TEST_NAME = "minatbakat";
+    private final String MINATBAKAT_TEST_NAME = "bakat";
 
     @Autowired
     AnswerRepository answerRepository;
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    TestResultRepository testResultRepository;
+
+    @Autowired
+    TestRepository testRepository;
+
+    private String result;
 
     @Override
     public void calculateNewResult(List<SubmittedAnswerDto> submittedAnswerDtoList) {
@@ -35,11 +46,8 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
         int userAgeInMonth = user.getAge(LocalDate.now());
 
 
-        List<SubmittedAnswerDto> minatBakatOnly = submittedAnswerDtoList.stream()
-                                                                        .filter(answers -> answers.getQuestionId().contains("minat"))
-                                                                        .collect(Collectors.toList());
         List<SubmittedAnswerDto> an =
-                minatBakatOnly.stream()
+                submittedAnswerDtoList.stream()
                               .filter(st1 -> {
                                  String[] questionIdSplit = st1.getQuestionId().split("_");
                                  return Integer.parseInt(questionIdSplit[1]) == 1;
@@ -47,7 +55,7 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
                               .collect(Collectors.toList());
 
         List<SubmittedAnswerDto> ge =
-                minatBakatOnly.stream()
+                submittedAnswerDtoList.stream()
                                 .filter(st2 -> {
                                     String[] questionIdSplit = st2.getQuestionId().split("_");
                                     return Integer.parseInt(questionIdSplit[1]) == 2;
@@ -55,14 +63,14 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
                                 .collect(Collectors.toList());
 
         List<SubmittedAnswerDto> ra =
-                minatBakatOnly.stream()
+                submittedAnswerDtoList.stream()
                                .filter(st3 -> {
                                    String[] questionIdSplit = st3.getQuestionId().split("_");
                                    return Integer.parseInt(questionIdSplit[1]) == 3;
                                })
                                .collect(Collectors.toList());
 
-        List<SubmittedAnswerDto> zr = minatBakatOnly;
+        List<SubmittedAnswerDto> zr = submittedAnswerDtoList;
         zr.removeAll(an);
         zr.removeAll(ge);
         zr.removeAll(ra);
@@ -79,12 +87,14 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
         int raMaxCorrectByAge = 0;
         int zrMaxCorrectByAge = 0;
 
-        List<Answer> allMinatBakatAnswerFromDb = answerRepository.findByIdStartingWith(minatBakatOnly.get(0).getQuestionId());
+        String[] answerDtoQuestionIdSplit = submittedAnswerDtoList.get(0).getQuestionId().split("_");
+        String testName = answerDtoQuestionIdSplit[0];
+        List<Answer> allMinatBakatAnswerFromDb = answerRepository.findByIdStartingWith(testName);
 
         // calculate "an" answer
         for (SubmittedAnswerDto anAnswerDto : an) {
             for (Answer ansFromDb : allMinatBakatAnswerFromDb) {
-                if (ansFromDb.getId().equals(anAnswerDto.getAnswers().get(0))) {
+                if (anAnswerDto.getAnswers().get(0).equalsIgnoreCase(ansFromDb.getId())) {
                     if (ansFromDb.getIsCorrect() == 1) {
                         anCorrectAnswers++;
                     }
@@ -96,8 +106,8 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
         // calculate "ge" answer need to sum the answer category 1 or 2
         for (SubmittedAnswerDto geAnswerDto : ge) {
             for (Answer ansFromDb : allMinatBakatAnswerFromDb) {
-                if(ansFromDb.getId().startsWith(MINATBAKAT_TEST_NAME+"_2")){
-                    if(ansFromDb.getAnswerContent().contains(geAnswerDto.getAnswers().get(0))){
+                if(ansFromDb.getId().startsWith(testName+"_2")){
+                    if(ansFromDb.getAnswerContent().equals(geAnswerDto.getAnswers().get(0))){
                         geCorrectAnswers += Integer.parseInt(ansFromDb.getAnswerCategory());
                     }
                 }
@@ -108,23 +118,8 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
         // calculate "ra" answer
         for (SubmittedAnswerDto raAnswerDto : ra){
             for(Answer ansFromDb : allMinatBakatAnswerFromDb){
-                if(ansFromDb.getId().equals(raAnswerDto.getAnswers().get(0))){
-                    String[] splitAnsFromDbContent = ansFromDb.getAnswerContent().split("");
-                    List<Integer> dbAnsList = new ArrayList<>();
-                    for (String s : splitAnsFromDbContent) {
-                        dbAnsList.add(Integer.parseInt(s));
-                    }
-                    List<Integer> userAnsList = new ArrayList<>();
-                    String[] splitAnsFromUser = raAnswerDto.getAnswers().get(0).split("");
-                    for (String s : splitAnsFromUser) {
-                        userAnsList.add(Integer.parseInt(s));
-                    }
-                    dbAnsList.sort(Comparator.naturalOrder());
-                    userAnsList.sort(Comparator.naturalOrder());
-
-                    if(Arrays.equals(dbAnsList.toArray(), userAnsList.toArray())){
-                        raCorrectAnswers++;
-                    }
+                if(ansFromDb.getAnswerContent().equals(raAnswerDto.getAnswers().get(0))){
+                    raCorrectAnswers++;
                 }
             }
         }
@@ -132,23 +127,8 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
         // calculate "zr" answer
         for (SubmittedAnswerDto zrAnswerDto : zr){
             for(Answer ansFromDb : allMinatBakatAnswerFromDb){
-                if(ansFromDb.getId().equals(zrAnswerDto.getAnswers().get(0))){
-                    String[] splitAnsFromDbContent = ansFromDb.getAnswerContent().split("");
-                    List<Integer> dbAnsList = new ArrayList<>();
-                    for (String s : splitAnsFromDbContent) {
-                        dbAnsList.add(Integer.parseInt(s));
-                    }
-                    List<Integer> userAnsList = new ArrayList<>();
-                    String[] splitAnsFromUser = zrAnswerDto.getAnswers().get(0).split("");
-                    for (String s : splitAnsFromUser) {
-                        userAnsList.add(Integer.parseInt(s));
-                    }
-                    dbAnsList.sort(Comparator.naturalOrder());
-                    userAnsList.sort(Comparator.naturalOrder());
-
-                    if(Arrays.equals(dbAnsList.toArray(), userAnsList.toArray())){
-                        zrCorrectAnswers++;
-                    }
+                if(ansFromDb.getAnswerContent().equals(zrAnswerDto.getAnswers().get(0))){
+                    zrCorrectAnswers++;
                 }
             }
         }
@@ -170,29 +150,63 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
         }
 
         //final output per subtest
-        double anPercentage = (double) anCorrectAnswers / (double) anMaxCorrectByAge;
-        double gePercentage = (double) geCorrectAnswers / (double) geMaxCorrectByAge;
-        double raPercentage = (double) raCorrectAnswers / (double) raMaxCorrectByAge;
-        double zrPercentage = (double) zrCorrectAnswers / (double) zrMaxCorrectByAge;
+        double anPercentage = (double) anCorrectAnswers / (double) anMaxCorrectByAge * 100;
+        double gePercentage = (double) geCorrectAnswers / (double) geMaxCorrectByAge * 100 ;
+        double raPercentage = (double) raCorrectAnswers / (double) raMaxCorrectByAge * 100 ;
+        double zrPercentage = (double) zrCorrectAnswers / (double) zrMaxCorrectByAge * 100 ;
 
-        boolean exact = false;
-        boolean nonExact = false;
-        boolean literate = false;
-        boolean numerate = false;
+        double testEksak = (double)(geCorrectAnswers + raCorrectAnswers) / (geCorrectAnswers + raCorrectAnswers + anCorrectAnswers + zrCorrectAnswers)*100;
+        double testNonEksak = (double)(anCorrectAnswers + zrCorrectAnswers) / (geCorrectAnswers + raCorrectAnswers + anCorrectAnswers + zrCorrectAnswers)*100;
+        double testLiterasi = (double) (anCorrectAnswers+geCorrectAnswers) / (anCorrectAnswers + geCorrectAnswers + raCorrectAnswers + zrCorrectAnswers)*100;
+        double testNumerasi = (double) (raCorrectAnswers+zrCorrectAnswers) / (anCorrectAnswers + geCorrectAnswers + raCorrectAnswers + zrCorrectAnswers)*100;
 
+        System.out.println("eksak: "+String.format("%.2f",testEksak));
+        System.out.println("non Eksak: "+String.format("%.2f",testNonEksak));
+        System.out.println("literasi: "+String.format("%.2f",testLiterasi));
+        System.out.println("numerasi: "+String.format("%.2f",testNumerasi));
 
-        //exact vs non exact
-        if((gePercentage + raPercentage) > (anPercentage + zrPercentage)){
-            exact = true;
-        }else if((gePercentage + raPercentage) < (anPercentage + zrPercentage)){
-            nonExact = true;
-        }
+        double eksak = gePercentage + raPercentage;
+        double nonEksak = anPercentage + zrPercentage;
+        double literasi = anPercentage + gePercentage;
+        double numerasi = raPercentage + zrPercentage;
 
-        if((anPercentage + gePercentage) > (raPercentage + zrPercentage)){
-            literate = true;
-        }else if((anPercentage + gePercentage) < (raPercentage + zrPercentage)){
-            numerate = true;
-        }
+        StringBuilder sb = new StringBuilder();
+//        sb.append("Minat bakat").append("\n");
+        sb.append("an: ").append((int)anPercentage).append(",");
+        sb.append("ge: ").append((int)gePercentage).append(",");
+        sb.append("ra: ").append((int)raPercentage).append(",");
+        sb.append("zr: ").append((int)zrPercentage).append(",");
+        sb.append("eksak: ").append(String.format("%.2f",testEksak)).append(",");
+        sb.append("nonEksak: ").append(String.format("%.2f",testNonEksak));
+        sb.append("literasi: ").append(String.format("%.2f",testLiterasi));
+        sb.append("numerasi: ").append(String.format("%.2f",testNumerasi));
+
+        setResult(sb.toString());
+
+        TestResult testResult = new TestResult();
+        testResult.setUser(userRepository.findUserByUsername(username));
+        testResult.setTest(testRepository.findTestByName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
+        testResult.setResult(getResult());
+        testResultRepository.save(testResult);
+
+//        boolean exact = false;
+//        boolean nonExact = false;
+//        boolean literate = false;
+//        boolean numerate = false;
+//
+//
+//        //exact vs non exact
+//        if((gePercentage + raPercentage) > (anPercentage + zrPercentage)){
+//            exact = true;
+//        }else if((gePercentage + raPercentage) < (anPercentage + zrPercentage)){
+//            nonExact = true;
+//        }
+//
+//        if((anPercentage + gePercentage) > (raPercentage + zrPercentage)){
+//            literate = true;
+//        }else if((anPercentage + gePercentage) < (raPercentage + zrPercentage)){
+//            numerate = true;
+//        }
 
 
         // define age range
@@ -233,7 +247,15 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
 
     }
 
-//    private Map<Integer,Integer> getAgeResultKeyValue(String ageRange, String subtestName){
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
+    }
+
+    //    private Map<Integer,Integer> getAgeResultKeyValue(String ageRange, String subtestName){
 //        try(Scanner scanner = new Scanner(new BufferedReader(new FileReader("src/main/resources/static/testresultdata/bakat/minatbakat.pku")))){
 //
 //            Map<Integer,Integer> subTestMap = new LinkedHashMap<>();

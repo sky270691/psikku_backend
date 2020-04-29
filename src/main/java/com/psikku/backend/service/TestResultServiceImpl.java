@@ -1,5 +1,6 @@
 package com.psikku.backend.service;
 
+import com.psikku.backend.dto.testresult.TestFinalResultDto;
 import com.psikku.backend.dto.testresult.TestResultDto;
 import com.psikku.backend.entity.TestResult;
 import com.psikku.backend.exception.TestResultException;
@@ -56,15 +57,17 @@ public class TestResultServiceImpl implements TestResultService {
     }
 
     @Override
-    public TestResultDto convertToTestResultDto(TestResult testResult) {
-        TestResultDto testResultDto = new TestResultDto();
+    public List<TestResult> findAllByUserName(String username) {
+        return testResultRepository.findAllByUser_username(username);
+    }
+
+    @Override
+    public TestFinalResultDto convertToTestResultDto(TestResult testResult) {
+        TestFinalResultDto testResultDto = new TestFinalResultDto();
         if(testResult.getId() != 0){
-            testResultDto.setId(testResult.getId());
-            testResultDto.setTestId(testResult.getTest().getId());
-            testResultDto.setTotalRightAnswer(testResult.getTotalRightAnswer());
-            testResultDto.setSurveyCategoryAnswer(testResult.getSurveyCategoryAnswer());
-            testResultDto.setUserId(testResult.getUser().getId());
-            testResultDto.setTestDate(testResult.getDateOfTest());
+            testResultDto.setTestDescription(testResult.getTest().getDescription());
+            testResultDto.setTestDateTime(testResult.getDateOfTest());
+            testResultDto.setResult(testResult.getResult());
         }
         return testResultDto;
     }

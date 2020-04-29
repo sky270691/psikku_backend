@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface TestResultRepository extends JpaRepository<TestResult, Integer> {
     List<TestResult> findAllByUser_Id(long userId);
+    List<TestResult> findAllByUser_username(String username);
     List<TestResult> findAllByUser_usernameAndDateOfTest(String username, LocalDateTime dateTime);
 }

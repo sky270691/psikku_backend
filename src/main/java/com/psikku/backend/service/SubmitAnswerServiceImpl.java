@@ -4,7 +4,7 @@ import com.psikku.backend.dto.test.SubmittedAnswerDto;
 import com.psikku.backend.entity.*;
 import com.psikku.backend.exception.TestException;
 import com.psikku.backend.repository.*;
-import com.psikku.backend.service.uniquetestresultcalculator.CfitResultTestCalculator;
+import com.psikku.backend.service.uniquetestresultcalculator.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +36,24 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
 
     @Autowired
     CfitResultTestCalculator cfitResultTestCalculator;
+
+    @Autowired
+    BullyResultTestCalculator bullyResultTestCalculator;
+
+    @Autowired
+    EQResultTestCalculator eqResultTestCalculator;
+
+    @Autowired
+    GayaBelajar1ResultTestCalculator gayaBelajar1ResultTestCalculator;
+
+    @Autowired
+    GayaBelajar2ResultTestCalculator gayaBelajar2ResultTestCalculator;
+
+    @Autowired
+    MinatBakatResultTestCalculator minatBakatResultTestCalculator;
+
+    @Autowired
+    SurveyKarakterResultTestCalculator surveyKarakterResultTestCalculator;
 
     @Transactional
     @Override
@@ -238,12 +256,67 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
         // get gaya belajar1 test only
         List<SubmittedAnswerDto> gayaBelajar1Only =
                 submittedAnswerDtoList.stream()
-                        .filter(answerDto -> answerDto.getQuestionId().contains("belajar1".toLowerCase()))
+                        .filter(answerDto -> answerDto.getQuestionId().contains("gayaBelajar1".toLowerCase()))
                         .collect(Collectors.toList());
 
+        // get gaya belajar2 test only
+        List<SubmittedAnswerDto> gayaBelajar2Only =
+                submittedAnswerDtoList.stream()
+                        .filter(answerDto -> answerDto.getQuestionId().contains("gayaBelajar2".toLowerCase()))
+                        .collect(Collectors.toList());
 
-        cfitResultTestCalculator.calculateNewResult(cfitAnswer);
-        return cfitResultTestCalculator.getResult();
+        // get bully test only
+        List<SubmittedAnswerDto> bullyTestOnly =
+                submittedAnswerDtoList.stream()
+                        .filter(answerDto -> answerDto.getQuestionId().contains("bully".toLowerCase()))
+                        .collect(Collectors.toList());
+
+        // get eq test only
+        List<SubmittedAnswerDto> eqTestOnly =
+                submittedAnswerDtoList.stream()
+                        .filter(answerDto -> answerDto.getQuestionId().contains("eq".toLowerCase()))
+                        .collect(Collectors.toList());
+
+        // minatbakat test only
+        List<SubmittedAnswerDto> minatBakatTestOnly =
+                submittedAnswerDtoList.stream()
+                        .filter(answerDto -> answerDto.getQuestionId().contains("bakat".toLowerCase()))
+                        .collect(Collectors.toList());
+
+        // minatbakat test only
+        List<SubmittedAnswerDto> surveyKarakterOnly =
+                submittedAnswerDtoList.stream()
+                        .filter(answerDto -> answerDto.getQuestionId().contains("surveyKarakter".toLowerCase()))
+                        .collect(Collectors.toList());
+        if(!cfitAnswer.isEmpty()){
+            cfitResultTestCalculator.calculateNewResult(cfitAnswer);
+        }
+        if(!bullyTestOnly.isEmpty()){
+            bullyResultTestCalculator.calculateNewResult(bullyTestOnly);
+        }
+        if(!eqTestOnly.isEmpty()){
+            eqResultTestCalculator.calculateNewResult(eqTestOnly);
+        }
+        if(!gayaBelajar1Only.isEmpty()){
+            gayaBelajar1ResultTestCalculator.calculateNewResult(gayaBelajar1Only);
+        }
+        if(!gayaBelajar2Only.isEmpty()){
+            gayaBelajar2ResultTestCalculator.calculateNewResult(gayaBelajar2Only);
+        }
+        if(!minatBakatTestOnly.isEmpty()){
+            minatBakatResultTestCalculator.calculateNewResult(minatBakatTestOnly);
+        }
+        if(!surveyKarakterOnly.isEmpty()){
+            surveyKarakterResultTestCalculator.calculateNewResult(surveyKarakterOnly);
+        }
+
+
+        return eqResultTestCalculator.getResult() +"\n\n"+ bullyResultTestCalculator.getTestResult()
+                +"\n\n"+gayaBelajar1ResultTestCalculator.getResult()
+                +"\n\n"+gayaBelajar2ResultTestCalculator.getResult()
+                +"\n\n"+minatBakatResultTestCalculator.getResult()
+                +"\n\n"+surveyKarakterResultTestCalculator.getTestResult()
+                +"\n\n"+cfitResultTestCalculator.getResult();
     }
 }
 

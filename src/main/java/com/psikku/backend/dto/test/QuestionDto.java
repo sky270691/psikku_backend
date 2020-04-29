@@ -14,7 +14,7 @@ public class QuestionDto{
     @JsonProperty(value = "question_content")
     private List<String> questionContent;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty(value = "question_category", access = JsonProperty.Access.WRITE_ONLY)
     private String questionCategory;
 
     private List<AnswerDto> answers;

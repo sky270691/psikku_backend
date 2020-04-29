@@ -1,5 +1,6 @@
 package com.psikku.backend.controller;
 
+import com.psikku.backend.dto.testresult.TestFinalResultDto;
 import com.psikku.backend.dto.testresult.TestResultDto;
 import com.psikku.backend.entity.TestResult;
 import com.psikku.backend.exception.TestResultException;
@@ -35,17 +36,31 @@ public class TestResultController {
 //        }
 //    }
 
+//    @GetMapping
+//    public List<TestResultDto> getTestResultByUserIdAndDateOfTest(@RequestParam String date,
+//                                                                  @RequestParam String time){
+//        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+//        List<TestResult> testResultList = testResultService.findAllResultByUserNameAndDateOfTest(username, date, time);
+//        List<TestResultDto> testResultDtoList = new ArrayList<>();
+//        if(!testResultList.isEmpty()){
+//            testResultList.forEach(testResult -> testResultDtoList.add(testResultService.convertToTestResultDto(testResult)));
+//            return testResultDtoList;
+//        }else{
+//            throw new TestResultException("No test found");
+//        }
+//    }
+
     @GetMapping
-    public List<TestResultDto> getTestResultByUserIdAndDateOfTest(@RequestParam String date,
-                                                                  @RequestParam String time){
+    public List<TestFinalResultDto> getTestResultByUsername(){
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        List<TestResult> testResultList = testResultService.findAllResultByUserNameAndDateOfTest(username, date, time);
-        List<TestResultDto> testResultDtoList = new ArrayList<>();
+        List<TestResult> testResultList = testResultService.findAllByUserName(username);
+        List<TestFinalResultDto> testFinalResultDtoList = new ArrayList<>();
         if(!testResultList.isEmpty()){
-            testResultList.forEach(testResult -> testResultDtoList.add(testResultService.convertToTestResultDto(testResult)));
-            return testResultDtoList;
+            testResultList.forEach(testResult -> testFinalResultDtoList.add(testResultService.convertToTestResultDto(testResult)));
+            return testFinalResultDtoList;
         }else{
             throw new TestResultException("No test found");
         }
     }
+
 }

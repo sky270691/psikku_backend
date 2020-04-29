@@ -42,11 +42,11 @@ public class TestServiceImpl implements TestService{
         if(!findTest.isPresent()){
             testRepository.save(entityTest);
             // check if the question is survey or not
-            if(entityTest.getIsSurvey()){
-                for(SurveyCategory surveyCategory : entityTest.getSurveyCategoryList()){
-                    surveyCategoryRepository.save(surveyCategory);
-                }
-            }
+//            if(entityTest.getIsSurvey()){
+//                for(SurveyCategory surveyCategory : entityTest.getSurveyCategoryList()){
+//                    surveyCategoryRepository.save(surveyCategory);
+//                }
+//            }
             for(Subtest subtest:entityTest.getSubtestList()){
                 subtestRepository.save(subtest);
                 for(Question question: subtest.getQuestionList()){
@@ -125,11 +125,10 @@ public class TestServiceImpl implements TestService{
                     question.setQuestionCategory("");
                 }
 //                System.out.println(questionDto.getId());
-                String[] questionDtoIdSplit = questionDto.getId().split("_");
-                if(questionDto.getId()!=null && Integer.parseInt(questionDtoIdSplit[2])<0){
-                    question.setId(subtest.getId() + "_" + questionDtoIdSplit[2]);
-                }else{
+                if(questionDto.getId() == null){
                     question.setId(subtest.getId() + "_" + questionId++);
+                }else{
+                    question.setId(questionDto.getId());
                 }
                 StringBuilder wholeQuestion= new StringBuilder();
                 for(int i = 0;i<questionDto.getQuestionContent().size(); i++){
@@ -141,25 +140,22 @@ public class TestServiceImpl implements TestService{
                 }
                 question.setQuestionContent(new String(wholeQuestion));
 
-                if(subtestDto.getTestType().equalsIgnoreCase("survey")){
-                    question.setQuestionCategory(fullTestDto.getId()+"_"+questionDto.getQuestionCategory());
-                }else{
-                    question.setQuestionCategory(fullTestDto.getId()+"_"+-1);
-                }
+
+//                if(subtestDto.getTestType().equalsIgnoreCase("survey")){
+//                    question.setQuestionCategory(fullTestDto.getId()+"_"+questionDto.getQuestionCategory());
+//                }else{
+//                    question.setQuestionCategory(fullTestDto.getId()+"_"+-1);
+//                }
                 questionList.add(question);
                 List<Answer> answerList = new ArrayList<>();
                 if(questionDto.getAnswers() != null){
                     for(AnswerDto answerDto:questionDto.getAnswers()){
                         Answer answer = new Answer();
-                        answer.setId(answerDto.getId());
+                        answer.setId(question.getId()+"_"+answerDto.getId());
                         answer.setAnswerContent(answerDto.getAnswerContent());
-                        if(subtestDto.getTestType().equalsIgnoreCase("survey")){
-                            answer.setAnswerCategory(answerDto.getAnswerCategory());
-                            answer.setIsCorrect(-1);
-                        }else{
-                            answer.setIsCorrect(answerDto.getIsCorrect());
-//                            answer.setAnswerCategory("");
-                        }
+                        answer.setAnswerCategory(answerDto.getAnswerCategory());
+                        answer.setIsCorrect(answerDto.getIsCorrect());
+
                         answerList.add(answer);
                     }
                 }
