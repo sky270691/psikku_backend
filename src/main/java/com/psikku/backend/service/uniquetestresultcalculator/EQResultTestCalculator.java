@@ -80,12 +80,12 @@ public class EQResultTestCalculator implements UniqueResultTestCalculator{
         double eqTotal = (mengenalEmosiDiriPercentage + mengelolaEmosiPercentage + memotivasiDiriPercentage + mengenalEmosiOrgLainPercentage + membinaHubunganPercentage)/5;
 
         StringBuilder sb = new StringBuilder();
-        sb.append("mengenal emosi diri: ").append((int)mengenalEmosiDiriPercentage).append(",");
-        sb.append("mengelola emosi diri: ").append((int)mengelolaEmosiPercentage).append(",");
-        sb.append("memotivasi diri: ").append((int)memotivasiDiriPercentage).append(",");
-        sb.append("mengenal emosi orang lain: ").append((int)mengenalEmosiOrgLainPercentage).append(",");
-        sb.append("membina hubungan: ").append((int)membinaHubunganPercentage).append(",");
-        sb.append("EQ: ").append(eqTotal);
+        sb.append("mengenal emosi diri:").append((int)mengenalEmosiDiriPercentage).append(",");
+        sb.append("mengelola emosi diri:").append((int)mengelolaEmosiPercentage).append(",");
+        sb.append("memotivasi diri:").append((int)memotivasiDiriPercentage).append(",");
+        sb.append("mengenal emosi orang lain:").append((int)mengenalEmosiOrgLainPercentage).append(",");
+        sb.append("membina hubungan:").append((int)membinaHubunganPercentage).append(",");
+        sb.append("EQ:").append(eqTotal);
 
         setResult(sb.toString());
 

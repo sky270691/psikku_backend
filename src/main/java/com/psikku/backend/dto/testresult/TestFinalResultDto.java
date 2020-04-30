@@ -1,10 +1,13 @@
 package com.psikku.backend.dto.testresult;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class TestFinalResultDto {
 
+    @JsonProperty("test_name")
     private String testDescription;
     private LocalDateTime testDateTime;
     private String result;

@@ -64,9 +64,20 @@ public class UserController {
         return new ResponseEntity<>(userRegisterResponse,HttpStatus.OK);
     }
 
+    @PostMapping(value = "/login")
+    public TokenFactory login (@RequestPart String username, @RequestPart String password){
+        try{
+            TokenFactory tokenFactory = userService.loginExistingUser(username,password);
+            return tokenFactory;
+        }catch (RuntimeException e){
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "incorrect username or password",e);
+        }
+    }
 
-    @PostMapping("/login")
-    public TokenFactory login(@RequestHeader("Authorization") String header) {
+
+    @PostMapping("/loginV2")
+    public TokenFactory loginV2(@RequestHeader("Authorization") String header) {
         String[] credentialWithBasic = header.split(" ");
         byte[] decoded = Base64.getDecoder().decode(credentialWithBasic[1]);
         String fullCredential = new String(decoded);

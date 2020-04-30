@@ -78,10 +78,10 @@ public class SurveyKarakterResultTestCalculator implements UniqueResultTestCalcu
 
         StringBuilder sb = new StringBuilder();
 //        sb.append("SURVEY KARAKTER").append("\n");
-        sb.append("Toleransi: ").append((int)toleransiPercentage).append(",");
-        sb.append("Gotong Royong: ").append((int)gotongRoyongPercentage).append(",");
-        sb.append("Well being: ").append((int)wellbeingPercentage).append(",");
-        sb.append("pluralisme: ").append((int)pluralismePercentage);
+        sb.append("Toleransi:").append((int)toleransiPercentage).append(",");
+        sb.append("Gotong Royong:").append((int)gotongRoyongPercentage).append(",");
+        sb.append("Well being:").append((int)wellbeingPercentage).append(",");
+        sb.append("pluralisme:").append((int)pluralismePercentage);
 
         setTestResult(sb.toString());
 

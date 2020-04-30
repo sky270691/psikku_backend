@@ -98,8 +98,8 @@ public class GayaBelajar2ResultTestCalculator implements UniqueResultTestCalcula
 
         StringBuilder sb = new StringBuilder();
 //        sb.append(resultKeyValue).append("\n");
-        sb.append("Highest Category: ").append(highestCategory).append(",");
-        sb.append("Combination Category: ").append(ceAc.get(0)).append("+").append(roAe.get(0));
+        sb.append("Highest Category:").append(highestCategory).append(",");
+        sb.append("Combination Category:").append(ceAc.get(0)).append("+").append(roAe.get(0));
 
         setResult(sb.toString());
 

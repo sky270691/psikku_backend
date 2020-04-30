@@ -143,8 +143,8 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.append("iq: ").append(iq).append(",");
-        sb.append("predicate: ").append(predicate);
+        sb.append("iq:").append(iq).append(",");
+        sb.append("predicate:").append(predicate);
         setResult(sb.toString());
 
         TestResult testResult = new TestResult();

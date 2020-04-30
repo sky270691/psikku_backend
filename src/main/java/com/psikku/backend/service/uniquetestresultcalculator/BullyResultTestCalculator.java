@@ -95,11 +95,11 @@ public class BullyResultTestCalculator implements UniqueResultTestCalculator{
         double cyberPercentage = (double)  cyber/maxVerbalAndCyber * 100;
 
         StringBuilder sb = new StringBuilder();
-        sb.append("fisik: "+(int)fisikPercentage+",");
-        sb.append("verbal: "+(int)verbalPercentage+",");
-        sb.append("nonVerbal: "+(int)nonVerbalPercentage+",");
-        sb.append("relasional: "+(int)relasionalPercentage+",");
-        sb.append("cyber: "+(int)cyberPercentage+",");
+        sb.append("fisik:"+(int)fisikPercentage+",");
+        sb.append("verbal:"+(int)verbalPercentage+",");
+        sb.append("nonVerbal:"+(int)nonVerbalPercentage+",");
+        sb.append("relasional:"+(int)relasionalPercentage+",");
+        sb.append("cyber:"+(int)cyberPercentage+",");
 
         setTestResult(sb.toString());
 

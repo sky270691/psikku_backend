@@ -60,9 +60,9 @@ public class GayaBelajar1ResultTestCalculator implements UniqueResultTestCalcula
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.append("visual: ").append(visual).append(",");
-        sb.append("auditori: ").append(auditori).append(",");
-        sb.append("kinestetik: ").append(kinestetik).append(",");
+        sb.append("visual:").append(visual).append(",");
+        sb.append("auditori:").append(auditori).append(",");
+        sb.append("kinestetik:").append(kinestetik);
         setResult(sb.toString());
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();

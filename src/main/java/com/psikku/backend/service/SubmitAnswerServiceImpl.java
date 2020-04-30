@@ -250,7 +250,7 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
 
         // get cfit3 answer only
         List<SubmittedAnswerDto> cfitAnswer = submittedAnswerDtoList.stream()
-                .filter(answer -> answer.getQuestionId().contains("cfit3"))
+                .filter(answer -> answer.getQuestionId().contains("cfit"))
                 .collect(Collectors.toList());
 
         // get gaya belajar1 test only

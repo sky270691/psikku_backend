@@ -172,14 +172,14 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
 
         StringBuilder sb = new StringBuilder();
 //        sb.append("Minat bakat").append("\n");
-        sb.append("an: ").append((int)anPercentage).append(",");
-        sb.append("ge: ").append((int)gePercentage).append(",");
-        sb.append("ra: ").append((int)raPercentage).append(",");
-        sb.append("zr: ").append((int)zrPercentage).append(",");
-        sb.append("eksak: ").append(String.format("%.2f",testEksak)).append(",");
-        sb.append("nonEksak: ").append(String.format("%.2f",testNonEksak));
-        sb.append("literasi: ").append(String.format("%.2f",testLiterasi));
-        sb.append("numerasi: ").append(String.format("%.2f",testNumerasi));
+        sb.append("an:").append((int)anPercentage).append(",");
+        sb.append("ge:").append((int)gePercentage).append(",");
+        sb.append("ra:").append((int)raPercentage).append(",");
+        sb.append("zr:").append((int)zrPercentage).append(",");
+        sb.append("eksak:").append(String.format("%.2f",testEksak)).append(",");
+        sb.append("nonEksak:").append(String.format("%.2f",testNonEksak)).append(",");
+        sb.append("literasi:").append(String.format("%.2f",testLiterasi)).append(",");
+        sb.append("numerasi:").append(String.format("%.2f",testNumerasi));
 
         setResult(sb.toString());
 
