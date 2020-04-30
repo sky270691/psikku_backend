@@ -49,6 +49,6 @@ public class SubmitAnswerController {
 //        submitAnswerService.saveUserAnswer(submittedAnswerList);
          submitAnswerService.calculateResultTest(submittedAnswerDto);
 //        return new ArrayList<>();
-        return new ResponseEntity<>("answer submitted successfully",HttpStatus.OK);
+        return new ResponseEntity<>("success",HttpStatus.OK);
     }
 }
