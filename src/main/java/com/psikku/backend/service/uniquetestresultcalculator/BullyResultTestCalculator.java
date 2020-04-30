@@ -95,11 +95,11 @@ public class BullyResultTestCalculator implements UniqueResultTestCalculator{
         double cyberPercentage = (double)  cyber/maxVerbalAndCyber * 100;
 
         StringBuilder sb = new StringBuilder();
-        sb.append("fisik:"+(int)fisikPercentage+",");
-        sb.append("verbal:"+(int)verbalPercentage+",");
-        sb.append("nonVerbal:"+(int)nonVerbalPercentage+",");
-        sb.append("relasional:"+(int)relasionalPercentage+",");
-        sb.append("cyber:"+(int)cyberPercentage+",");
+        sb.append("fisik:"+(int)fisikPercentage).append(":").append(perCategoryPredicate(fisikPercentage)).append(",");
+        sb.append("verbal:"+(int)verbalPercentage).append(":").append(perCategoryPredicate(verbalPercentage)).append(",");
+        sb.append("nonVerbal:"+(int)nonVerbalPercentage).append(":").append(perCategoryPredicate(nonVerbalPercentage)).append(",");
+        sb.append("relasional:"+(int)relasionalPercentage).append(":").append(perCategoryPredicate(relasionalPercentage)).append(",");
+        sb.append("cyber:"+(int)cyberPercentage).append(":").append(perCategoryPredicate(cyberPercentage));
 
         setTestResult(sb.toString());
 
@@ -109,6 +109,16 @@ public class BullyResultTestCalculator implements UniqueResultTestCalculator{
         testResult.setUser(userRepository.findUserByUsername(username));
         testResult.setResult(getTestResult());
         resultRepository.save(testResult);
+    }
+
+    private String perCategoryPredicate(double resultValue){
+        if(resultValue < 33.33){
+            return "rendah";
+        }else if(resultValue < 66.66){
+            return "sedang";
+        }else {
+            return "tinggi";
+        }
     }
 
     public String getTestResult() {

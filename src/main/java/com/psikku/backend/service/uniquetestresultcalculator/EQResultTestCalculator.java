@@ -77,15 +77,28 @@ public class EQResultTestCalculator implements UniqueResultTestCalculator{
         double mengenalEmosiOrgLainPercentage = (double) mengenalEmosiOrgLain / maxPointEveryCategory * 100;
         double membinaHubunganPercentage = (double) membinaHubungan / maxPointEveryCategory * 100;
 
+
         double eqTotal = (mengenalEmosiDiriPercentage + mengelolaEmosiPercentage + memotivasiDiriPercentage + mengenalEmosiOrgLainPercentage + membinaHubunganPercentage)/5;
+        String eqTotalCategoryString;
+        if(eqTotal>-1){
+            eqTotalCategoryString = "kurang sekali";
+        }else if(eqTotal>20){
+            eqTotalCategoryString = "kurang";
+        }else if(eqTotal>40){
+            eqTotalCategoryString = "sedang";
+        }else if(eqTotal>60){
+            eqTotalCategoryString = "tinggi";
+        }else {
+            eqTotalCategoryString = "tinggi sekali";
+        }
 
         StringBuilder sb = new StringBuilder();
-        sb.append("mengenal emosi diri:").append((int)mengenalEmosiDiriPercentage).append(",");
-        sb.append("mengelola emosi diri:").append((int)mengelolaEmosiPercentage).append(",");
-        sb.append("memotivasi diri:").append((int)memotivasiDiriPercentage).append(",");
-        sb.append("mengenal emosi orang lain:").append((int)mengenalEmosiOrgLainPercentage).append(",");
-        sb.append("membina hubungan:").append((int)membinaHubunganPercentage).append(",");
-        sb.append("EQ:").append(eqTotal);
+        sb.append("mengenal emosi diri:").append((int)mengenalEmosiDiriPercentage).append(":").append(perCategoryPredicate(mengenalEmosiDiriPercentage)).append(",");
+        sb.append("mengelola emosi diri:").append((int)mengelolaEmosiPercentage).append(":").append(perCategoryPredicate(mengelolaEmosiPercentage)).append(",");
+        sb.append("memotivasi diri:").append((int)memotivasiDiriPercentage).append(":").append(perCategoryPredicate(memotivasiDiriPercentage)).append(",");
+        sb.append("mengenal emosi orang lain:").append((int)mengenalEmosiOrgLainPercentage).append(":").append(perCategoryPredicate(mengenalEmosiOrgLainPercentage)).append(",");
+        sb.append("membina hubungan:").append((int)membinaHubunganPercentage).append(":").append(perCategoryPredicate(membinaHubunganPercentage)).append(",");
+        sb.append("EQ:").append(eqTotal).append(":").append(eqTotalCategoryString);
 
         setResult(sb.toString());
 
@@ -95,6 +108,18 @@ public class EQResultTestCalculator implements UniqueResultTestCalculator{
         testResult.setTest(testRepository.findTestByName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
         testResult.setResult(getResult());
         testResultRepository.save(testResult);
+    }
+
+    private String perCategoryPredicate(double resultValue){
+        if(resultValue < 25){
+            return "sangat kurang";
+        }else if(resultValue < 50){
+            return "kurang";
+        }else if(resultValue < 75){
+            return "cukup baik";
+        }else{
+            return "sangat baik";
+        }
     }
 
     public String getResult() {

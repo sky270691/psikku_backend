@@ -78,10 +78,10 @@ public class SurveyKarakterResultTestCalculator implements UniqueResultTestCalcu
 
         StringBuilder sb = new StringBuilder();
 //        sb.append("SURVEY KARAKTER").append("\n");
-        sb.append("Toleransi:").append((int)toleransiPercentage).append(",");
-        sb.append("Gotong Royong:").append((int)gotongRoyongPercentage).append(",");
-        sb.append("Well being:").append((int)wellbeingPercentage).append(",");
-        sb.append("pluralisme:").append((int)pluralismePercentage);
+        sb.append("Toleransi:").append((int)toleransiPercentage).append(":").append(perCategoryPredicate(toleransiPercentage)).append(",");
+        sb.append("Gotong Royong:").append((int)gotongRoyongPercentage).append(":").append(perCategoryPredicate(gotongRoyongPercentage)).append(",");
+        sb.append("Well being:").append((int)wellbeingPercentage).append(":").append(perCategoryPredicate(wellbeingPercentage)).append(",");
+        sb.append("pluralisme:").append((int)pluralismePercentage).append(":").append(perCategoryPredicate(pluralismePercentage));
 
         setTestResult(sb.toString());
 
@@ -91,6 +91,20 @@ public class SurveyKarakterResultTestCalculator implements UniqueResultTestCalcu
         testResult.setTest(testRepository.findTestByName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
         testResult.setResult(getTestResult());
         testResultRepository.save(testResult);
+    }
+
+    private String perCategoryPredicate(double resultValue){
+        if(resultValue < 20){
+            return "kurang sekali";
+        }else if(resultValue < 40){
+            return "kurang";
+        }else if(resultValue < 60){
+            return "cukup";
+        }else if(resultValue < 80){
+            return "cukup baik";
+        }else {
+            return "baik";
+        }
     }
 
     public String getTestResult() {
