@@ -5,7 +5,6 @@ import com.psikku.backend.dto.user.UserRegisterDto;
 import com.psikku.backend.dto.user.UserRegisterResponse;
 import com.psikku.backend.entity.TokenFactory;
 import com.psikku.backend.entity.User;
-import com.psikku.backend.service.CustomClientTokenService;
 import com.psikku.backend.service.TokenService;
 import com.psikku.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -38,7 +38,9 @@ public class UserController {
     }
 
     @GetMapping
-    public List<UserDto> getAllUser(){
+    public List<UserDto> getAllUser(HttpServletRequest request){
+        System.out.println(request.getRemoteHost());
+
         List<User> userList = userService.findAll();
         List<UserDto> userDtoList = new ArrayList<>();
         for(User user : userList){
@@ -47,10 +49,21 @@ public class UserController {
         return userDtoList;
     }
 
-    @PostMapping(value = "/register", consumes = "multipart/form-data")
-    public ResponseEntity<UserRegisterResponse> register(@Valid UserRegisterDto userRegisterDto) {
-        System.out.println(userRegisterDto);
+    @PostMapping("/register")
+    public ResponseEntity<UserRegisterResponse> register(@Valid @RequestBody UserRegisterDto userRegisterDto) {
+        System.out.println(userRegisterDto.getUsername());
+
+
+//        dummy response
+//        UserRegisterResponse response = new UserRegisterResponse();
+//        response.setStatus("success");
+//        response.setMessage("success");
+//        response.setUsername(userRegisterDto.getUsername());
+//        response.setId(0);
+
+
         return userService.registerNewUserToAuthServer(userRegisterDto);
+//        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 //
 //    @PostMapping(value = "/register")
@@ -106,7 +119,16 @@ public class UserController {
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         User user = userService.findByUsername(username);
         UserDto userDto = userService.convertToUserDto(user);
+
+        userDto.setFirstname(firstLetterUpperCase(userDto.getFirstname()));
+        userDto.setLastname(firstLetterUpperCase(userDto.getLastname()));
         return userDto;
+    }
+
+    private String firstLetterUpperCase(String textToCapitalize){
+        String[] textSplit = textToCapitalize.split("");
+        String result = textSplit[0].toUpperCase()+textToCapitalize.substring(1);
+        return result;
     }
 
 }

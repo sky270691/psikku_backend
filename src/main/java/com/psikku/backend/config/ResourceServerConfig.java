@@ -44,6 +44,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/api/users/info").fullyAuthenticated()
                 .antMatchers("/api/tests*/*").fullyAuthenticated()
                 .antMatchers("/api/users/login").permitAll()
+                .antMatchers("/api/users/register").permitAll()
 //                .antMatchers("/api/users/login").permitAll()
 //            .antMatchers("/api/**").permitAll()
 //                .antMatchers("/api/**").hasRole("USER")

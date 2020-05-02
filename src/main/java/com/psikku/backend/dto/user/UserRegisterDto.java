@@ -1,5 +1,6 @@
 package com.psikku.backend.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.psikku.backend.validation.AgeValidation;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -33,6 +34,7 @@ public class UserRegisterDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private List<RoleRegisterDto> roles;
 
     public String getFirstname() {

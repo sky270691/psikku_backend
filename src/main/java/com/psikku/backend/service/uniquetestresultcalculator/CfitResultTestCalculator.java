@@ -156,6 +156,7 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
     }
 
     private Map<Integer,Integer> getAgeResultKeyValue(String ageRange){
+        // /opt/tomcat/webapps/backend/WEB-INF/classes/static/testresultdata/cfit/cfit3.pku -->> for live apps
         try(Scanner scanner = new Scanner(new BufferedReader(new FileReader("src/main/resources/static/testresultdata/cfit/cfit3.pku")))){
 
             Map<Integer,Integer> map = new LinkedHashMap<>();

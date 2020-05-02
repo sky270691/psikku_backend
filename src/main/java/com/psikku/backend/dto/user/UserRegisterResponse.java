@@ -1,5 +1,8 @@
 package com.psikku.backend.dto.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class UserRegisterResponse {
 
     private long id;
