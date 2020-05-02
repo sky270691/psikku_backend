@@ -283,7 +283,7 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
                         .filter(answerDto -> answerDto.getQuestionId().contains("bakat".toLowerCase()))
                         .collect(Collectors.toList());
 
-        // minatbakat test only
+        // survey karakter test only
         List<SubmittedAnswerDto> surveyKarakterOnly =
                 submittedAnswerDtoList.stream()
                         .filter(answerDto -> answerDto.getQuestionId().contains("surveyKarakter".toLowerCase()))

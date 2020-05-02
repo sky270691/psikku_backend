@@ -76,7 +76,7 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
 
         // subtest 1 3 4 calculation
         cfitAnswer.forEach(answerSub134Dto -> {
-            Answer tempAnswer = answerRepository.findById(answerSub134Dto.getAnswers().get(0)).orElseThrow(()->
+            Answer tempAnswer = answerRepository.findById(answerSub134Dto.getAnswers().get(0).toLowerCase()).orElseThrow(()->
                     new RuntimeException("tempAnswer not Found"));
             Answer[] answers = {tempAnswer};
             if(tempAnswer.getIsCorrect() == 1){
@@ -86,8 +86,9 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
 
         // subtest 2 calculation (2 right answers)
         subtest2.forEach(answerSub2Dto -> {
-            String answer1String = Optional.of(answerSub2Dto.getAnswers().get(0)).orElse("");
-            String answer2String = Optional.of(answerSub2Dto.getAnswers().get(1)).orElse("");
+            String answer1String = Optional.of(answerSub2Dto.getAnswers().get(0).toLowerCase()).orElse("");
+            String answer2String = Optional.of(answerSub2Dto.getAnswers().get(1).toLowerCase()).orElse("");
+
             if(!answer1String.equals("") && !answer2String.equals("")){
                 Answer answer1 = answerRepository.findById(answer1String).orElse(null);
                 Answer answer2 = answerRepository.findById(answer2String).orElse(null);

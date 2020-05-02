@@ -36,7 +36,7 @@ public class EQResultTestCalculator implements UniqueResultTestCalculator{
     @Override
     public void calculateNewResult(List<SubmittedAnswerDto> EQAnsDtoOnly) {
         String[] EQAnsOnlyIdSplit = EQAnsDtoOnly.get(0).getQuestionId().split("_");
-        String testName = EQAnsOnlyIdSplit[0];
+        String testName = EQAnsOnlyIdSplit[0].toLowerCase();
         List<Answer> EQansFromDb =
                 answerRepository.findByIdStartingWith(testName);
         List<Question> questionsFromDb = questionRepository.findByIdStartingWith(testName);

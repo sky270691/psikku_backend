@@ -52,7 +52,7 @@ public class CustomClientTokenService implements TokenService{
             responseEntity = restTemplate.postForEntity(endpoint,entity, TokenFactory.class);
         } catch (RestClientException e) {
             e.printStackTrace();
-            throw new BadCredentialsException("Error User Name or Password");
+            throw new BadCredentialsException(getClass().getSimpleName()+": "+"Error User Name or Password");
         }
 //        TokenFactory tf = responseEntity.getBody();
 //        ExtractedToken extractedToken = extractToken(tf.getAccess_token());

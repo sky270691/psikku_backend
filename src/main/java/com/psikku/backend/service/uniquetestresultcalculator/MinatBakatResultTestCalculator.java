@@ -68,12 +68,14 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
                                    String[] questionIdSplit = st3.getQuestionId().split("_");
                                    return Integer.parseInt(questionIdSplit[1]) == 3;
                                })
+                               .peek(zrTest -> zrTest.setQuestionId(zrTest.getQuestionId().toLowerCase()))
                                .collect(Collectors.toList());
 
         List<SubmittedAnswerDto> zr = submittedAnswerDtoList;
         zr.removeAll(an);
         zr.removeAll(ge);
         zr.removeAll(ra);
+        zr.forEach(zrTest -> zrTest.setQuestionId(zrTest.getQuestionId().toLowerCase()));
 
         //Todo
         // setup percentage for outputting the result

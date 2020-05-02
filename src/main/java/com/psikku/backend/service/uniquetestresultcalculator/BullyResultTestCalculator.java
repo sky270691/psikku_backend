@@ -44,7 +44,8 @@ public class BullyResultTestCalculator implements UniqueResultTestCalculator{
 
         String[] bullyAnsSplit = bullyAnsDtoOnly.get(0).getQuestionId().split("_");
 
-        List<Question> questionsFromDb = questionRepository.findByIdStartingWith(bullyAnsSplit[0]);
+
+        List<Question> questionsFromDb = questionRepository.findByIdStartingWith(bullyAnsSplit[0].toLowerCase());
 //        for (Question question : questionsFromDb) {
 //            System.out.println(question.getId());
 //        }

@@ -34,7 +34,7 @@ public class GayaBelajar1ResultTestCalculator implements UniqueResultTestCalcula
     public void calculateNewResult(List<SubmittedAnswerDto> gayaBelajar1Only) {
 
         String[] gayaBelajar1QuestionIdSplit = gayaBelajar1Only.get(0).getQuestionId().split("_");
-        String testName = gayaBelajar1QuestionIdSplit[0];
+        String testName = gayaBelajar1QuestionIdSplit[0].toLowerCase();
         List<Answer> gayaBelajar1AnswerFromDb = answerRepository.findByIdStartingWith(testName);
 
         int visual = 0;
