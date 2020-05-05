@@ -5,6 +5,8 @@ import com.psikku.backend.dto.testresult.TestResultDto;
 import com.psikku.backend.entity.TestResult;
 import com.psikku.backend.exception.TestResultException;
 import com.psikku.backend.service.TestResultService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +20,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/result")
 public class TestResultController {
+
+    public final Logger logger = LoggerFactory.getLogger(TestResultController.class);
 
     @Autowired
     TestResultService testResultService;
@@ -57,8 +61,10 @@ public class TestResultController {
         List<TestFinalResultDto> testFinalResultDtoList = new ArrayList<>();
         if(!testResultList.isEmpty()){
             testResultList.forEach(testResult -> testFinalResultDtoList.add(testResultService.convertToTestResultDto(testResult)));
+            logger.info("username: '"+username+"' getting test result success");
             return testFinalResultDtoList;
         }else{
+            logger.error("username: '"+username+"' no test found");
             throw new TestResultException("No test found");
         }
     }

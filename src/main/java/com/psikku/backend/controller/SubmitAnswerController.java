@@ -6,6 +6,8 @@ import com.psikku.backend.entity.User;
 import com.psikku.backend.service.TestService;
 import com.psikku.backend.service.SubmitAnswerService;
 import com.psikku.backend.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,8 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/user-answers")
 public class SubmitAnswerController {
+
+    public final Logger logger = LoggerFactory.getLogger(SubmitAnswerController.class);
 
     @Autowired
     UserService userService;
@@ -43,12 +47,15 @@ public class SubmitAnswerController {
 
     @PostMapping
     public ResponseEntity<String> submitAnswers(@RequestBody List<SubmittedAnswerDto> submittedAnswerDto){
-//        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        logger.info("username: '"+username+"' try to submit answer");
 //        User user = userService.findByUsername(username);
 //        List<SubmittedAnswer> submittedAnswerList = submitAnswerService.convertToSubmittedAnswerList(submittedAnswerDto,user);
 //        submitAnswerService.saveUserAnswer(submittedAnswerList);
          submitAnswerService.calculateResultTest(submittedAnswerDto);
 //        return new ArrayList<>();
+
+        logger.info("username: '"+username+"' answer's calculated successfully");
         return new ResponseEntity<>("success",HttpStatus.OK);
     }
 }

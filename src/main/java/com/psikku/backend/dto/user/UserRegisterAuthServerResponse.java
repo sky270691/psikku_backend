@@ -14,6 +14,7 @@ public class UserRegisterAuthServerResponse {
     private String lastname;
     private String sex;
     private LocalDateTime createTime;
+    private LocalDateTime modifiedTime;
     private LocalDate dateOfBirth;
 
     public long getId() {
@@ -96,5 +97,11 @@ public class UserRegisterAuthServerResponse {
         this.createTime = createTime;
     }
 
+    public LocalDateTime getModifiedTime() {
+        return modifiedTime;
+    }
 
+    public void setModifiedTime(LocalDateTime modifiedTime) {
+        this.modifiedTime = modifiedTime;
+    }
 }

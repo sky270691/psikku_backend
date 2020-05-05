@@ -5,6 +5,8 @@ import com.psikku.backend.entity.Answer;
 import com.psikku.backend.entity.Question;
 import com.psikku.backend.entity.TestResult;
 import com.psikku.backend.repository.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,8 @@ import java.util.List;
 
 @Service
 public class BullyResultTestCalculator implements UniqueResultTestCalculator{
+
+    public final Logger logger = LoggerFactory.getLogger(BullyResultTestCalculator.class);
 
     @Autowired
     AnswerRepository answerRepository;
@@ -110,6 +114,7 @@ public class BullyResultTestCalculator implements UniqueResultTestCalculator{
         testResult.setUser(userRepository.findUserByUsername(username));
         testResult.setResult(getTestResult());
         resultRepository.save(testResult);
+        logger.info("username: '"+username+"' BULLY answer calculated successfully");
     }
 
     private String perCategoryPredicate(double resultValue){

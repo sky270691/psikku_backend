@@ -7,6 +7,8 @@ import com.psikku.backend.repository.AnswerRepository;
 import com.psikku.backend.repository.TestRepository;
 import com.psikku.backend.repository.TestResultRepository;
 import com.psikku.backend.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,8 @@ import java.util.List;
 
 @Service
 public class GayaBelajar1ResultTestCalculator implements UniqueResultTestCalculator {
+
+    public final Logger logger = LoggerFactory.getLogger(GayaBelajar1ResultTestCalculator.class);
 
     @Autowired
     UserRepository userRepository;
@@ -71,7 +75,7 @@ public class GayaBelajar1ResultTestCalculator implements UniqueResultTestCalcula
         testResult.setTest(testRepository.findTestByName(testName.toLowerCase()).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
         testResult.setResult(getResult());
         testResultRepository.save(testResult);
-
+        logger.info("username: '"+username+"' GB1 answer calculated successfully");
     }
 
     public String getResult() {

@@ -29,6 +29,9 @@ public class UserServiceImpl implements UserService {
     @Value(value = "${auth-server.endpoint.users}")
     private String usersEndpoint;
 
+    @Value("${auth-server.endpoint.searchuser}")
+    private String userSearchEndpoint;
+
     @Override
     public List<User> findAll() {
 //        return userRepository.findAll(Sort.by("email").ascending());
@@ -74,6 +77,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public ResponseEntity<UserRegisterResponse> updateUser(UserRegisterDto userRegisterDto){
+        User user = userRepository.findUserByUsername(userRegisterDto.getUsername());
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<UserRegisterResponse> searchResponse = restTemplate.getForEntity(userSearchEndpoint,UserRegisterResponse.class,userRegisterDto.getUsername());
+
+        if(searchResponse.getBody() != null && searchResponse.getBody().getUsername().equalsIgnoreCase(userRegisterDto.getUsername())){
+            restTemplate.put(usersEndpoint,userRegisterDto);
+            user.setFirstname(userRegisterDto.getFirstname());
+            user.setLastname(userRegisterDto.getLastname());
+            user.setSex(userRegisterDto.getSex());
+            user.setDateOfBirth(userRegisterDto.getDateOfBirth());
+
+            UserRegisterResponse response = new UserRegisterResponse();
+            response.setStatus("success");
+            response.setMessage("userdata for username " +userRegisterDto.getUsername()+" updated successfully");
+            response.setUsername(userRegisterDto.getUsername());
+            response.setId(user.getId());
+            userRepository.save(user);
+            return new ResponseEntity<>(response,HttpStatus.OK);
+        }
+        System.out.println("Error update user");
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
     @Transactional
     public TokenFactory loginExistingUser(String username, String password) {
         TokenFactory tf = clientTokenService.getToken(username,password).getBody();
@@ -92,6 +120,7 @@ public class UserServiceImpl implements UserService {
         user.setSex(userRegisterAuthServerResponse.getSex());
         user.setEmail(userRegisterAuthServerResponse.getEmail());
         user.setCreateTime(userRegisterAuthServerResponse.getCreateTime());
+        user.setModifiedTime(userRegisterAuthServerResponse.getModifiedTime());
         user.setDateOfBirth(userRegisterAuthServerResponse.getDateOfBirth());
 
         return user;

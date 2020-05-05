@@ -15,6 +15,7 @@ public interface UserService {
     User findByUsername(String username);
     ResponseEntity<UserRegisterResponse> registerNewUserToAuthServer(UserRegisterDto userRegisterDto);
     TokenFactory loginExistingUser(String username, String password);
+    ResponseEntity<UserRegisterResponse> updateUser(UserRegisterDto userRegisterDto);
     List<User> findAll();
     UserDto convertToUserDto(User user);
     String getUserNameFromToken(String token);

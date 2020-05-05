@@ -5,6 +5,8 @@ import com.psikku.backend.entity.Answer;
 import com.psikku.backend.entity.Question;
 import com.psikku.backend.entity.TestResult;
 import com.psikku.backend.repository.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,8 @@ import java.util.List;
 
 @Service
 public class EQResultTestCalculator implements UniqueResultTestCalculator{
+
+    public final Logger logger = LoggerFactory.getLogger(EQResultTestCalculator.class);
 
     @Autowired
     AnswerRepository answerRepository;
@@ -108,6 +112,7 @@ public class EQResultTestCalculator implements UniqueResultTestCalculator{
         testResult.setTest(testRepository.findTestByName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
         testResult.setResult(getResult());
         testResultRepository.save(testResult);
+        logger.info("username: '"+username+"' EQ answer calculated successfully");
     }
 
     private String perCategoryPredicate(double resultValue){

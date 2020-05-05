@@ -9,7 +9,10 @@ import com.psikku.backend.repository.TestRepository;
 import com.psikku.backend.repository.TestResultRepository;
 import com.psikku.backend.repository.UserRepository;
 import com.psikku.backend.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +27,12 @@ import java.util.stream.Collectors;
 @Service
 public class CfitResultTestCalculator implements UniqueResultTestCalculator {
 
+    public final Logger logger = LoggerFactory.getLogger(CfitResultTestCalculator.class);
+
     private String result;
+
+    @Value("${cfit-pku.location}")
+    private String cfitPkuLocation;
 
     @Autowired
     UserService userService;
@@ -101,6 +109,8 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
             }
         });
 
+        int points = correctAnswer.size();
+
         Map<Integer,Integer> resultMapping;
 
         if(ageInMonth < 161){
@@ -116,9 +126,13 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
         }else{
             resultMapping = getAgeResultKeyValue("17.0-more");
         }
+        System.out.println(points+","+correctAnswer.size());
 
         // the result output(iq)
-        int iq = resultMapping.get(correctAnswer.size());
+        if(points > 50){
+            points = 50;
+        }
+        int iq = resultMapping.get(points);
 
         String predicate;
         if(iq>170){
@@ -153,11 +167,11 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
         testResult.setTest(testRepository.findTestByName("cfit3").orElseThrow(()->new RuntimeException(getClass().getSimpleName()+" Test not found")));
         testResult.setResult(getResult());
         testResultRepository.save(testResult);
+        logger.info("username: '"+username+"' CFIT answer calculated successfully");
     }
 
     private Map<Integer,Integer> getAgeResultKeyValue(String ageRange){
-        // /opt/tomcat/webapps/backend/WEB-INF/classes/static/testresultdata/cfit/cfit3.pku -->> for live apps
-        try(Scanner scanner = new Scanner(new BufferedReader(new FileReader("src/main/resources/static/testresultdata/cfit/cfit3.pku")))){
+        try(Scanner scanner = new Scanner(new BufferedReader(new FileReader(cfitPkuLocation)))){
 
             Map<Integer,Integer> map = new LinkedHashMap<>();
             String testParameterKeyValue;
@@ -178,7 +192,7 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
             System.out.println(map);
             return map;
         }catch (IOException e){
-            throw new RuntimeException("Cfit calculation error: "+e.getMessage());
+            throw new RuntimeException("error loading file cfit.pku: "+e.getMessage());
         }
     }
 }

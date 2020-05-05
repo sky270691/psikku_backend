@@ -7,6 +7,8 @@ import com.psikku.backend.entity.TokenFactory;
 import com.psikku.backend.entity.User;
 import com.psikku.backend.service.TokenService;
 import com.psikku.backend.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
+
+    Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     TokenService clientTokenService;
@@ -51,7 +55,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<UserRegisterResponse> register(@Valid @RequestBody UserRegisterDto userRegisterDto) {
-        System.out.println(userRegisterDto.getUsername());
+        logger.info("new username: '"+userRegisterDto.getUsername()+"' try to register");
 
 
 //        dummy response
@@ -65,25 +69,28 @@ public class UserController {
         return userService.registerNewUserToAuthServer(userRegisterDto);
 //        return new ResponseEntity<>(response,HttpStatus.OK);
     }
-//
-//    @PostMapping(value = "/register")
-//    public ResponseEntity<UserRegisterResponse> register(@Valid @RequestBody UserRegisterDto userRegisterDto) {
-//        System.out.println(userRegisterDto);
-//        return userService.registerNewUserToAuthServer(userRegisterDto);
-//    }
 
-    @PostMapping(value = "/testuser2", consumes = "multipart/form-data")
-    public ResponseEntity<UserRegisterResponse> testUser2(UserRegisterResponse userRegisterResponse){
-        return new ResponseEntity<>(userRegisterResponse,HttpStatus.OK);
+    @PutMapping("/register")
+    public ResponseEntity<UserRegisterResponse> updateUser(@Valid @RequestBody UserRegisterDto userRegisterDto) {
+        logger.info("username: '"+userRegisterDto.getUsername()+"' try to update data");
+
+        return userService.updateUser(userRegisterDto);
     }
+
+//    @PostMapping(value = "/testuser2", consumes = "multipart/form-data")
+//    public ResponseEntity<UserRegisterResponse> testUser2(UserRegisterResponse userRegisterResponse){
+//        return new ResponseEntity<>(userRegisterResponse,HttpStatus.OK);
+//    }
 
     @PostMapping(value = "/login")
     public TokenFactory login (@RequestPart String username, @RequestPart String password){
         try{
             TokenFactory tokenFactory = userService.loginExistingUser(username.trim(),password);
+            logger.info("username: '"+username+"' try to login");
             return tokenFactory;
         }catch (RuntimeException e){
-            e.printStackTrace();
+//            e.printStackTrace();
+            logger.info("username: '"+username+"' login error\nstacktrace: "+e.getMessage());
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "incorrect username or password",e);
         }
     }
@@ -122,6 +129,7 @@ public class UserController {
 
         userDto.setFirstname(firstLetterUpperCase(userDto.getFirstname()));
         userDto.setLastname(firstLetterUpperCase(userDto.getLastname()));
+        logger.info("username: '"+username+"' get user info");
         return userDto;
     }
 

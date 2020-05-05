@@ -1,6 +1,8 @@
 package com.psikku.backend.entity;
 
 
+import org.hibernate.annotations.UpdateTimestamp;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,6 +33,10 @@ public class User {
 
     @Column(name = "create_time")
     LocalDateTime createTime;
+
+    @Column(name = "lastmodified_time")
+    @UpdateTimestamp
+    LocalDateTime modifiedTime;
 
     @Column(name = "date_of_birth")
     LocalDate dateOfBirth;
@@ -96,6 +102,14 @@ public class User {
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
+    }
+
+    public LocalDateTime getModifiedTime() {
+        return modifiedTime;
+    }
+
+    public void setModifiedTime(LocalDateTime modifiedTime) {
+        this.modifiedTime = modifiedTime;
     }
 
     public LocalDate getDateOfBirth() {

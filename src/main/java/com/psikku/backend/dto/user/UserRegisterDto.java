@@ -11,11 +11,12 @@ import java.util.List;
 public class UserRegisterDto {
 
     @NotBlank(message = "username shouldn't be blank")
+    @Pattern(regexp ="\\S+", message = "username shouldn't contain any whitespace character")
     private String username;
 
     @NotBlank(message = "password shouldn't be blank")
     @Size(min = 6, message = "password should be at least 6 character")
-    @Pattern(regexp = "\\d+[a-z]+|[a-z]+\\d+",message = "password should contain number and alphabet")
+    @Pattern(regexp = "^(?=.*[a-zA-Z\\d].*)[a-zA-Z\\d!@#$%&*]{6,}$",message = "password should contain number and alphabet")
     private String password;
     private String firstname;
     private String lastname;

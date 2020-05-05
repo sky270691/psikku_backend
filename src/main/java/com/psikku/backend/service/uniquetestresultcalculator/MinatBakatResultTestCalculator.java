@@ -8,6 +8,8 @@ import com.psikku.backend.repository.AnswerRepository;
 import com.psikku.backend.repository.TestRepository;
 import com.psikku.backend.repository.TestResultRepository;
 import com.psikku.backend.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -20,9 +22,9 @@ import java.util.stream.Collectors;
 @Service
 public class MinatBakatResultTestCalculator implements UniqueResultTestCalculator {
 
-    //Todo
-    // Make it same with the minat bakat test name
     private final String MINATBAKAT_TEST_NAME = "bakat";
+
+    public final Logger logger = LoggerFactory.getLogger(MinatBakatResultTestCalculator.class);
 
     @Autowired
     AnswerRepository answerRepository;
@@ -190,6 +192,7 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
         testResult.setTest(testRepository.findTestByName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
         testResult.setResult(getResult());
         testResultRepository.save(testResult);
+        logger.info("username: '"+username+"' MINATBAKAT answer calculated successfully");
 
 //        boolean exact = false;
 //        boolean nonExact = false;
