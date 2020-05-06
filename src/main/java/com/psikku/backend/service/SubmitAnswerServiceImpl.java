@@ -55,6 +55,9 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
     @Autowired
     SurveyKarakterResultTestCalculator surveyKarakterResultTestCalculator;
 
+    @Autowired
+    CovidResultTestCalculator covidResultTestCalculator;
+
     @Transactional
     @Override
     public List<SubmittedAnswer> saveUserAnswer(List<SubmittedAnswer> answerList) {
@@ -288,6 +291,14 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
                 submittedAnswerDtoList.stream()
                         .filter(answerDto -> answerDto.getQuestionId().contains("surveyKarakter".toLowerCase()))
                         .collect(Collectors.toList());
+
+        // covid test only
+        List<SubmittedAnswerDto> covidOnly =
+                submittedAnswerDtoList.stream()
+                        .filter(answerDto -> answerDto.getQuestionId().contains("covid".toLowerCase()))
+                        .collect(Collectors.toList());
+
+
         if(!cfitAnswer.isEmpty()){
             cfitResultTestCalculator.calculateNewResult(cfitAnswer);
         }
@@ -309,14 +320,19 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
         if(!surveyKarakterOnly.isEmpty()){
             surveyKarakterResultTestCalculator.calculateNewResult(surveyKarakterOnly);
         }
+        if(!covidOnly.isEmpty()){
+            covidResultTestCalculator.calculateNewResult(covidOnly);
+        }
 
 
-        return eqResultTestCalculator.getResult() +"\n\n"+ bullyResultTestCalculator.getTestResult()
+        return eqResultTestCalculator.getResult()
+                +"\n\n"+bullyResultTestCalculator.getTestResult()
                 +"\n\n"+gayaBelajar1ResultTestCalculator.getResult()
                 +"\n\n"+gayaBelajar2ResultTestCalculator.getResult()
                 +"\n\n"+minatBakatResultTestCalculator.getResult()
                 +"\n\n"+surveyKarakterResultTestCalculator.getTestResult()
-                +"\n\n"+cfitResultTestCalculator.getResult();
+                +"\n\n"+cfitResultTestCalculator.getResult()
+                +"\n\n"+covidResultTestCalculator.getResult();
     }
 }
 
