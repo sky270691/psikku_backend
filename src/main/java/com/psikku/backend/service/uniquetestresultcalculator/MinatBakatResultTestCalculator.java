@@ -79,8 +79,6 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
         zr.removeAll(ra);
         zr.forEach(zrTest -> zrTest.setQuestionId(zrTest.getQuestionId().toLowerCase()));
 
-        //Todo
-        // setup percentage for outputting the result
         int anCorrectAnswers = 0;
         int geCorrectAnswers = 0;
         int raCorrectAnswers = 0;

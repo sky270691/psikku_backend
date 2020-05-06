@@ -57,10 +57,6 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
         this.result = result;
     }
 
-
-    //ToDo
-    // testing the output with the real test
-
     @Transactional
     @Override
     public void calculateNewResult(List<SubmittedAnswerDto> cfitAnswer) {

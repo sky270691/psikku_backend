@@ -87,9 +87,6 @@ public class GayaBelajar2ResultTestCalculator implements UniqueResultTestCalcula
             roAe.add("ae");
         }
 
-
-        //Todo
-        // update the final output for this test
         List<String> sortedHighestResultKey =
                 resultKeyValue.entrySet().stream()
                                          .sorted((x,y)->y.getValue().compareTo(x.getValue()))
