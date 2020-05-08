@@ -41,7 +41,7 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
     private String result;
 
     @Override
-    public void calculateNewResult(List<SubmittedAnswerDto> submittedAnswerDtoList) {
+    public TestResult calculateNewResult(List<SubmittedAnswerDto> submittedAnswerDtoList) {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         User user = userRepository.findUserByUsername(username);
@@ -189,8 +189,9 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
         testResult.setUser(userRepository.findUserByUsername(username));
         testResult.setTest(testRepository.findTestByName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
         testResult.setResult(getResult());
-        testResultRepository.save(testResult);
+//        testResultRepository.save(testResult);
         logger.info("username: '"+username+"' MINATBAKAT answer calculated successfully");
+        return testResult;
 
 //        boolean exact = false;
 //        boolean nonExact = false;

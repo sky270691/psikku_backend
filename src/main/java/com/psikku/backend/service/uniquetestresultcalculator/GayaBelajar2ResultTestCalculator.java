@@ -37,7 +37,7 @@ public class GayaBelajar2ResultTestCalculator implements UniqueResultTestCalcula
 
 
     @Override
-    public void calculateNewResult(List<SubmittedAnswerDto> gayaBelajar2AnsOnly) {
+    public TestResult calculateNewResult(List<SubmittedAnswerDto> gayaBelajar2AnsOnly) {
 
         String[] gayaBelajar2DtoSplit = gayaBelajar2AnsOnly.get(0).getQuestionId().split("_");
         String testName = gayaBelajar2DtoSplit[0].toLowerCase();
@@ -109,8 +109,9 @@ public class GayaBelajar2ResultTestCalculator implements UniqueResultTestCalcula
         testResult.setUser(userRepository.findUserByUsername(username));
         testResult.setTest(testRepository.findTestByName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
         testResult.setResult(getResult());
-        testResultRepository.save(testResult);
+//        testResultRepository.save(testResult);
         logger.info("username: '"+username+"' GB2 answer calculated successfully");
+        return testResult;
     }
 
     public String getResult() {

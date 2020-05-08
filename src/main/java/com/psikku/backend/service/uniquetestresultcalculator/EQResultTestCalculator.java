@@ -38,7 +38,7 @@ public class EQResultTestCalculator implements UniqueResultTestCalculator{
 
     @Transactional
     @Override
-    public void calculateNewResult(List<SubmittedAnswerDto> EQAnsDtoOnly) {
+    public TestResult calculateNewResult(List<SubmittedAnswerDto> EQAnsDtoOnly) {
         String[] EQAnsOnlyIdSplit = EQAnsDtoOnly.get(0).getQuestionId().split("_");
         String testName = EQAnsOnlyIdSplit[0].toLowerCase();
         List<Answer> EQansFromDb =
@@ -111,8 +111,9 @@ public class EQResultTestCalculator implements UniqueResultTestCalculator{
         testResult.setUser(userRepository.findUserByUsername(username));
         testResult.setTest(testRepository.findTestByName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
         testResult.setResult(getResult());
-        testResultRepository.save(testResult);
+//        testResultRepository.save(testResult);
         logger.info("username: '"+username+"' EQ answer calculated successfully");
+        return testResult;
     }
 
     private String perCategoryPredicate(double resultValue){

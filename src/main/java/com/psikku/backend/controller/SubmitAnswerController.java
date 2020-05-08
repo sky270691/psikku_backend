@@ -1,6 +1,7 @@
 package com.psikku.backend.controller;
 
 import com.psikku.backend.dto.useranswer.SubmittedAnswerDto;
+import com.psikku.backend.dto.useranswer.UserAnswerDto;
 import com.psikku.backend.service.TestService;
 import com.psikku.backend.service.SubmitAnswerService;
 import com.psikku.backend.service.UserService;
@@ -51,6 +52,20 @@ public class SubmitAnswerController {
 //        List<SubmittedAnswer> submittedAnswerList = submitAnswerService.convertToSubmittedAnswerList(submittedAnswerDto,user);
 //        submitAnswerService.saveUserAnswer(submittedAnswerList);
          submitAnswerService.calculateResultTest(submittedAnswerDto);
+//        return new ArrayList<>();
+
+        logger.info("username: '"+username+"' answer's calculated successfully");
+        return new ResponseEntity<>("success",HttpStatus.OK);
+    }
+
+    @PostMapping("/v2")
+    public ResponseEntity<String> submitAnswers2(@RequestBody UserAnswerDto userAnswerDto){
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        logger.info("username: '"+username+"' try to submit answer");
+//        User user = userService.findByUsername(username);
+//        List<SubmittedAnswer> submittedAnswerList = submitAnswerService.convertToSubmittedAnswerList(submittedAnswerDto,user);
+//        submitAnswerService.saveUserAnswer(submittedAnswerList);
+        submitAnswerService.calculateResultTestV2(userAnswerDto);
 //        return new ArrayList<>();
 
         logger.info("username: '"+username+"' answer's calculated successfully");

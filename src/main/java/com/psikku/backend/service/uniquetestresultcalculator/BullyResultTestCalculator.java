@@ -38,7 +38,7 @@ public class BullyResultTestCalculator implements UniqueResultTestCalculator{
 
     @Transactional
     @Override
-    public void calculateNewResult(List<SubmittedAnswerDto> bullyAnsDtoOnly) {
+    public TestResult calculateNewResult(List<SubmittedAnswerDto> bullyAnsDtoOnly) {
 
         String[] bullyAnsDtoOnlySplit = bullyAnsDtoOnly.get(0).getQuestionId().split("_");
         String testName = bullyAnsDtoOnlySplit[0];
@@ -113,8 +113,9 @@ public class BullyResultTestCalculator implements UniqueResultTestCalculator{
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         testResult.setUser(userRepository.findUserByUsername(username));
         testResult.setResult(getTestResult());
-        resultRepository.save(testResult);
         logger.info("username: '"+username+"' BULLY answer calculated successfully");
+        return testResult;
+//        resultRepository.save(testResult);
     }
 
     private String perCategoryPredicate(double resultValue){

@@ -25,7 +25,7 @@ public class TestResult {
 
     private String result;
 
-    @CreationTimestamp
+//    @CreationTimestamp
     @Column(name = "creation_date")
     private LocalDateTime dateOfTest;
 

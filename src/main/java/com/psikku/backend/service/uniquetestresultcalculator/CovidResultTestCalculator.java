@@ -37,7 +37,7 @@ public class CovidResultTestCalculator implements UniqueResultTestCalculator{
     private String result;
 
     @Override
-    public void calculateNewResult(List<SubmittedAnswerDto> submittedAnswerDtoList) {
+    public TestResult calculateNewResult(List<SubmittedAnswerDto> submittedAnswerDtoList) {
 
         // get username from Security Context (from Token)
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
@@ -72,9 +72,10 @@ public class CovidResultTestCalculator implements UniqueResultTestCalculator{
         testResult.setTest(test);
         testResult.setResult(getResult());
 
-        testResultRepository.save(testResult);
+//        testResultRepository.save(testResult);
 
         logger.info("username: '"+username+"' covid answer calculated successfully");
+        return testResult;
     }
 
     private String perCategoryPredicate(int resultValue){

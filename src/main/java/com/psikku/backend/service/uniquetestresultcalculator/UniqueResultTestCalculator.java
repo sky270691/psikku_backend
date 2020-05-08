@@ -1,9 +1,10 @@
 package com.psikku.backend.service.uniquetestresultcalculator;
 
 import com.psikku.backend.dto.useranswer.SubmittedAnswerDto;
+import com.psikku.backend.entity.TestResult;
 
 import java.util.List;
 
 public interface UniqueResultTestCalculator {
-    void calculateNewResult(List<SubmittedAnswerDto> submittedAnswerDtoList);
+    TestResult calculateNewResult(List<SubmittedAnswerDto> submittedAnswerDtoList);
 }

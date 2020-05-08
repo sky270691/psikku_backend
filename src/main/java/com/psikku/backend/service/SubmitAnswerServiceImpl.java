@@ -1,6 +1,7 @@
 package com.psikku.backend.service;
 
 import com.psikku.backend.dto.useranswer.SubmittedAnswerDto;
+import com.psikku.backend.dto.useranswer.UserAnswerDto;
 import com.psikku.backend.entity.*;
 import com.psikku.backend.repository.*;
 import com.psikku.backend.service.uniquetestresultcalculator.*;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,12 +25,6 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
 
     @Autowired
     SubtestRepository subtestRepository;
-
-    @Autowired
-    TestRepository testRepository;
-
-    @Autowired
-    AnswerRepository answerRepository;
 
     @Autowired
     TestResultRepository testResultRepository;
@@ -331,6 +328,120 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
                 +"\n\n"+surveyKarakterResultTestCalculator.getTestResult()
                 +"\n\n"+cfitResultTestCalculator.getResult()
                 +"\n\n"+covidResultTestCalculator.getResult();
+    }
+
+    @Override
+    @Transactional
+    public String calculateResultTestV2(UserAnswerDto userAnswerDto) {
+
+        List<SubmittedAnswerDto> submittedAnswerDtoList = userAnswerDto.getSubmittedAnswerDtoList();
+        LocalDateTime creationDate = formatLdt(userAnswerDto.getCreationDateTime());
+        TestResult testResult;
+
+        // get cfit3 answer only
+        List<SubmittedAnswerDto> cfitAnswer = submittedAnswerDtoList.stream()
+                .filter(answer -> answer.getQuestionId().contains("cfit"))
+                .collect(Collectors.toList());
+
+        // get gaya belajar1 test only
+        List<SubmittedAnswerDto> gayaBelajar1Only =
+                submittedAnswerDtoList.stream()
+                        .filter(answerDto -> answerDto.getQuestionId().contains("gayaBelajar1".toLowerCase()))
+                        .collect(Collectors.toList());
+
+        // get gaya belajar2 test only
+        List<SubmittedAnswerDto> gayaBelajar2Only =
+                submittedAnswerDtoList.stream()
+                        .filter(answerDto -> answerDto.getQuestionId().contains("gayaBelajar2".toLowerCase()))
+                        .collect(Collectors.toList());
+
+        // get bully test only
+        List<SubmittedAnswerDto> bullyTestOnly =
+                submittedAnswerDtoList.stream()
+                        .filter(answerDto -> answerDto.getQuestionId().contains("bully".toLowerCase()))
+                        .collect(Collectors.toList());
+
+        // get eq test only
+        List<SubmittedAnswerDto> eqTestOnly =
+                submittedAnswerDtoList.stream()
+                        .filter(answerDto -> answerDto.getQuestionId().contains("eq".toLowerCase()))
+                        .collect(Collectors.toList());
+
+        // minatbakat test only
+        List<SubmittedAnswerDto> minatBakatTestOnly =
+                submittedAnswerDtoList.stream()
+                        .filter(answerDto -> answerDto.getQuestionId().contains("bakat".toLowerCase()))
+                        .collect(Collectors.toList());
+
+        // survey karakter test only
+        List<SubmittedAnswerDto> surveyKarakterOnly =
+                submittedAnswerDtoList.stream()
+                        .filter(answerDto -> answerDto.getQuestionId().contains("surveyKarakter".toLowerCase()))
+                        .collect(Collectors.toList());
+
+        // covid test only
+        List<SubmittedAnswerDto> covidOnly =
+                submittedAnswerDtoList.stream()
+                        .filter(answerDto -> answerDto.getQuestionId().contains("covid".toLowerCase()))
+                        .collect(Collectors.toList());
+
+
+        if(!cfitAnswer.isEmpty()){
+            testResult = cfitResultTestCalculator.calculateNewResult(cfitAnswer);
+            testResult.setDateOfTest(creationDate);
+            testResultRepository.save(testResult);
+        }
+        if(!bullyTestOnly.isEmpty()){
+            testResult = bullyResultTestCalculator.calculateNewResult(bullyTestOnly);
+            testResult.setDateOfTest(creationDate);
+            testResultRepository.save(testResult);
+        }
+        if(!eqTestOnly.isEmpty()){
+            testResult = eqResultTestCalculator.calculateNewResult(eqTestOnly);
+            testResult.setDateOfTest(creationDate);
+            testResultRepository.save(testResult);
+        }
+        if(!gayaBelajar1Only.isEmpty()){
+            testResult = gayaBelajar1ResultTestCalculator.calculateNewResult(gayaBelajar1Only);
+            testResult.setDateOfTest(creationDate);
+            testResultRepository.save(testResult);
+        }
+        if(!gayaBelajar2Only.isEmpty()){
+            testResult = gayaBelajar2ResultTestCalculator.calculateNewResult(gayaBelajar2Only);
+            testResult.setDateOfTest(creationDate);
+            testResultRepository.save(testResult);
+        }
+        if(!minatBakatTestOnly.isEmpty()){
+            testResult = minatBakatResultTestCalculator.calculateNewResult(minatBakatTestOnly);
+            testResult.setDateOfTest(creationDate);
+            testResultRepository.save(testResult);
+        }
+        if(!surveyKarakterOnly.isEmpty()){
+            testResult = surveyKarakterResultTestCalculator.calculateNewResult(surveyKarakterOnly);
+            testResult.setDateOfTest(creationDate);
+            testResultRepository.save(testResult);
+        }
+        if(!covidOnly.isEmpty()){
+            testResult = covidResultTestCalculator.calculateNewResult(covidOnly);
+            testResult.setDateOfTest(creationDate);
+            testResultRepository.save(testResult);
+        }
+
+
+        return eqResultTestCalculator.getResult()
+                +"\n\n"+bullyResultTestCalculator.getTestResult()
+                +"\n\n"+gayaBelajar1ResultTestCalculator.getResult()
+                +"\n\n"+gayaBelajar2ResultTestCalculator.getResult()
+                +"\n\n"+minatBakatResultTestCalculator.getResult()
+                +"\n\n"+surveyKarakterResultTestCalculator.getTestResult()
+                +"\n\n"+cfitResultTestCalculator.getResult()
+                +"\n\n"+covidResultTestCalculator.getResult();
+    }
+
+    private LocalDateTime formatLdt(String customLocalDateTime){
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime ldt = LocalDateTime.parse(customLocalDateTime, dtf);
+        return ldt;
     }
 }
 

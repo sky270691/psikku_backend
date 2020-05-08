@@ -59,7 +59,7 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
 
     @Transactional
     @Override
-    public void calculateNewResult(List<SubmittedAnswerDto> cfitAnswer) {
+    public TestResult calculateNewResult(List<SubmittedAnswerDto> cfitAnswer) {
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         User user = userService.findByUsername(username);
         int ageInMonth = user.getAge(LocalDate.now());
@@ -162,8 +162,9 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
         testResult.setUser(user);
         testResult.setTest(testRepository.findTestByName("cfit3").orElseThrow(()->new RuntimeException(getClass().getSimpleName()+" Test not found")));
         testResult.setResult(getResult());
-        testResultRepository.save(testResult);
-        logger.info("username: '"+username+"' CFIT answer calculated successfully");
+//        testResultRepository.save(testResult);
+        logger.info("username: '"+username+"' CF" + "IT answer calculated successfully");
+        return testResult;
     }
 
     private Map<Integer,Integer> getAgeResultKeyValue(String ageRange){

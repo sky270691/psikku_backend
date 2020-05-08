@@ -36,7 +36,7 @@ public class SurveyKarakterResultTestCalculator implements UniqueResultTestCalcu
     private String testResult;
 
     @Override
-    public void calculateNewResult(List<SubmittedAnswerDto> surveyKarakterAnsDtoOnly) {
+    public TestResult calculateNewResult(List<SubmittedAnswerDto> surveyKarakterAnsDtoOnly) {
 
         String[] surveyKarakterAnsSplit = surveyKarakterAnsDtoOnly.get(0).getQuestionId().split("_");
         String testName = surveyKarakterAnsSplit[0];
@@ -94,8 +94,9 @@ public class SurveyKarakterResultTestCalculator implements UniqueResultTestCalcu
         testResult.setUser(userRepository.findUserByUsername(username));
         testResult.setTest(testRepository.findTestByName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
         testResult.setResult(getTestResult());
-        testResultRepository.save(testResult);
+//        testResultRepository.save(testResult);
         logger.info("username: '"+username+"' SURVEYKARAKTER answer calculated successfully");
+        return testResult;
     }
 
     private String perCategoryPredicate(double resultValue){
