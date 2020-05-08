@@ -1,4 +1,4 @@
-package com.psikku.backend.dto.test;
+package com.psikku.backend.dto.useranswer;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

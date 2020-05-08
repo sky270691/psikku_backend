@@ -1,8 +1,7 @@
 package com.psikku.backend.service;
 
-import com.psikku.backend.dto.test.SubmittedAnswerDto;
+import com.psikku.backend.dto.useranswer.SubmittedAnswerDto;
 import com.psikku.backend.entity.*;
-import com.psikku.backend.exception.TestException;
 import com.psikku.backend.repository.*;
 import com.psikku.backend.service.uniquetestresultcalculator.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class SubmitAnswerServiceImpl implements SubmitAnswerService {

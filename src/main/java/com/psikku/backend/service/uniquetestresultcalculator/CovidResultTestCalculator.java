@@ -1,6 +1,6 @@
 package com.psikku.backend.service.uniquetestresultcalculator;
 
-import com.psikku.backend.dto.test.SubmittedAnswerDto;
+import com.psikku.backend.dto.useranswer.SubmittedAnswerDto;
 import com.psikku.backend.entity.Answer;
 import com.psikku.backend.entity.Test;
 import com.psikku.backend.entity.TestResult;
