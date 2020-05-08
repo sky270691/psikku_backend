@@ -9,7 +9,7 @@ public class UserAnswerDto {
     @JsonProperty("answer-list")
     private List<SubmittedAnswerDto> submittedAnswerDtoList;
 
-    @JsonProperty("creation_date_time")
+    @JsonProperty("creation-date-time")
     private String creationDateTime;
 
 

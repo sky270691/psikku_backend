@@ -44,21 +44,21 @@ public class SubmitAnswerController {
 //        return responseEntity;
 //    }
 
+//    @PostMapping
+//    public ResponseEntity<String> submitAnswers(@RequestBody List<SubmittedAnswerDto> submittedAnswerDto){
+//        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+//        logger.info("username: '"+username+"' try to submit answer");
+////        User user = userService.findByUsername(username);
+////        List<SubmittedAnswer> submittedAnswerList = submitAnswerService.convertToSubmittedAnswerList(submittedAnswerDto,user);
+////        submitAnswerService.saveUserAnswer(submittedAnswerList);
+//         submitAnswerService.calculateResultTest(submittedAnswerDto);
+////        return new ArrayList<>();
+//
+//        logger.info("username: '"+username+"' answer's calculated successfully");
+//        return new ResponseEntity<>("success",HttpStatus.OK);
+//    }
+
     @PostMapping
-    public ResponseEntity<String> submitAnswers(@RequestBody List<SubmittedAnswerDto> submittedAnswerDto){
-        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        logger.info("username: '"+username+"' try to submit answer");
-//        User user = userService.findByUsername(username);
-//        List<SubmittedAnswer> submittedAnswerList = submitAnswerService.convertToSubmittedAnswerList(submittedAnswerDto,user);
-//        submitAnswerService.saveUserAnswer(submittedAnswerList);
-         submitAnswerService.calculateResultTest(submittedAnswerDto);
-//        return new ArrayList<>();
-
-        logger.info("username: '"+username+"' answer's calculated successfully");
-        return new ResponseEntity<>("success",HttpStatus.OK);
-    }
-
-    @PostMapping("/v2")
     public ResponseEntity<String> submitAnswers2(@RequestBody UserAnswerDto userAnswerDto){
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         logger.info("username: '"+username+"' try to submit answer");

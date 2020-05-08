@@ -439,7 +439,7 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
     }
 
     private LocalDateTime formatLdt(String customLocalDateTime){
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
         LocalDateTime ldt = LocalDateTime.parse(customLocalDateTime, dtf);
         return ldt;
     }
