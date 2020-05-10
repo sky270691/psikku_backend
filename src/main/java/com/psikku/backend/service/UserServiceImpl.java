@@ -123,6 +123,7 @@ public class UserServiceImpl implements UserService {
         user.setModifiedTime(userRegisterAuthServerResponse.getModifiedTime());
         user.setDateOfBirth(userRegisterAuthServerResponse.getDateOfBirth());
 
+
         return user;
     }
 

@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 
 public class UserDto {
 
+    //Todo
+    // Ask Arthur about the Company submission for each user (by CompanyId or Complete CompanyDto)
+
     long id;
     String username;
     String email;

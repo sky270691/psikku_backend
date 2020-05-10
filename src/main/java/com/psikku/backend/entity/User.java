@@ -14,35 +14,40 @@ import java.util.List;
 public class User {
 
     @Id
-    long id;
+    private long id;
 
     @Column(name = "username")
-    String username;
+    private String username;
 
     @Column(name = "email")
-    String email;
+    private String email;
 
     @Column(name = "firstname")
-    String firstname;
+    private String firstname;
 
     @Column(name = "lastname")
-    String lastname;
+    private String lastname;
 
     @Column(name = "sex")
-    String sex;
+    private String sex;
 
     @Column(name = "create_time")
-    LocalDateTime createTime;
+    private LocalDateTime createTime;
 
     @Column(name = "lastmodified_time")
     @UpdateTimestamp
-    LocalDateTime modifiedTime;
+    private LocalDateTime modifiedTime;
 
     @Column(name = "date_of_birth")
-    LocalDate dateOfBirth;
+    private LocalDate dateOfBirth;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH,CascadeType.REFRESH})
+    @JoinColumn(name = "company_id")
+    private Company company;
+
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    List<SubmittedAnswer> submittedAnswerList;
+    private List<SubmittedAnswer> submittedAnswerList;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
@@ -146,4 +151,11 @@ public class User {
         return (int) age;
     }
 
+    public Company getCompany() {
+        return company;
+    }
+
+    public void setCompany(Company company) {
+        this.company = company;
+    }
 }

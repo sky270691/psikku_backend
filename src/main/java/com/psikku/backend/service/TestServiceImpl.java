@@ -41,12 +41,6 @@ public class TestServiceImpl implements TestService{
         Optional<Test> findTest = testRepository.findTestByName(entityTest.getName());
         if(!findTest.isPresent()){
             testRepository.save(entityTest);
-            // check if the question is survey or not
-//            if(entityTest.getIsSurvey()){
-//                for(SurveyCategory surveyCategory : entityTest.getSurveyCategoryList()){
-//                    surveyCategoryRepository.save(surveyCategory);
-//                }
-//            }
             for(Subtest subtest:entityTest.getSubtestList()){
                 subtestRepository.save(subtest);
                 for(Question question: subtest.getQuestionList()){
@@ -79,22 +73,7 @@ public class TestServiceImpl implements TestService{
         Test test = new Test();
         test.setName(fullTestDto.getName());
         test.setDescription(fullTestDto.getDescription());
-//        List<Test> testList = testRepository.findAll();
-//        int maxTestId = testList.stream()
-//                                .map(Test::getId)
-//                                .max(Comparator.naturalOrder())
-//                                .orElse(0);
 
-//        if(fullTestDto.getIsSurvey()){
-//            test.setIsSurvey(true);
-//            test.setSurveyCategoryList(new ArrayList<>());
-//            for(SurveyCategoryDto surveyCategoryDto : fullTestDto.getSurveyCategoryDto()){
-//                SurveyCategory tempEntitySurveyCategory = new SurveyCategory();
-//                tempEntitySurveyCategory.setId((maxTestId+1)+"_"+surveyCategoryDto.getCategoryNumber());
-//                tempEntitySurveyCategory.setCategory(surveyCategoryDto.getCategory());
-//                test.getSurveyCategoryList().add(tempEntitySurveyCategory);
-//            }
-//        }
         List<SubtestDto> subtestDtoList = fullTestDto.getSubtests();
         List<Subtest> entitySubtestList = new ArrayList<>();
         int subtestNumber = 1;
@@ -124,7 +103,6 @@ public class TestServiceImpl implements TestService{
                 }else{
                     question.setQuestionCategory("");
                 }
-//                System.out.println(questionDto.getId());
                 if(questionDto.getId() == null){
                     question.setId(subtest.getId() + "_" + questionId++);
                 }else{
@@ -140,12 +118,6 @@ public class TestServiceImpl implements TestService{
                 }
                 question.setQuestionContent(new String(wholeQuestion));
 
-
-//                if(subtestDto.getTestType().equalsIgnoreCase("survey")){
-//                    question.setQuestionCategory(fullTestDto.getId()+"_"+questionDto.getQuestionCategory());
-//                }else{
-//                    question.setQuestionCategory(fullTestDto.getId()+"_"+-1);
-//                }
                 questionList.add(question);
                 List<Answer> answerList = new ArrayList<>();
                 if(questionDto.getAnswers() != null){
@@ -208,18 +180,9 @@ public class TestServiceImpl implements TestService{
 
                 // shuffle the question to display in the endpoint
                 Collections.shuffle(subtestDto.getQuestions());
-                // sort the questions to display with the correct order
-//                subtestDto.getQuestions().sort((x,y) -> {
-//                    String[] xId = x.getId().split("_");
-//                    String[] yId = y.getId().split("_");
-//                    Integer a = Integer.parseInt(xId[2]);
-//                    Integer b = Integer.parseInt(yId[2]);
-//                    return a.compareTo(b);
-//                });
-//                subtestDto.getQuestions().stream().map(QuestionDto::getId)
-//                                                    .forEach(System.out::println);
             }
             fullTestDto.getSubtests().add(subtestDto);
+
             // sort the subtest to display with the correct order
             fullTestDto.getSubtests().sort((x,y)->{
                 String[] xId = x.getId().split("_");

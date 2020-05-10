@@ -24,7 +24,7 @@ public class FullTestDto {
 
 //    @JsonProperty(value = "subtest")
 
-    List<SubtestDto> subtests;
+    private List<SubtestDto> subtests;
 
     public int getId() {
         return id;

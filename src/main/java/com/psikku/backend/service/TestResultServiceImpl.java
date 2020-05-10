@@ -38,23 +38,6 @@ public class TestResultServiceImpl implements TestResultService {
         }
     }
 
-    @Override
-    public List<TestResult> findAllResultByUserNameAndDateOfTest(String username, String date, String time) {
-        String completeDateTime = date+" "+time;
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        LocalDateTime ldt;
-        try {
-            ldt = LocalDateTime.parse(completeDateTime,dtf);
-        } catch (DateTimeParseException e) {
-            throw new TestResultException("date or time format is not valid (date -> 'dd-MM-yyyy' time -> 'HH:mm:ss')");
-        }
-        List<TestResult> testResultList = testResultRepository.findAllByUser_usernameAndDateOfTest(username, ldt);
-        if(!testResultList.isEmpty()){
-            return testResultList;
-        }else{
-            throw new TestResultException("test result not found on the submitted date");
-        }
-    }
 
     @Override
     public List<TestResult> findAllByUserName(String username) {
