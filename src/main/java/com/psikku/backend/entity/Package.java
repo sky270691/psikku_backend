@@ -14,10 +14,7 @@ public class Package {
     private String name;
     private int price;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REFRESH,CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
-    @JoinTable(name = "package_test",
-                joinColumns = @JoinColumn(name = "package_id"),
-                inverseJoinColumns = @JoinColumn(name = "test_id"))
+    @ManyToMany(mappedBy = "packageList", cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     private List<Test> testList;
 
     public int getId() {

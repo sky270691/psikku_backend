@@ -135,7 +135,7 @@ public class TestServiceImpl implements TestService{
                     if(i==questionDto.getQuestionContent().size()-1){
                         wholeQuestion.append(questionDto.getQuestionContent().get(i));
                     }else{
-                        wholeQuestion.append(questionDto.getQuestionContent().get(i)).append(",");
+                        wholeQuestion.append(questionDto.getQuestionContent().get(i)).append(";");
                     }
                 }
                 question.setQuestionContent(new String(wholeQuestion));
@@ -190,7 +190,7 @@ public class TestServiceImpl implements TestService{
                 QuestionDto questionDto = new QuestionDto();
                 questionDto.setId(question.getId());
                 questionDto.setQuestionContent(new ArrayList<>());
-                String[] questionArray = question.getQuestionContent().split(",");
+                String[] questionArray = question.getQuestionContent().split(";");
                 for(String tempQuestion : questionArray){
                     questionDto.getQuestionContent().add(tempQuestion);
                 }
@@ -224,8 +224,8 @@ public class TestServiceImpl implements TestService{
             fullTestDto.getSubtests().sort((x,y)->{
                 String[] xId = x.getId().split("_");
                 String[] yId = y.getId().split("_");
-                java.lang.Integer a = java.lang.Integer.parseInt(xId[1]);
-                java.lang.Integer b = java.lang.Integer.parseInt(yId[1]);
+                Integer a = Integer.parseInt(xId[1]);
+                Integer b = Integer.parseInt(yId[1]);
                 return a.compareTo(b);
             });
         }
