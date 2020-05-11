@@ -201,7 +201,24 @@ public class TestServiceImpl implements TestService{
         MinimalTestDto minimalTestDto = new MinimalTestDto();
         minimalTestDto.setId(test.getId());
         minimalTestDto.setName(test.getName());
+        minimalTestDto.setDescription(test.getDescription());
+        int duration = test.getSubtestList().stream()
+                                            .mapToInt(Subtest::getDuration)
+                                            .sum();
+        minimalTestDto.setDuration(duration);
         return minimalTestDto;
+    }
+
+    @Override
+    public List<MinimalTestDto> getAllMinTestList() {
+
+        List<Test> testList = testRepository.findAll();
+        List<MinimalTestDto> minimalTestDtoList = new ArrayList<>();
+        testList.forEach(test -> {
+            MinimalTestDto tempMinTestDto = convertToMinimalTestDto(test);
+            minimalTestDtoList.add(tempMinTestDto);
+        });
+        return minimalTestDtoList;
     }
 
     @Override

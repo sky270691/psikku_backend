@@ -1,8 +1,10 @@
 package com.psikku.backend.controller;
 
 import com.psikku.backend.dto.test.FullTestDto;
+import com.psikku.backend.dto.test.MinimalTestDto;
 import com.psikku.backend.dto.test.TestInsertResponseDto;
 import com.psikku.backend.entity.Test;
+import com.psikku.backend.exception.TestException;
 import com.psikku.backend.service.TestService;
 import com.psikku.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +38,22 @@ public class TestController {
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
+//    @GetMapping
+//    public ResponseEntity<List<FullTestDto>> getAllTests() {
+//        List<Test> testList = testService.findAll();
+//        List<FullTestDto> fullTestDtoList = new ArrayList<>();
+//        testList.forEach(test -> fullTestDtoList.add(testService.convertToFullTestDto(test)));
+//        return new ResponseEntity<>(fullTestDtoList, HttpStatus.OK);
+//    }
+
     @GetMapping
-    public ResponseEntity<List<FullTestDto>> getAllTests() {
-        List<Test> testList = testService.findAll();
-        List<FullTestDto> fullTestDtoList = new ArrayList<>();
-        testList.forEach(test -> fullTestDtoList.add(testService.convertToFullTestDto(test)));
-        return new ResponseEntity<>(fullTestDtoList, HttpStatus.OK);
+    public ResponseEntity<List<MinimalTestDto>> getAllMinimalTests(){
+
+        List<MinimalTestDto> minimalTestDtosList = testService.getAllMinTestList();
+        if(minimalTestDtosList.isEmpty()){
+            throw new TestException("no tests found on server");
+        }
+        return new ResponseEntity<>(minimalTestDtosList,HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

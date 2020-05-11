@@ -15,6 +15,7 @@ public interface TestService {
     Test findTestById(int id);
     Test findTestByName(String name);
     FullTestDto convertToFullTestDto(Test test);
+    List<MinimalTestDto> getAllMinTestList();
 
 //  subtest area
     Subtest findSubtestById(String id);
