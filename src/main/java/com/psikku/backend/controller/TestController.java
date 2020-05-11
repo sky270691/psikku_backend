@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -58,13 +59,13 @@ public class TestController {
 //    }
 
     @GetMapping
-    public ResponseEntity<List<MinimalTestDto>> getAllMinimalTests(HttpServletRequest request){
+    public ResponseEntity<List<MinimalTestDto>> getAllMinimalTests(){
 
         List<MinimalTestDto> minimalTestDtosList = testService.getAllMinTestList();
         if(minimalTestDtosList.isEmpty()){
             throw new TestException("no tests found on server");
         }
-        logger.info("ip address: " + request.getRemoteAddr());
+
         return new ResponseEntity<>(minimalTestDtosList,HttpStatus.OK);
     }
 
