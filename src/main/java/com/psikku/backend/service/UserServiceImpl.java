@@ -88,6 +88,10 @@ public class UserServiceImpl implements UserService {
             user.setLastname(userRegisterDto.getLastname());
             user.setSex(userRegisterDto.getSex());
             user.setDateOfBirth(userRegisterDto.getDateOfBirth());
+            user.setAddress(userRegisterDto.getAddress());
+            user.setCity(userRegisterDto.getCity());
+            user.setProvince(userRegisterDto.getProvince());
+
 
             UserRegisterResponse response = new UserRegisterResponse();
             response.setStatus("success");

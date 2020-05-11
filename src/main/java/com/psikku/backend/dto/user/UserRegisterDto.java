@@ -18,7 +18,9 @@ public class UserRegisterDto {
     @Size(min = 6, message = "password should be at least 6 character")
     @Pattern(regexp = "^(?=.*[a-zA-Z\\d].*)[a-zA-Z\\d!@#$%&*]{6,}$",message = "password should contain number and alphabet")
     private String password;
+
     private String firstname;
+
     private String lastname;
 
     @NotBlank(message = "sex shouldn't be blank")
@@ -28,6 +30,13 @@ public class UserRegisterDto {
     @NotBlank(message = "email shouldn't be blank")
     @Pattern(regexp = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{1,}$", message = "email format should be valid")
     private String email;
+
+    private String address;
+
+    private String city;
+
+    private String province;
+
 //    private LocalDateTime createTime;
 
     @Past(message = "so lahir so bro?")
@@ -100,5 +109,29 @@ public class UserRegisterDto {
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
     }
 }

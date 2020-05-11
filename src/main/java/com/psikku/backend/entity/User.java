@@ -10,26 +10,26 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Entity
-@Table(name = "user")
 public class User {
 
     @Id
     private long id;
 
-    @Column(name = "username")
     private String username;
 
-    @Column(name = "email")
     private String email;
 
-    @Column(name = "firstname")
     private String firstname;
 
-    @Column(name = "lastname")
     private String lastname;
 
-    @Column(name = "sex")
     private String sex;
+
+    private String address;
+
+    private String city;
+
+    private String province;
 
     @Column(name = "create_time")
     private LocalDateTime createTime;
@@ -157,5 +157,29 @@ public class User {
 
     public void setCompany(Company company) {
         this.company = company;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
     }
 }

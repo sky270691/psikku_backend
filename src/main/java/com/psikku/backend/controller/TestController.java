@@ -7,11 +7,15 @@ import com.psikku.backend.entity.Test;
 import com.psikku.backend.exception.TestException;
 import com.psikku.backend.service.TestService;
 import com.psikku.backend.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +24,15 @@ import java.util.List;
 @RequestMapping("api/tests")
 public class TestController {
 
-    @Autowired
-    TestService testService;
+    private final Logger logger = LoggerFactory.getLogger(TestController.class);
+
+//    private String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
     @Autowired
-    UserService userService;
+    private TestService testService;
+
+    @Autowired
+    private UserService userService;
 
     @PostMapping
     public ResponseEntity<TestInsertResponseDto> addNewTest(@RequestBody @Valid FullTestDto fullTestDto){
@@ -35,6 +43,9 @@ public class TestController {
         response.setTestId(insertedTest.getId());
         response.setTestName(insertedTest.getName());
         response.setMessage("Successfully added");
+
+//        logger.info();
+
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
@@ -47,12 +58,13 @@ public class TestController {
 //    }
 
     @GetMapping
-    public ResponseEntity<List<MinimalTestDto>> getAllMinimalTests(){
+    public ResponseEntity<List<MinimalTestDto>> getAllMinimalTests(HttpServletRequest request){
 
         List<MinimalTestDto> minimalTestDtosList = testService.getAllMinTestList();
         if(minimalTestDtosList.isEmpty()){
             throw new TestException("no tests found on server");
         }
+        logger.info("ip address: " + request.getRemoteAddr());
         return new ResponseEntity<>(minimalTestDtosList,HttpStatus.OK);
     }
 
