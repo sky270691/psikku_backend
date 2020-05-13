@@ -39,8 +39,6 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @Autowired
-    ResourceLoader resourceLoader;
 
     private TokenFactory tokenFactory;
 
@@ -139,22 +137,6 @@ public class UserController {
         userDto.setLastname(firstLetterUpperCase(userDto.getLastname()));
         logger.info("username: '"+username+"' get user info");
 
-        Resource resource = resourceLoader.getResource("file:C:/Users/langi/Desktop/adsfsdf");
-        try(Scanner scanner = new Scanner(new BufferedReader(new InputStreamReader(resource.getInputStream())))){
-            StringBuilder sb = new StringBuilder();
-            while(scanner.hasNextLine()){
-                sb.append(scanner.nextLine()).append("\n");
-            }
-            File file = new File(new ClassPathResource("bangke.txt").getPath());
-
-            FileWriter writer = new FileWriter(file.getAbsolutePath());
-            BufferedWriter bw = new BufferedWriter(writer);
-            bw.write(sb.toString());
-            bw.close();
-
-        }catch (IOException e){
-            e.printStackTrace();
-        }
 
 
         return userDto;

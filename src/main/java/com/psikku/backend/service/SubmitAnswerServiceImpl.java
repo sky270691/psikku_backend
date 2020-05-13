@@ -252,6 +252,8 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
 //        }
 //    }
 
+
+    @Deprecated
     public String calculateResultTest(List<SubmittedAnswerDto> submittedAnswerDtoList){
 
         // get cfit3 answer only

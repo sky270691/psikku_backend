@@ -13,13 +13,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -45,6 +46,9 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
 
     @Autowired
     TestRepository testRepository;
+
+    @Autowired
+    ResourceLoader resourceLoader;
 
     @Autowired
     TestResultRepository testResultRepository;
@@ -168,7 +172,10 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
     }
 
     private Map<Integer,Integer> getAgeResultKeyValue(String ageRange){
-        try(Scanner scanner = new Scanner(new BufferedReader(new FileReader(cfitPkuLocation)))){
+
+        Resource resource = resourceLoader.getResource(cfitPkuLocation);
+
+        try(Scanner scanner = new Scanner(new BufferedReader(new InputStreamReader(resource.getInputStream())))){
 
             Map<Integer,Integer> map = new LinkedHashMap<>();
             String testParameterKeyValue;
