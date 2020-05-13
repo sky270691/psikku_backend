@@ -22,8 +22,6 @@ import java.util.stream.Collectors;
 @Service
 public class MinatBakatResultTestCalculator implements UniqueResultTestCalculator {
 
-    private final String MINATBAKAT_TEST_NAME = "bakat";
-
     public final Logger logger = LoggerFactory.getLogger(MinatBakatResultTestCalculator.class);
 
     @Autowired
@@ -31,9 +29,6 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
 
     @Autowired
     UserRepository userRepository;
-
-    @Autowired
-    TestResultRepository testResultRepository;
 
     @Autowired
     TestRepository testRepository;

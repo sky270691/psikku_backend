@@ -10,6 +10,7 @@ import com.psikku.backend.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,9 +19,13 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Scanner;
 
 @RestController
 @RequestMapping("/api/users")
@@ -33,6 +38,9 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    ResourceLoader resourceLoader;
 
     private TokenFactory tokenFactory;
 
@@ -130,6 +138,25 @@ public class UserController {
         userDto.setFirstname(firstLetterUpperCase(userDto.getFirstname()));
         userDto.setLastname(firstLetterUpperCase(userDto.getLastname()));
         logger.info("username: '"+username+"' get user info");
+
+        Resource resource = resourceLoader.getResource("file:C:/Users/langi/Desktop/adsfsdf");
+        try(Scanner scanner = new Scanner(new BufferedReader(new InputStreamReader(resource.getInputStream())))){
+            StringBuilder sb = new StringBuilder();
+            while(scanner.hasNextLine()){
+                sb.append(scanner.nextLine()).append("\n");
+            }
+            File file = new File(new ClassPathResource("bangke.txt").getPath());
+
+            FileWriter writer = new FileWriter(file.getAbsolutePath());
+            BufferedWriter bw = new BufferedWriter(writer);
+            bw.write(sb.toString());
+            bw.close();
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+
         return userDto;
     }
 

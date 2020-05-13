@@ -12,11 +12,12 @@ import com.psikku.backend.repository.TestResultRepository;
 import com.psikku.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class DepressionResultTestCalculator implements UniqueResultTestCalculator{
+@Service
+public class StateAnxietyTestResultCalculator implements UniqueResultTestCalculator{
 
     @Autowired
     TestResultRepository testResultRepository;
@@ -54,22 +55,27 @@ public class DepressionResultTestCalculator implements UniqueResultTestCalculato
             }
         }
 
+        StringBuilder sb = new StringBuilder();
+        sb.append("Kecemasan ").append(perCategoryPredicate(answerPoints));
+        setResult(sb.toString());
+
         TestResult testResult = new TestResult();
-        testResult.setResult(perCategoryPredicate(answerPoints));
+        testResult.setResult(getResult());
         testResult.setUser(user);
         testResult.setTest(test);
-        testResultRepository.save(testResult);
+
+//        testResultRepository.save(testResult);
 
         return testResult;
     }
 
     private String perCategoryPredicate(int resultValue){
         if(resultValue < 40){
-            return "Kecemasan Ringan";
+            return "ringan";
         }else if(resultValue < 60){
-            return "Kecemasan Sedang";
+            return "sedang";
         }else {
-            return "Kecemasan Berat";
+            return "berat";
         }
     }
 

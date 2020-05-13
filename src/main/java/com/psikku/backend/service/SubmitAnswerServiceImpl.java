@@ -1,8 +1,10 @@
 package com.psikku.backend.service;
 
+import com.psikku.backend.dto.testresult.TestFinalResultDto;
 import com.psikku.backend.dto.useranswer.SubmittedAnswerDto;
 import com.psikku.backend.dto.useranswer.UserAnswerDto;
 import com.psikku.backend.entity.*;
+import com.psikku.backend.exception.TestResultException;
 import com.psikku.backend.repository.*;
 import com.psikku.backend.service.uniquetestresultcalculator.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +54,12 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
 
     @Autowired
     CovidResultTestCalculator covidResultTestCalculator;
+
+    @Autowired
+    StateAnxietyTestResultCalculator stateAnxietyTestResultCalculator;
+
+    @Autowired
+    TestResultService testResultService;
 
     @Transactional
     @Override
@@ -247,51 +255,36 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
     public String calculateResultTest(List<SubmittedAnswerDto> submittedAnswerDtoList){
 
         // get cfit3 answer only
-        List<SubmittedAnswerDto> cfitAnswer = submittedAnswerDtoList.stream()
-                .filter(answer -> answer.getQuestionId().contains("cfit"))
-                .collect(Collectors.toList());
+        List<SubmittedAnswerDto> cfitAnswer =
+                getSpecificAnswerDtoList(submittedAnswerDtoList, "cfit");
 
         // get gaya belajar1 test only
         List<SubmittedAnswerDto> gayaBelajar1Only =
-                submittedAnswerDtoList.stream()
-                        .filter(answerDto -> answerDto.getQuestionId().contains("gayaBelajar1".toLowerCase()))
-                        .collect(Collectors.toList());
+                getSpecificAnswerDtoList(submittedAnswerDtoList, "gayaBelajar1".toLowerCase());
 
         // get gaya belajar2 test only
         List<SubmittedAnswerDto> gayaBelajar2Only =
-                submittedAnswerDtoList.stream()
-                        .filter(answerDto -> answerDto.getQuestionId().contains("gayaBelajar2".toLowerCase()))
-                        .collect(Collectors.toList());
+                getSpecificAnswerDtoList(submittedAnswerDtoList, "gayaBelajar2".toLowerCase());
 
         // get bully test only
         List<SubmittedAnswerDto> bullyTestOnly =
-                submittedAnswerDtoList.stream()
-                        .filter(answerDto -> answerDto.getQuestionId().contains("bully".toLowerCase()))
-                        .collect(Collectors.toList());
+                getSpecificAnswerDtoList(submittedAnswerDtoList, "bully".toLowerCase());
 
         // get eq test only
         List<SubmittedAnswerDto> eqTestOnly =
-                submittedAnswerDtoList.stream()
-                        .filter(answerDto -> answerDto.getQuestionId().contains("eq".toLowerCase()))
-                        .collect(Collectors.toList());
+                getSpecificAnswerDtoList(submittedAnswerDtoList, "eq".toLowerCase());
 
         // minatbakat test only
         List<SubmittedAnswerDto> minatBakatTestOnly =
-                submittedAnswerDtoList.stream()
-                        .filter(answerDto -> answerDto.getQuestionId().contains("bakat".toLowerCase()))
-                        .collect(Collectors.toList());
+                getSpecificAnswerDtoList(submittedAnswerDtoList, "bakat".toLowerCase());
 
         // survey karakter test only
         List<SubmittedAnswerDto> surveyKarakterOnly =
-                submittedAnswerDtoList.stream()
-                        .filter(answerDto -> answerDto.getQuestionId().contains("surveyKarakter".toLowerCase()))
-                        .collect(Collectors.toList());
+                getSpecificAnswerDtoList(submittedAnswerDtoList, "surveyKarakter".toLowerCase());
 
         // covid test only
         List<SubmittedAnswerDto> covidOnly =
-                submittedAnswerDtoList.stream()
-                        .filter(answerDto -> answerDto.getQuestionId().contains("covid".toLowerCase()))
-                        .collect(Collectors.toList());
+                getSpecificAnswerDtoList(submittedAnswerDtoList, "covid".toLowerCase());
 
 
         if(!cfitAnswer.isEmpty()){
@@ -330,61 +323,54 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
                 +"\n\n"+covidResultTestCalculator.getResult();
     }
 
+
     @Override
     @Transactional
-    public String calculateResultTestV2(UserAnswerDto userAnswerDto) {
+    public TestFinalResultDto calculateResultTestV2(UserAnswerDto userAnswerDto) {
 
         List<SubmittedAnswerDto> submittedAnswerDtoList = userAnswerDto.getSubmittedAnswerDtoList();
         LocalDateTime creationDate = formatLdt(userAnswerDto.getCreationDateTime());
-        TestResult testResult;
+        TestResult testResult = null;
+
+        //filter the specific answer only from the submission
 
         // get cfit3 answer only
-        List<SubmittedAnswerDto> cfitAnswer = submittedAnswerDtoList.stream()
-                .filter(answer -> answer.getQuestionId().contains("cfit"))
-                .collect(Collectors.toList());
+        List<SubmittedAnswerDto> cfitAnswer =
+                getSpecificAnswerDtoList(submittedAnswerDtoList, "cfit");
 
         // get gaya belajar1 test only
         List<SubmittedAnswerDto> gayaBelajar1Only =
-                submittedAnswerDtoList.stream()
-                        .filter(answerDto -> answerDto.getQuestionId().contains("gayaBelajar1".toLowerCase()))
-                        .collect(Collectors.toList());
+                getSpecificAnswerDtoList(submittedAnswerDtoList, "gayaBelajar1".toLowerCase());
 
         // get gaya belajar2 test only
         List<SubmittedAnswerDto> gayaBelajar2Only =
-                submittedAnswerDtoList.stream()
-                        .filter(answerDto -> answerDto.getQuestionId().contains("gayaBelajar2".toLowerCase()))
-                        .collect(Collectors.toList());
+                getSpecificAnswerDtoList(submittedAnswerDtoList, "gayaBelajar2".toLowerCase());
 
         // get bully test only
         List<SubmittedAnswerDto> bullyTestOnly =
-                submittedAnswerDtoList.stream()
-                        .filter(answerDto -> answerDto.getQuestionId().contains("bully".toLowerCase()))
-                        .collect(Collectors.toList());
+                getSpecificAnswerDtoList(submittedAnswerDtoList, "bully".toLowerCase());
 
         // get eq test only
         List<SubmittedAnswerDto> eqTestOnly =
-                submittedAnswerDtoList.stream()
-                        .filter(answerDto -> answerDto.getQuestionId().contains("eq".toLowerCase()))
-                        .collect(Collectors.toList());
+                getSpecificAnswerDtoList(submittedAnswerDtoList, "eq".toLowerCase());
 
         // minatbakat test only
         List<SubmittedAnswerDto> minatBakatTestOnly =
-                submittedAnswerDtoList.stream()
-                        .filter(answerDto -> answerDto.getQuestionId().contains("bakat".toLowerCase()))
-                        .collect(Collectors.toList());
+                getSpecificAnswerDtoList(submittedAnswerDtoList, "bakat".toLowerCase());
 
         // survey karakter test only
         List<SubmittedAnswerDto> surveyKarakterOnly =
-                submittedAnswerDtoList.stream()
-                        .filter(answerDto -> answerDto.getQuestionId().contains("surveyKarakter".toLowerCase()))
-                        .collect(Collectors.toList());
+                getSpecificAnswerDtoList(submittedAnswerDtoList, "surveyKarakter".toLowerCase());
 
         // covid test only
         List<SubmittedAnswerDto> covidOnly =
-                submittedAnswerDtoList.stream()
-                        .filter(answerDto -> answerDto.getQuestionId().contains("covid".toLowerCase()))
-                        .collect(Collectors.toList());
+                getSpecificAnswerDtoList(submittedAnswerDtoList, "covid".toLowerCase());
 
+        // stateAnxiety test only
+        List<SubmittedAnswerDto> stateAnxietyOnly =
+                getSpecificAnswerDtoList(submittedAnswerDtoList, "stateAnxiety".toLowerCase());
+
+        // calculate each unique test independently
 
         if(!cfitAnswer.isEmpty()){
             testResult = cfitResultTestCalculator.calculateNewResult(cfitAnswer);
@@ -426,22 +412,33 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
             testResult.setDateOfTest(creationDate);
             testResultRepository.save(testResult);
         }
+        if(!stateAnxietyOnly.isEmpty()){
+            testResult = stateAnxietyTestResultCalculator.calculateNewResult(stateAnxietyOnly);
+            testResult.setDateOfTest(creationDate);
+            testResultRepository.save(testResult);
+        }
 
+        if(testResult != null){
+            System.out.println("reach here");
+            return testResultService.convertToTestResultDto(testResult);
+        }else{
+            throw new TestResultException("Test Result Error");
+        }
 
-        return eqResultTestCalculator.getResult()
-                +"\n\n"+bullyResultTestCalculator.getTestResult()
-                +"\n\n"+gayaBelajar1ResultTestCalculator.getResult()
-                +"\n\n"+gayaBelajar2ResultTestCalculator.getResult()
-                +"\n\n"+minatBakatResultTestCalculator.getResult()
-                +"\n\n"+surveyKarakterResultTestCalculator.getTestResult()
-                +"\n\n"+cfitResultTestCalculator.getResult()
-                +"\n\n"+covidResultTestCalculator.getResult();
     }
+
 
     private LocalDateTime formatLdt(String customLocalDateTime){
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS");
         LocalDateTime ldt = LocalDateTime.parse(customLocalDateTime, dtf);
         return ldt;
+    }
+
+
+    private List<SubmittedAnswerDto> getSpecificAnswerDtoList(List<SubmittedAnswerDto> submittedAnswerDtoList, String testName) {
+        return submittedAnswerDtoList.stream()
+                .filter(answer -> answer.getQuestionId().contains(testName))
+                .collect(Collectors.toList());
     }
 }
 

@@ -1,7 +1,10 @@
 package com.psikku.backend.controller;
 
+import com.psikku.backend.dto.testresult.TestFinalResultDto;
 import com.psikku.backend.dto.useranswer.SubmittedAnswerDto;
 import com.psikku.backend.dto.useranswer.UserAnswerDto;
+import com.psikku.backend.entity.TestResult;
+import com.psikku.backend.service.TestResultService;
 import com.psikku.backend.service.TestService;
 import com.psikku.backend.service.SubmitAnswerService;
 import com.psikku.backend.service.UserService;
@@ -22,10 +25,7 @@ public class SubmitAnswerController {
     public final Logger logger = LoggerFactory.getLogger(SubmitAnswerController.class);
 
     @Autowired
-    UserService userService;
-
-    @Autowired
-    TestService testService;
+    TestResultService testResultService;
 
     @Autowired
     SubmitAnswerService submitAnswerService;
@@ -58,17 +58,27 @@ public class SubmitAnswerController {
 //        return new ResponseEntity<>("success",HttpStatus.OK);
 //    }
 
+//    @PostMapping
+//    public ResponseEntity<String> submitAnswers2(@RequestBody UserAnswerDto userAnswerDto){
+//        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+//        logger.info("username: '"+username+"' try to submit answer");
+////        User user = userService.findByUsername(username);
+////        List<SubmittedAnswer> submittedAnswerList = submitAnswerService.convertToSubmittedAnswerList(submittedAnswerDto,user);
+////        submitAnswerService.saveUserAnswer(submittedAnswerList);
+//        submitAnswerService.calculateResultTestV2(userAnswerDto);
+////        return new ArrayList<>();
+//
+//        logger.info("username: '"+username+"' answer's calculated successfully");
+//        return new ResponseEntity<>("success",HttpStatus.OK);
+//    }
+
     @PostMapping
-    public ResponseEntity<String> submitAnswers2(@RequestBody UserAnswerDto userAnswerDto){
+    public ResponseEntity<TestFinalResultDto> submitAnswers(@RequestBody UserAnswerDto userAnswerDto){
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         logger.info("username: '"+username+"' try to submit answer");
-//        User user = userService.findByUsername(username);
-//        List<SubmittedAnswer> submittedAnswerList = submitAnswerService.convertToSubmittedAnswerList(submittedAnswerDto,user);
-//        submitAnswerService.saveUserAnswer(submittedAnswerList);
-        submitAnswerService.calculateResultTestV2(userAnswerDto);
-//        return new ArrayList<>();
+        TestFinalResultDto testFinalResultDto= submitAnswerService.calculateResultTestV2(userAnswerDto);
 
         logger.info("username: '"+username+"' answer's calculated successfully");
-        return new ResponseEntity<>("success",HttpStatus.OK);
+        return new ResponseEntity<>(testFinalResultDto,HttpStatus.OK);
     }
 }
