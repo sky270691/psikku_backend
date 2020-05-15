@@ -12,6 +12,7 @@ public interface TestResultService  {
     boolean saveTestResult(TestResult testResult);
     List<TestResult> findAllByUserName (String username);
     List<TestResult> findAllResultByUserId(long userId);
+    List<TestResult> findAllResultByTestId(int id);
 
     //-------------converter method-------------------------------------------------
     TestFinalResultDto convertToTestResultDto(TestResult testResult);

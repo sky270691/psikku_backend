@@ -5,15 +5,15 @@ import java.time.LocalDateTime;
 
 public class UserDto {
 
-    //Todo
-    // Ask Arthur about the Company submission for each user (by CompanyId or Complete CompanyDto)
-
     long id;
     String username;
     String email;
     String firstname;
     String lastname;
     String sex;
+    String province;
+    String city;
+    String address;
     LocalDateTime createTime;
     LocalDate dateOfBirth;
 
@@ -79,5 +79,29 @@ public class UserDto {
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

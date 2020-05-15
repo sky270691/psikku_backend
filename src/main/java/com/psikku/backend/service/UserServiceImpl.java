@@ -157,6 +157,9 @@ public class UserServiceImpl implements UserService {
         userDto.setSex(user.getSex());
         userDto.setDateOfBirth(user.getDateOfBirth());
         userDto.setCreateTime(user.getCreateTime());
+        userDto.setProvince(user.getProvince());
+        userDto.setCity(user.getCity());
+        userDto.setAddress(user.getAddress());
         return userDto;
     }
 

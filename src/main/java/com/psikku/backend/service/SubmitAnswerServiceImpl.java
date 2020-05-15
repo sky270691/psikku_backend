@@ -4,12 +4,15 @@ import com.psikku.backend.dto.testresult.TestFinalResultDto;
 import com.psikku.backend.dto.useranswer.SubmittedAnswerDto;
 import com.psikku.backend.dto.useranswer.UserAnswerDto;
 import com.psikku.backend.entity.*;
+import com.psikku.backend.exception.TestException;
 import com.psikku.backend.exception.TestResultException;
 import com.psikku.backend.repository.*;
 import com.psikku.backend.service.uniquetestresultcalculator.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -60,6 +63,10 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
 
     @Autowired
     TestResultService testResultService;
+
+    @Autowired
+    GenericResultTestCalculator genericResultTestCalculator;
+
 
     @Transactional
     @Override
@@ -128,202 +135,87 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
         return testType;
     }
 
-    // calculate result test conventional
-//    @Transactional
-//    @Override
-//    public void calculateResultTest(List<SubmittedAnswer> submittedAnswerList) {
-//
-//        List<Test> testList = submittedAnswerList.stream()
-//                .map(x -> {
-//                    String[] questionIdSplit = x.getQuestion().getId().split("_");
-////                    return testRepository.findTestByName(questionIdSplit[0]).orElseThrow(() -> new TestException("Test Not found"));
-//                    return questionIdSplit[0];
-//                })
-//                .distinct()
-//                .map(testName-> testRepository.findTestByName(testName).orElseThrow(() -> new TestException("Test Not found")))
-//                .collect(Collectors.toList());
-//
-//        User user = submittedAnswerList.stream()
-//                        .map(SubmittedAnswer::getUser)
-//                        .findFirst().orElse(null);
-//
-//        int totalNumOfCorrectAnswer = 0;
-//        Map<Integer, Integer> surveyCategoryPair = new HashMap<>();
-//        Map<Integer, Integer> totalSurveyCategoryPair = new HashMap<>();
-//
-//        for (Test test : testList) {
-//            System.out.println("Test name: " + test.getName());
-//            for (Subtest subTest : test.getSubtestList()) {
-//
-//                // variable init for several subtest type purposes
-//                int numOfCorrectAnswer = 0;
-//                int counter = 0;
-//
-//                if (subTest.getId().startsWith(test.getName())) {
-//                    String[] subtestIdSplit = subTest.getId().split("_");
-//                    System.out.println("subtest = " + subtestIdSplit[1]);
-//                    for (SubmittedAnswer submittedAnswer : submittedAnswerList) {
-//                        if (submittedAnswer.getQuestion().getId().startsWith(subTest.getId())) {
-//                            String[] submittedAnswerSplit = submittedAnswer.getAnswers().split(",");
-//                            int numOfAnswers = 0;
-//                            for (String tempSubmittedAnswer : submittedAnswerSplit) {
-//                                Answer tempAnswer = null;
-//                                if(!((subTest.getTestType().equalsIgnoreCase("user_input_string"))||
-//                                        subTest.getTestType().equalsIgnoreCase("user_input_number"))) {
-//                                    tempAnswer = answerRepository.findById(submittedAnswer.getQuestion().getId() + "_" + tempSubmittedAnswer)
-//                                            .orElseThrow(() -> new RuntimeException("no answer found"));
-//                                }else{
-//                                    String questionId = submittedAnswer.getQuestion().getId();
-//                                    Question tempQuestion = questionRepository.findQuestionByIdEquals(questionId).orElseThrow(()-> new RuntimeException("question not found"));
-//                                    tempAnswer = tempQuestion.getAnswerList().get(0);
-//                                }
-//                                switch (subTest.getTestType()) {
-//                                    case "right_or_wrong":
-//                                        if (tempAnswer.getIsCorrect() == 1) {
-//                                            numOfCorrectAnswer++;
-//                                        }
-//                                        break;
-//                                    case "two_answers":
-//                                        if (tempAnswer.getIsCorrect() == 1 && numOfAnswers < 1) {
-//                                            numOfAnswers++;
-//                                        } else if (tempAnswer.getIsCorrect() == 1 && numOfAnswers == 1) {
-//                                            numOfCorrectAnswer++;
-//                                        }
-//                                        break;
-////                                    case "three_answers":
-////                                        if (tempAnswer.getIsCorrect() == 1 && numOfAnswers < 2) {
-////                                            numOfAnswers++;
-////                                        } else if (tempAnswer.getIsCorrect() == 1 && numOfAnswers == 2) {
-////                                            numOfCorrectAnswer++;
-////                                        }
-////                                        break;
-//                                    case "survey":
-////                                        List<Integer> answerCategoryList = subTest.getQuestionList().stream()
-////                                                                        .flatMap(question -> question.getAnswerList().stream())
-////                                                                        .map(Answer::getAnswerCategory)
-////                                                                        .distinct()
-////                                                                        .collect(Collectors.toList());
-////                                        int maxCategory = Collections.max(answerCategoryList);
-////                                        for(int i = maxCategory;i>0;i--){
-////                                            if(tempAnswer.getAnswerCategory()==i){
-////                                                if(surveyCategoryPair.containsKey(i)){
-////                                                    counter = surveyCategoryPair.get(i)+1;
-////                                                }else{
-////                                                    counter = 1;
-////                                                }
-////                                                surveyCategoryPair.put(i,counter);
-////                                            }
-////                                        }
-//                                        break;
-//                                    case "user_input_string":
-//                                    case "user_input_number":
-//                                        if(tempSubmittedAnswer.equalsIgnoreCase(tempAnswer.getAnswerContent())){
-//                                            numOfCorrectAnswer++;
-//                                        }
-//                                        break;
-//                                    default:
-//                                        break;
-//                                }
-//                            }
-//                        }
-//                    }
-//                    System.out.println("total correct number: " + numOfCorrectAnswer);
-//                    totalNumOfCorrectAnswer += numOfCorrectAnswer;
-//                    if(subTest.getTestType().equalsIgnoreCase("survey")){
-//                        for(int key : surveyCategoryPair.keySet()){
-//                            totalSurveyCategoryPair.put(key,surveyCategoryPair.get(key));
-//                        }
-//                        System.out.println("List of Survey answer: "+surveyCategoryPair);
-//                    }
-//                }
-//            }
-//            System.out.println("===================================================================================");
-//            TestResult testResult = new TestResult();
-//            testResult.setTest(test);
-//            System.out.println("total correct number: " + totalNumOfCorrectAnswer);
-//            if(test.getIsSurvey()){
-//                testResult.setSurveyCategoryAnswer(surveyCategoryPair.toString());
-//                System.out.println("List of Survey answer: "+surveyCategoryPair);
-//            }else{
-//                testResult.setTotalRightAnswer(totalNumOfCorrectAnswer);
-//            }
-//            testResult.setUser(user);
-//            testResultRepository.save(testResult);
-//        }
-//    }
-
-
-    @Deprecated
-    public String calculateResultTest(List<SubmittedAnswerDto> submittedAnswerDtoList){
-
-        // get cfit3 answer only
-        List<SubmittedAnswerDto> cfitAnswer =
-                getSpecificAnswerDtoList(submittedAnswerDtoList, "cfit");
-
-        // get gaya belajar1 test only
-        List<SubmittedAnswerDto> gayaBelajar1Only =
-                getSpecificAnswerDtoList(submittedAnswerDtoList, "gayaBelajar1".toLowerCase());
-
-        // get gaya belajar2 test only
-        List<SubmittedAnswerDto> gayaBelajar2Only =
-                getSpecificAnswerDtoList(submittedAnswerDtoList, "gayaBelajar2".toLowerCase());
-
-        // get bully test only
-        List<SubmittedAnswerDto> bullyTestOnly =
-                getSpecificAnswerDtoList(submittedAnswerDtoList, "bully".toLowerCase());
-
-        // get eq test only
-        List<SubmittedAnswerDto> eqTestOnly =
-                getSpecificAnswerDtoList(submittedAnswerDtoList, "eq".toLowerCase());
-
-        // minatbakat test only
-        List<SubmittedAnswerDto> minatBakatTestOnly =
-                getSpecificAnswerDtoList(submittedAnswerDtoList, "bakat".toLowerCase());
-
-        // survey karakter test only
-        List<SubmittedAnswerDto> surveyKarakterOnly =
-                getSpecificAnswerDtoList(submittedAnswerDtoList, "surveyKarakter".toLowerCase());
-
-        // covid test only
-        List<SubmittedAnswerDto> covidOnly =
-                getSpecificAnswerDtoList(submittedAnswerDtoList, "covid".toLowerCase());
-
-
-        if(!cfitAnswer.isEmpty()){
-            cfitResultTestCalculator.calculateNewResult(cfitAnswer);
-        }
-        if(!bullyTestOnly.isEmpty()){
-            bullyResultTestCalculator.calculateNewResult(bullyTestOnly);
-        }
-        if(!eqTestOnly.isEmpty()){
-            eqResultTestCalculator.calculateNewResult(eqTestOnly);
-        }
-        if(!gayaBelajar1Only.isEmpty()){
-            gayaBelajar1ResultTestCalculator.calculateNewResult(gayaBelajar1Only);
-        }
-        if(!gayaBelajar2Only.isEmpty()){
-            gayaBelajar2ResultTestCalculator.calculateNewResult(gayaBelajar2Only);
-        }
-        if(!minatBakatTestOnly.isEmpty()){
-            minatBakatResultTestCalculator.calculateNewResult(minatBakatTestOnly);
-        }
-        if(!surveyKarakterOnly.isEmpty()){
-            surveyKarakterResultTestCalculator.calculateNewResult(surveyKarakterOnly);
-        }
-        if(!covidOnly.isEmpty()){
-            covidResultTestCalculator.calculateNewResult(covidOnly);
-        }
-
-
-        return eqResultTestCalculator.getResult()
-                +"\n\n"+bullyResultTestCalculator.getTestResult()
-                +"\n\n"+gayaBelajar1ResultTestCalculator.getResult()
-                +"\n\n"+gayaBelajar2ResultTestCalculator.getResult()
-                +"\n\n"+minatBakatResultTestCalculator.getResult()
-                +"\n\n"+surveyKarakterResultTestCalculator.getTestResult()
-                +"\n\n"+cfitResultTestCalculator.getResult()
-                +"\n\n"+covidResultTestCalculator.getResult();
+    // calculate result test generic
+    @Override
+    public TestFinalResultDto calculateGenericTest(UserAnswerDto userAnswerDto) {
+        List<SubmittedAnswerDto> answerFromUser = userAnswerDto.getSubmittedAnswerDtoList();
+        TestResult testResult = genericResultTestCalculator.calculateNewResult(answerFromUser);
+        TestFinalResultDto testFinalResultDto = testResultService.convertToTestResultDto(testResult);
+        testResult.setDateOfTest(formatLdt(userAnswerDto.getCreationDateTime()));
+        testResultService.saveTestResult(testResult);
+        return testFinalResultDto;
     }
+
+//    public String calculateResultTest(List<SubmittedAnswerDto> submittedAnswerDtoList){
+//
+//        // get cfit3 answer only
+//        List<SubmittedAnswerDto> cfitAnswer =
+//                getSpecificAnswerDtoList(submittedAnswerDtoList, "cfit");
+//
+//        // get gaya belajar1 test only
+//        List<SubmittedAnswerDto> gayaBelajar1Only =
+//                getSpecificAnswerDtoList(submittedAnswerDtoList, "gayaBelajar1".toLowerCase());
+//
+//        // get gaya belajar2 test only
+//        List<SubmittedAnswerDto> gayaBelajar2Only =
+//                getSpecificAnswerDtoList(submittedAnswerDtoList, "gayaBelajar2".toLowerCase());
+//
+//        // get bully test only
+//        List<SubmittedAnswerDto> bullyTestOnly =
+//                getSpecificAnswerDtoList(submittedAnswerDtoList, "bully".toLowerCase());
+//
+//        // get eq test only
+//        List<SubmittedAnswerDto> eqTestOnly =
+//                getSpecificAnswerDtoList(submittedAnswerDtoList, "eq".toLowerCase());
+//
+//        // minatbakat test only
+//        List<SubmittedAnswerDto> minatBakatTestOnly =
+//                getSpecificAnswerDtoList(submittedAnswerDtoList, "bakat".toLowerCase());
+//
+//        // survey karakter test only
+//        List<SubmittedAnswerDto> surveyKarakterOnly =
+//                getSpecificAnswerDtoList(submittedAnswerDtoList, "surveyKarakter".toLowerCase());
+//
+//        // covid test only
+//        List<SubmittedAnswerDto> covidOnly =
+//                getSpecificAnswerDtoList(submittedAnswerDtoList, "covid".toLowerCase());
+//
+//
+//        if(!cfitAnswer.isEmpty()){
+//            cfitResultTestCalculator.calculateNewResult(cfitAnswer);
+//        }
+//        if(!bullyTestOnly.isEmpty()){
+//            bullyResultTestCalculator.calculateNewResult(bullyTestOnly);
+//        }
+//        if(!eqTestOnly.isEmpty()){
+//            eqResultTestCalculator.calculateNewResult(eqTestOnly);
+//        }
+//        if(!gayaBelajar1Only.isEmpty()){
+//            gayaBelajar1ResultTestCalculator.calculateNewResult(gayaBelajar1Only);
+//        }
+//        if(!gayaBelajar2Only.isEmpty()){
+//            gayaBelajar2ResultTestCalculator.calculateNewResult(gayaBelajar2Only);
+//        }
+//        if(!minatBakatTestOnly.isEmpty()){
+//            minatBakatResultTestCalculator.calculateNewResult(minatBakatTestOnly);
+//        }
+//        if(!surveyKarakterOnly.isEmpty()){
+//            surveyKarakterResultTestCalculator.calculateNewResult(surveyKarakterOnly);
+//        }
+//        if(!covidOnly.isEmpty()){
+//            covidResultTestCalculator.calculateNewResult(covidOnly);
+//        }
+//
+//
+//        return eqResultTestCalculator.getResult()
+//                +"\n\n"+bullyResultTestCalculator.getTestResult()
+//                +"\n\n"+gayaBelajar1ResultTestCalculator.getResult()
+//                +"\n\n"+gayaBelajar2ResultTestCalculator.getResult()
+//                +"\n\n"+minatBakatResultTestCalculator.getResult()
+//                +"\n\n"+surveyKarakterResultTestCalculator.getTestResult()
+//                +"\n\n"+cfitResultTestCalculator.getResult()
+//                +"\n\n"+covidResultTestCalculator.getResult();
+//}
 
 
     @Override
@@ -372,6 +264,10 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
         List<SubmittedAnswerDto> stateAnxietyOnly =
                 getSpecificAnswerDtoList(submittedAnswerDtoList, "stateAnxiety".toLowerCase());
 
+        // kesbang test only
+        List<SubmittedAnswerDto> belaNegaraOnly =
+                getSpecificAnswerDtoList(submittedAnswerDtoList, "belaNegara".toLowerCase());
+
         // calculate each unique test independently
 
         if(!cfitAnswer.isEmpty()){
@@ -416,6 +312,11 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
         }
         if(!stateAnxietyOnly.isEmpty()){
             testResult = stateAnxietyTestResultCalculator.calculateNewResult(stateAnxietyOnly);
+            testResult.setDateOfTest(creationDate);
+            testResultRepository.save(testResult);
+        }
+        if(!belaNegaraOnly.isEmpty()){
+            testResult = genericResultTestCalculator.calculateNewResult(belaNegaraOnly);
             testResult.setDateOfTest(creationDate);
             testResultRepository.save(testResult);
         }

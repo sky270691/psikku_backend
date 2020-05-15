@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "auth-server.endpoint.users",
+      "type": "java.lang.String",
+      "description": "Description for auth-server.endpoint.users."
+  }
+] }

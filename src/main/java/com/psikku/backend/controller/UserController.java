@@ -137,8 +137,6 @@ public class UserController {
         userDto.setLastname(firstLetterUpperCase(userDto.getLastname()));
         logger.info("username: '"+username+"' get user info");
 
-
-
         return userDto;
     }
 

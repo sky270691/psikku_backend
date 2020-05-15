@@ -54,4 +54,9 @@ public class TestResultServiceImpl implements TestResultService {
         }
         return testResultDto;
     }
+
+    @Override
+    public List<TestResult> findAllResultByTestId(int id) {
+        return null;
+    }
 }
