@@ -17,6 +17,7 @@ public class Package {
     @ManyToMany(mappedBy = "packageList", cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     private List<Test> testList;
 
+
     public int getId() {
         return id;
     }

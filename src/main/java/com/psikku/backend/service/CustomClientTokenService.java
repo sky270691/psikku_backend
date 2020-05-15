@@ -1,20 +1,16 @@
 package com.psikku.backend.service;
 
-import com.psikku.backend.entity.ExtractedToken;
 import com.psikku.backend.entity.TokenFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.jwt.Jwt;
-import org.springframework.security.jwt.JwtHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Arrays;
 import java.util.Base64;
 
 @Service
@@ -64,20 +60,6 @@ public class CustomClientTokenService implements TokenService{
         return responseEntity;
     }
 
-    @Override
-    public ExtractedToken extractToken(String token) {
-        Jwt jwt = JwtHelper.decode(token);
-        String[] extractedSplitPayload = jwt.getClaims().split(",");
 
-        long exp = Long.parseLong(extractedSplitPayload[0].substring(7,extractedSplitPayload[0].length()-1));
-        String username = extractedSplitPayload[1].substring(13,extractedSplitPayload[1].length()-1);
-        String authorities = extractedSplitPayload[2].substring(16,extractedSplitPayload[2].length()-2);
-        String jti = extractedSplitPayload[3].substring(8,extractedSplitPayload[3].length()-1);
-        String client_id = extractedSplitPayload[4].substring(13,extractedSplitPayload[4].length()-1);
-        String scope = extractedSplitPayload[5].substring(10,extractedSplitPayload[5].length()-3);
-
-        ExtractedToken extractedToken = new ExtractedToken(exp,username, Arrays.asList(authorities),jti,client_id,Arrays.asList(scope));
-        return extractedToken;
-    }
 
 }

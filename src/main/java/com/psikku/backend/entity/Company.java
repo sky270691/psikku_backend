@@ -27,6 +27,9 @@ public class Company {
     @OneToMany(mappedBy = "company")
     private List<User> userList;
 
+    @OneToMany(mappedBy = "company")
+    private List<Voucher> voucherList;
+
     public long getId() {
         return id;
     }
@@ -89,5 +92,13 @@ public class Company {
 
     public void setUserList(List<User> userList) {
         this.userList = userList;
+    }
+
+    public List<Voucher> getVoucherList() {
+        return voucherList;
+    }
+
+    public void setVoucherList(List<Voucher> voucherList) {
+        this.voucherList = voucherList;
     }
 }

@@ -53,6 +53,12 @@ public class User {
     @JoinColumn(name = "user_id")
     public List<TestResult> testResultList;
 
+    @ManyToMany
+    @JoinTable(name = "user_voucher",
+                joinColumns = @JoinColumn(name = "user_id"),
+                inverseJoinColumns = @JoinColumn(name = "voucher_id"))
+    private List<Voucher> voucherList;
+
     public long getId() {
         return id;
     }
@@ -181,5 +187,13 @@ public class User {
 
     public void setProvince(String province) {
         this.province = province;
+    }
+
+    public List<Voucher> getVoucherList() {
+        return voucherList;
+    }
+
+    public void setVoucherList(List<Voucher> voucherList) {
+        this.voucherList = voucherList;
     }
 }
