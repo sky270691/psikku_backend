@@ -13,15 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/packages")
 public class TestPackageController {
 
-//    public PackageDto getPackage()
-    @Autowired
-    PackageService packageService;
 
-    @PostMapping
-    public ResponseEntity<CreatePackageResponseDto> createNewPackage(@RequestBody PackageDto packageDto){
-        System.out.println("test  1 2 3");
-        Package newPackage = packageService.convertToPackageEntity(packageDto);
-        return new ResponseEntity<>(packageService.createPackage(newPackage), HttpStatus.OK);
-    }
 
 }

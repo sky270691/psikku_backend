@@ -2,6 +2,7 @@ package com.psikku.backend.entity;
 
 
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.domain.Auditable;
 
 import javax.persistence.*;
 import java.time.LocalDate;

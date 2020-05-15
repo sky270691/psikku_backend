@@ -26,7 +26,8 @@ public class Voucher {
     @Column(name = "valid")
     private boolean valid;
 
-    @ManyToOne(cascade = {CascadeType.REFRESH,CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST})
+    @ManyToOne(cascade = {CascadeType.REFRESH,CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST},fetch = FetchType.LAZY)
+    @JoinColumn(name = "package_id")
     private Package thePackage;
 
     @ManyToMany(cascade = {CascadeType.REFRESH,CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST})
@@ -42,6 +43,13 @@ public class Voucher {
     @OneToOne
     @JoinColumn(name = "payment_id")
     private Payment payment;
+
+    @Column(name = "user_count")
+    private int userCont;
+
+
+
+
 
     public long getId() {
         return id;
@@ -113,5 +121,13 @@ public class Voucher {
 
     public void setPayment(Payment payment) {
         this.payment = payment;
+    }
+
+    public int getUserCont() {
+        return userCont;
+    }
+
+    public void setUserCont(int userCont) {
+        this.userCont = userCont;
     }
 }

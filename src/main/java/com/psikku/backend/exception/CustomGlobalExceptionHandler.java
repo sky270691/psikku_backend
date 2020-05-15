@@ -109,6 +109,16 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(PaymentException.class)
+    public ResponseEntity<PaymentExceptionResponse> handlePaymentException(PaymentException e){
+
+        PaymentExceptionResponse response = new PaymentExceptionResponse();
+        response.setMessage(e.getMessage());
+        response.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
+        response.setTimestamp(LocalDateTime.now());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
 
 
 

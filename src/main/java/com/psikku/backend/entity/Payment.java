@@ -60,4 +60,14 @@ public class Payment {
     public void setPaymentDate(LocalDate paymentDate) {
         this.paymentDate = paymentDate;
     }
+
+
+    public enum Method{
+        CASH,
+        BANK_TRANSFER,
+        CREDIT_CARD
+    }
+
 }
+
+
