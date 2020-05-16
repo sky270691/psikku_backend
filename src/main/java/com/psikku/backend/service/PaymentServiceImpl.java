@@ -24,14 +24,17 @@ public class PaymentServiceImpl implements PaymentService {
         Payment thePayment = getPaymentById(paymentId);
         thePayment.setPaid(true);
         savePayment(thePayment);
+        logger.info("payment detail verified successfully");
     }
 
     @Override
     public Payment getPaymentById(long paymentId) {
-        return paymentRepository.findById(paymentId).orElseThrow(()-> {
+        Payment thePayment = paymentRepository.findById(paymentId).orElseThrow(()-> {
             logger.error("error finding payment in database");
             return new PaymentException("payment not found");
         });
+        logger.info("getting payment data success");
+        return thePayment;
     }
 
     //Todo
@@ -42,11 +45,13 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setPaid(false);
         payment.setTotalPayment(packagePrice);
         payment.setMethod(paymentMethod.name());
+        logger.info("payment detail generated");
         return payment;
     }
 
     @Override
     public void savePayment(Payment payment) {
         paymentRepository.save(payment);
+        logger.info("payment data saved successfully");
     }
 }

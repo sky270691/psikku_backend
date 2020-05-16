@@ -45,7 +45,7 @@ public class Voucher {
     private Payment payment;
 
     @Column(name = "user_count")
-    private int userCont;
+    private int userCount;
 
 
 
@@ -123,11 +123,11 @@ public class Voucher {
         this.payment = payment;
     }
 
-    public int getUserCont() {
-        return userCont;
+    public int getUserCount() {
+        return userCount;
     }
 
-    public void setUserCont(int userCont) {
-        this.userCont = userCont;
+    public void setUserCount(int userCont) {
+        this.userCount = userCont;
     }
 }
