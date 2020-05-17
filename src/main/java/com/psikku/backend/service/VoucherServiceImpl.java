@@ -51,6 +51,8 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public String generateVoucherCode() {
+        Voucher voucher = new Voucher();
+
 
         return generateAlphaNumeric(12);
     }
@@ -66,7 +68,7 @@ public class VoucherServiceImpl implements VoucherService {
         return false;
     }
 
-    private static String generateAlphaNumeric(int stringLength){
+    private String generateAlphaNumeric(int stringLength){
         String alphaLower = "abcdefghijklmnopqrstuvwxyz";
         String alphaUpper = alphaLower.toUpperCase();
         String number = "0123456789";

@@ -42,11 +42,6 @@ public class UserController {
 
     private TokenFactory tokenFactory;
 
-    @GetMapping("/hello")
-    public String hello(){
-        return "HELLO!";
-    }
-
     @GetMapping
     public List<UserDto> getAllUser(HttpServletRequest request){
         System.out.println(request.getRemoteHost());

@@ -11,7 +11,7 @@ public class FullTestDto {
 
     private int id;
 
-    @Pattern(regexp = "[^_\\s]+", message = "test name cannot contain '_' and white space character")
+    @Pattern(regexp = "[^_]+", message = "test name cannot contain '_' (under score) character")
     private String name;
 
     private String description;

@@ -13,6 +13,12 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/packages")
 public class TestPackageController {
 
+    // Todo impl
+    @PostMapping
+    public ResponseEntity addPackage(PackageDto packageDto){
+
+        return null;
+    }
 
 
 }
