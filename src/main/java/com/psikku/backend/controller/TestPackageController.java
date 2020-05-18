@@ -1,11 +1,6 @@
 package com.psikku.backend.controller;
 
-import com.psikku.backend.dto.testpackage.CreatePackageResponseDto;
-import com.psikku.backend.dto.testpackage.PackageDto;
-import com.psikku.backend.entity.Package;
-import com.psikku.backend.service.PackageService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import com.psikku.backend.dto.testpackage.TestPackageCreationDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +10,7 @@ public class TestPackageController {
 
     // Todo impl
     @PostMapping
-    public ResponseEntity addPackage(PackageDto packageDto){
+    public ResponseEntity addPackage(TestPackageCreationDto testPackageCreationDto){
 
         return null;
     }

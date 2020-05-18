@@ -28,7 +28,7 @@ public class Voucher {
 
     @ManyToOne(cascade = {CascadeType.REFRESH,CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST},fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id")
-    private Package thePackage;
+    private TestPackage testPackage;
 
     @ManyToMany(cascade = {CascadeType.REFRESH,CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST})
     @JoinTable(name = "user_voucher",
@@ -83,12 +83,12 @@ public class Voucher {
         this.createTime = createTime;
     }
 
-    public Package getThePackage() {
-        return thePackage;
+    public TestPackage getTestPackage() {
+        return testPackage;
     }
 
-    public void setThePackage(Package thePackage) {
-        this.thePackage = thePackage;
+    public void setTestPackage(TestPackage testPackage) {
+        this.testPackage = testPackage;
     }
 
     public List<User> getUserList() {

@@ -1,9 +1,5 @@
 package com.psikku.backend.entity;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -36,7 +32,7 @@ public class Test {
     @JoinTable(name = "package_test",
             joinColumns = @JoinColumn(name = "test_id"),
             inverseJoinColumns = @JoinColumn(name = "package_id"))
-    private List<Package> packageList;
+    private List<TestPackage> testPackageList;
 
     @OneToMany(mappedBy = "user",
             fetch = FetchType.LAZY,
@@ -83,12 +79,12 @@ public class Test {
         this.subtestList = subtestList;
     }
 
-    public List<Package> getPackageList() {
-        return packageList;
+    public List<TestPackage> getTestPackageList() {
+        return testPackageList;
     }
 
-    public void setPackageList(List<Package> packageList) {
-        this.packageList = packageList;
+    public void setTestPackageList(List<TestPackage> testPackageList) {
+        this.testPackageList = testPackageList;
     }
 
     public List<SurveyCategory> getSurveyCategoryList() {
