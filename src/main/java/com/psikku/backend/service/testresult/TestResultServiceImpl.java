@@ -1,19 +1,12 @@
-package com.psikku.backend.service;
+package com.psikku.backend.service.testresult;
 
 import com.psikku.backend.dto.testresult.TestFinalResultDto;
-import com.psikku.backend.dto.testresult.TestResultDto;
 import com.psikku.backend.entity.TestResult;
 import com.psikku.backend.exception.TestResultException;
 import com.psikku.backend.repository.TestResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 
 @Service
@@ -48,7 +41,7 @@ public class TestResultServiceImpl implements TestResultService {
     public TestFinalResultDto convertToTestResultDto(TestResult testResult) {
         TestFinalResultDto testResultDto = new TestFinalResultDto();
         if(testResult.getId() != 0){
-            testResultDto.setTestDescription(testResult.getTest().getName());
+            testResultDto.setTestName(testResult.getTest().getName());
             testResultDto.setTestDateTime(testResult.getDateOfTest());
             testResultDto.setResult(testResult.getResult());
         }

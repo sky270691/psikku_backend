@@ -46,6 +46,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers("/api/tests*/*").fullyAuthenticated()
                 .antMatchers("/api/users/login").permitAll()
                 .antMatchers("/api/users/register").permitAll()
+                .mvcMatchers("/api/packages/*").permitAll()
 //                .antMatchers("/api/users/login").permitAll()
 //            .antMatchers("/api/**").permitAll()
 //                .antMatchers("/api/**").hasRole("USER")
@@ -57,7 +58,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 CorsConfiguration corsConfiguration = new CorsConfiguration();
                 corsConfiguration.setAllowedOrigins(Arrays.asList("*"));
                 corsConfiguration.setAllowedMethods(Arrays.asList("POST","GET","PUT","DELETE"));
-                corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization","Content-Type"));
+                corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization","Content-Type","Voucher"));
 
                 return corsConfiguration;
             };

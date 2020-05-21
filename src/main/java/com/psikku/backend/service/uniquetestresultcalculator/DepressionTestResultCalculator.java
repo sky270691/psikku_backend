@@ -5,10 +5,6 @@ import com.psikku.backend.entity.Answer;
 import com.psikku.backend.entity.Test;
 import com.psikku.backend.entity.TestResult;
 import com.psikku.backend.entity.User;
-import com.psikku.backend.exception.TestException;
-import com.psikku.backend.repository.AnswerRepository;
-import com.psikku.backend.repository.TestRepository;
-import com.psikku.backend.repository.UserRepository;
 import com.psikku.backend.service.answer.AnswerService;
 import com.psikku.backend.service.test.TestService;
 import com.psikku.backend.service.user.UserService;
@@ -18,14 +14,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class StateAnxietyTestResultCalculator implements UniqueResultTestCalculator{
+public class DepressionTestResultCalculator implements UniqueResultTestCalculator{
 
     private final TestService testService;
     private final UserService userService;
     private final AnswerService answerService;
     private String result;
 
-    public StateAnxietyTestResultCalculator(TestService testService, UserService userService, AnswerService answerService) {
+    public DepressionTestResultCalculator(TestService testService, UserService userService, AnswerService answerService) {
         this.testService = testService;
         this.userService = userService;
         this.answerService = answerService;
@@ -54,7 +50,7 @@ public class StateAnxietyTestResultCalculator implements UniqueResultTestCalcula
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.append("Kecemasan ").append(perCategoryPredicate(answerPoints));
+        sb.append(perCategoryPredicate(answerPoints));
         setResult(sb.toString());
 
         TestResult testResult = new TestResult();
@@ -62,18 +58,16 @@ public class StateAnxietyTestResultCalculator implements UniqueResultTestCalcula
         testResult.setUser(user);
         testResult.setTest(test);
 
-//        testResultRepository.save(testResult);
-
-        return testResult;
+        return null;
     }
 
     private String perCategoryPredicate(int resultValue){
-        if(resultValue < 40){
-            return "ringan";
-        }else if(resultValue < 60){
-            return "sedang";
+        if(resultValue < 12){
+            return "Tidak Depresi";
+        }else if(resultValue < 20){
+            return "Depresi";
         }else {
-            return "berat";
+            return "Depresi Akut";
         }
     }
 

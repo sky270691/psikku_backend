@@ -6,13 +6,16 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
-@JsonPropertyOrder({"id","name","description","is_survey","survey_category","subtests"})
+@JsonPropertyOrder({"id","internal_name","name","description","is_survey","survey_category","subtests"})
 public class FullTestDto {
 
     private int id;
 
     @Pattern(regexp = "[^_]+", message = "test name cannot contain '_' (under score) character")
     private String name;
+
+    @JsonProperty("internal_name")
+    private String internalName;
 
     private String description;
 
@@ -34,12 +37,20 @@ public class FullTestDto {
         this.id = id;
     }
 
+    public String getInternalName() {
+        return internalName;
+    }
+
+    public void setInternalName(String internalName) {
+        this.internalName = internalName;
+    }
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
-        this.name = name.toLowerCase();
+        this.name = name;
     }
 
     public String getDescription() {

@@ -11,6 +11,9 @@ public class Test {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "internal_name")
+    private String internalName;
+
     @Column(name = "name")
     private String name;
 
@@ -28,10 +31,7 @@ public class Test {
     @JoinColumn(name = "test_id")
     private List<SurveyCategory> surveyCategoryList;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH,CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
-    @JoinTable(name = "package_test",
-            joinColumns = @JoinColumn(name = "test_id"),
-            inverseJoinColumns = @JoinColumn(name = "package_id"))
+    @ManyToMany(mappedBy = "testList",fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH,CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
     private List<TestPackage> testPackageList;
 
     @OneToMany(mappedBy = "user",
@@ -45,6 +45,14 @@ public class Test {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getInternalName() {
+        return internalName;
+    }
+
+    public void setInternalName(String internalName) {
+        this.internalName = internalName;
     }
 
     public String getName() {

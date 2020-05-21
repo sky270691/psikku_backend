@@ -9,5 +9,5 @@ public interface VoucherRepository extends JpaRepository<Voucher,Long> {
 
     Optional<Voucher> findVoucherByVoucherCode(String voucherCode);
     void deleteById(long id);
-
+    Optional<Voucher> findByPayment_Id(long paymentId);
 }

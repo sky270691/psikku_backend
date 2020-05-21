@@ -1,4 +1,4 @@
-package com.psikku.backend.service;
+package com.psikku.backend.service.test;
 
 import com.psikku.backend.dto.test.*;
 import com.psikku.backend.dto.test.MinimalTestDto;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TestServiceImpl implements TestService{
@@ -72,6 +73,7 @@ public class TestServiceImpl implements TestService{
     public Test convertToTestEntity(FullTestDto fullTestDto) {
         Test test = new Test();
         test.setName(fullTestDto.getName());
+        test.setInternalName(fullTestDto.getInternalName());
         test.setDescription(fullTestDto.getDescription());
 
         List<SubtestDto> subtestDtoList = fullTestDto.getSubtests();
@@ -79,7 +81,7 @@ public class TestServiceImpl implements TestService{
         int subtestNumber = 1;
         for(SubtestDto subtestDto : subtestDtoList){
             Subtest subtest = new Subtest();
-            subtest.setId(test.getName() + "_" + subtestNumber++);
+            subtest.setId(test.getInternalName() + "_" + subtestNumber++);
 
             // list of guide convert to whole string to save in db
             StringBuilder guideSb = new StringBuilder();
@@ -144,6 +146,7 @@ public class TestServiceImpl implements TestService{
     public FullTestDto convertToFullTestDto(Test test){
         FullTestDto fullTestDto = new FullTestDto();
         fullTestDto.setName(test.getName());
+        fullTestDto.setInternalName(test.getInternalName());
         fullTestDto.setId(test.getId());
         fullTestDto.setDescription(test.getDescription());
         fullTestDto.setSubtests(new ArrayList<>());
@@ -178,19 +181,15 @@ public class TestServiceImpl implements TestService{
                 }
                 subtestDto.getQuestions().add(questionDto);
 
+                // sort the question ascending
+                subtestDto.getQuestions().sort(Comparator.comparingInt(x -> Integer.parseInt(x.getId().split("_")[2])));
+
                 // shuffle the question to display in the endpoint
-                Collections.shuffle(subtestDto.getQuestions());
+//                Collections.shuffle(subtestDto.getQuestions());
             }
             fullTestDto.getSubtests().add(subtestDto);
 
-            // sort the subtest to display with the correct order
-            fullTestDto.getSubtests().sort((x,y)->{
-                String[] xId = x.getId().split("_");
-                String[] yId = y.getId().split("_");
-                Integer a = Integer.parseInt(xId[1]);
-                Integer b = Integer.parseInt(yId[1]);
-                return a.compareTo(b);
-            });
+
         }
         return fullTestDto;
     }

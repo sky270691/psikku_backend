@@ -1,6 +1,7 @@
-package com.psikku.backend.service;
+package com.psikku.backend.service.jwttoken;
 
 import com.psikku.backend.entity.TokenFactory;
+import com.psikku.backend.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;

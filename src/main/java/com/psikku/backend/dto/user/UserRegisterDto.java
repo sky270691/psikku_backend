@@ -19,8 +19,10 @@ public class UserRegisterDto {
     @Pattern(regexp = "^(?=.*[a-zA-Z\\d].*)[a-zA-Z\\d!@#$%&*]{6,}$",message = "password should contain number and alphabet")
     private String password;
 
+    @NotBlank(message = "firstname shouldn't be blank")
     private String firstname;
 
+    @NotBlank(message = "lastname shouldn't be blank")
     private String lastname;
 
     @NotBlank(message = "sex shouldn't be blank")

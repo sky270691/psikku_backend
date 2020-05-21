@@ -1,5 +1,6 @@
 package com.psikku.backend.dto.voucher;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -7,7 +8,7 @@ import java.time.LocalDateTime;
 
 @JsonPropertyOrder({"id","voucher_code","valid_until", "company", "num_of_users"})
 public class VoucherDto {
-
+    @JsonIgnore
     private long id;
 
     @JsonProperty("voucher_code")

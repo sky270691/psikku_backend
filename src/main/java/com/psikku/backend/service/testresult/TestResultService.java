@@ -1,4 +1,4 @@
-package com.psikku.backend.service;
+package com.psikku.backend.service.testresult;
 
 import com.psikku.backend.dto.testresult.TestFinalResultDto;
 import com.psikku.backend.dto.testresult.TestResultDto;

@@ -21,7 +21,10 @@ public class TestPackage {
     @Column(name = "creation_date")
     private LocalDate createDate;
 
-    @ManyToMany(mappedBy = "packageList", cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
+    @JoinTable(name = "package_test",
+                joinColumns = @JoinColumn(name = "package_id"),
+                inverseJoinColumns = @JoinColumn(name = "test_id"))
     private List<Test> testList;
 
 //    @ManyToOne

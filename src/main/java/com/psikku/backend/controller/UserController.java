@@ -5,12 +5,11 @@ import com.psikku.backend.dto.user.UserRegisterDto;
 import com.psikku.backend.dto.user.UserRegisterResponse;
 import com.psikku.backend.entity.TokenFactory;
 import com.psikku.backend.entity.User;
-import com.psikku.backend.service.TokenService;
-import com.psikku.backend.service.UserService;
+import com.psikku.backend.service.jwttoken.TokenService;
+import com.psikku.backend.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,13 +18,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.Scanner;
 
 @RestController
 @RequestMapping("/api/users")

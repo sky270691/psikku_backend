@@ -2,6 +2,10 @@ package com.psikku.backend.dto.testpackage;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 public class TestPackageCreationDto {
@@ -12,10 +16,14 @@ public class TestPackageCreationDto {
     private long companyId;
 
     @JsonProperty("test_list")
-    private List<Integer> testIdList;
+    private List<@Positive(message = "testidList m") Integer> testIdList;
 
     @JsonProperty("user_count")
+    @Positive(message = "'user_count' must be a positive value")
     private int numOfUser;
+
+    @PositiveOrZero(message = "'price' can't be a negative value")
+    private int price;
 
     public String getName() {
         return name;
@@ -47,5 +55,13 @@ public class TestPackageCreationDto {
 
     public void setNumOfUser(int numOfUser) {
         this.numOfUser = numOfUser;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 }

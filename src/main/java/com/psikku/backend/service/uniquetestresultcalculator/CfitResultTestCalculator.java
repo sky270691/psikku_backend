@@ -8,7 +8,7 @@ import com.psikku.backend.repository.AnswerRepository;
 import com.psikku.backend.repository.TestRepository;
 import com.psikku.backend.repository.TestResultRepository;
 import com.psikku.backend.repository.UserRepository;
-import com.psikku.backend.service.UserService;
+import com.psikku.backend.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.io.*;
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -40,9 +39,6 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
 
     @Autowired
     AnswerRepository answerRepository;
-
-    @Autowired
-    UserRepository userRepository;
 
     @Autowired
     TestRepository testRepository;

@@ -30,10 +30,8 @@ public class Voucher {
     @JoinColumn(name = "package_id")
     private TestPackage testPackage;
 
-    @ManyToMany(cascade = {CascadeType.REFRESH,CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST})
-    @JoinTable(name = "user_voucher",
-                joinColumns = @JoinColumn(name = "voucher_id"),
-                inverseJoinColumns = @JoinColumn(name = "user_id"))
+    @ManyToMany(cascade = {CascadeType.REFRESH,CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST},
+            mappedBy = "voucherList")
     private List<User> userList;
 
     @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})

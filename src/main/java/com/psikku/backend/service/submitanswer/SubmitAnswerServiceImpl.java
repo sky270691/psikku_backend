@@ -1,18 +1,16 @@
-package com.psikku.backend.service;
+package com.psikku.backend.service.submitanswer;
 
 import com.psikku.backend.dto.testresult.TestFinalResultDto;
 import com.psikku.backend.dto.useranswer.SubmittedAnswerDto;
 import com.psikku.backend.dto.useranswer.UserAnswerDto;
 import com.psikku.backend.entity.*;
-import com.psikku.backend.exception.TestException;
 import com.psikku.backend.exception.TestResultException;
 import com.psikku.backend.repository.*;
+import com.psikku.backend.service.testresult.TestResultService;
 import com.psikku.backend.service.uniquetestresultcalculator.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -66,6 +64,9 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
 
     @Autowired
     GenericResultTestCalculator genericResultTestCalculator;
+
+    @Autowired
+    DepressionTestResultCalculator depressionTestResultCalculator;
 
 
     @Transactional
@@ -268,6 +269,10 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
         List<SubmittedAnswerDto> belaNegaraOnly =
                 getSpecificAnswerDtoList(submittedAnswerDtoList, "belaNegara".toLowerCase());
 
+        // Depression test only
+        List<SubmittedAnswerDto> depressionOnly =
+                getSpecificAnswerDtoList(submittedAnswerDtoList, "depression".toLowerCase());
+
         // calculate each unique test independently
 
         if(!cfitAnswer.isEmpty()){
@@ -317,6 +322,11 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
         }
         if(!belaNegaraOnly.isEmpty()){
             testResult = genericResultTestCalculator.calculateNewResult(belaNegaraOnly);
+            testResult.setDateOfTest(creationDate);
+            testResultRepository.save(testResult);
+        }
+        if(!depressionOnly.isEmpty()){
+            testResult = depressionTestResultCalculator.calculateNewResult(depressionOnly);
             testResult.setDateOfTest(creationDate);
             testResultRepository.save(testResult);
         }

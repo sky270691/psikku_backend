@@ -130,6 +130,25 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(CompanyException.class)
+    public ResponseEntity<CompanyExceptionResponse> handleVoucherException(CompanyException e){
+
+        CompanyExceptionResponse response = new CompanyExceptionResponse();
+        response.setMessage(e.getMessage());
+        response.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
+        response.setTimestamp(LocalDateTime.now());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AnswerException.class)
+    public ResponseEntity<AnswerExceptionResponse> handleVoucherException(AnswerException e){
+
+        AnswerExceptionResponse response = new AnswerExceptionResponse();
+        response.setMessage(e.getMessage());
+        response.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
+        response.setTimestamp(LocalDateTime.now());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 
 
 

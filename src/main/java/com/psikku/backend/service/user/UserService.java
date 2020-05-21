@@ -1,4 +1,4 @@
-package com.psikku.backend.service;
+package com.psikku.backend.service.user;
 
 import com.psikku.backend.dto.user.UserDto;
 import com.psikku.backend.dto.user.UserRegisterResponse;

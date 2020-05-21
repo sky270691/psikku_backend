@@ -1,21 +1,15 @@
 package com.psikku.backend.controller;
 
 import com.psikku.backend.dto.testresult.TestFinalResultDto;
-import com.psikku.backend.dto.testresult.TestResultDto;
 import com.psikku.backend.entity.TestResult;
 import com.psikku.backend.exception.TestResultException;
-import com.psikku.backend.service.TestResultService;
+import com.psikku.backend.service.testresult.TestResultService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
 import java.util.ArrayList;
 import java.util.List;
 

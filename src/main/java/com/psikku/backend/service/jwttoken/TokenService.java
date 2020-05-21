@@ -1,4 +1,4 @@
-package com.psikku.backend.service;
+package com.psikku.backend.service.jwttoken;
 
 import com.psikku.backend.entity.TokenFactory;
 import org.springframework.http.ResponseEntity;

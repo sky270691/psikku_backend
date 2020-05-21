@@ -54,7 +54,7 @@ public class User {
     @JoinColumn(name = "user_id")
     public List<TestResult> testResultList;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     @JoinTable(name = "user_voucher",
                 joinColumns = @JoinColumn(name = "user_id"),
                 inverseJoinColumns = @JoinColumn(name = "voucher_id"))

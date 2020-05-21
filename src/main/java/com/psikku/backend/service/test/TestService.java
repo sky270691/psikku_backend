@@ -1,4 +1,4 @@
-package com.psikku.backend.service;
+package com.psikku.backend.service.test;
 
 import com.psikku.backend.dto.test.FullTestDto;
 import com.psikku.backend.dto.test.MinimalTestDto;
