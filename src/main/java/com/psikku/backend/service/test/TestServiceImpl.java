@@ -5,6 +5,7 @@ import com.psikku.backend.dto.test.MinimalTestDto;
 import com.psikku.backend.entity.*;
 import com.psikku.backend.repository.*;
 import com.psikku.backend.exception.TestException;
+import com.psikku.backend.service.voucher.VoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,8 @@ public class TestServiceImpl implements TestService{
     @Autowired
     AnswerRepository answerRepository;
 
+    @Autowired
+    VoucherService voucherService;
 
 
     @Transactional
@@ -206,6 +209,14 @@ public class TestServiceImpl implements TestService{
                                             .sum();
         minimalTestDto.setDuration(duration);
         return minimalTestDto;
+    }
+
+    public List<MinimalTestDto> getMinTestByVoucher(String voucherCode){
+        Voucher voucher = voucherService.getVoucherByCode(voucherCode);
+        List<Test> testList = voucher.getTestPackage().getTestList();
+        List<MinimalTestDto> minimalTestDtoList = new ArrayList<>();
+        testList.forEach(test -> minimalTestDtoList.add(convertToMinimalTestDto(test)));
+        return minimalTestDtoList;
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.psikku.backend.entity.Test;
 import com.psikku.backend.exception.TestException;
 import com.psikku.backend.service.test.TestService;
 import com.psikku.backend.service.user.UserService;
+import com.psikku.backend.service.voucher.VoucherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class TestController {
     private TestService testService;
 
     @Autowired
-    private UserService userService;
+    private VoucherService voucherService;
 
     @PostMapping
     public ResponseEntity<TestInsertResponseDto> addNewTest(@RequestBody @Valid FullTestDto fullTestDto){
@@ -54,22 +55,28 @@ public class TestController {
 //        return new ResponseEntity<>(fullTestDtoList, HttpStatus.OK);
 //    }
 
-    @GetMapping
-    public ResponseEntity<List<MinimalTestDto>> getAllMinimalTests(){
-
-        List<MinimalTestDto> minimalTestDtosList = testService.getAllMinTestList();
-        if(minimalTestDtosList.isEmpty()){
-            throw new TestException("no tests found on server");
-        }
-
-        return new ResponseEntity<>(minimalTestDtosList,HttpStatus.OK);
-    }
+//    @GetMapping
+//    public ResponseEntity<List<MinimalTestDto>> getAllMinimalTests(){
+//
+//        List<MinimalTestDto> minimalTestDtosList = testService.getAllMinTestList();
+//        if(minimalTestDtosList.isEmpty()){
+//            throw new TestException("no tests found on server");
+//        }
+//
+//        return new ResponseEntity<>(minimalTestDtosList,HttpStatus.OK);
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<FullTestDto> getTestById(@PathVariable int id){
         Test test =  testService.findTestById(id);
         FullTestDto fullTestDto = testService.convertToFullTestDto(test);
         return new ResponseEntity<>(fullTestDto,HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<MinimalTestDto>> getAllMinimalTestsByVoucher(@RequestHeader("Voucher") String voucher){
+        List<MinimalTestDto> minimalTestDtoList = testService.getMinTestByVoucher(voucher);
+        return new ResponseEntity<>(minimalTestDtoList,HttpStatus.OK);
     }
 
 

@@ -16,6 +16,7 @@ public interface TestService {
     Test findTestByName(String name);
     FullTestDto convertToFullTestDto(Test test);
     List<MinimalTestDto> getAllMinTestList();
+    List<MinimalTestDto> getMinTestByVoucher(String voucherCode);
 
 //  subtest area
     Subtest findSubtestById(String id);
