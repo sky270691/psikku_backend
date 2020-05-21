@@ -42,7 +42,7 @@ public class TestServiceImpl implements TestService{
     @Override
     public Test addNewTest(FullTestDto fullTestDto) {
         Test entityTest = convertToTestEntity(fullTestDto);
-        Optional<Test> findTest = testRepository.findTestByName(entityTest.getName());
+        Optional<Test> findTest = testRepository.findTestByInternalName(entityTest.getInternalName());
         if(!findTest.isPresent()){
             testRepository.save(entityTest);
             for(Subtest subtest:entityTest.getSubtestList()){
