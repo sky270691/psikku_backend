@@ -38,10 +38,10 @@ public class StateAnxietyTestResultCalculator implements UniqueResultTestCalcula
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findByUsername(username);
 
-        String testName = submittedAnswerDtoList.get(0).getQuestionId().split("_")[0];
-        Test test = testService.findTestByName(testName);
+        String internalTestName = submittedAnswerDtoList.get(0).getQuestionId().split("_")[0];
+        Test test = testService.findTestByInternalName(internalTestName);
 
-        List<Answer> answersFromDb = answerService.findByIdStartingWith(testName);
+        List<Answer> answersFromDb = answerService.findByIdStartingWith(internalTestName);
 
         int answerPoints = 0;
 

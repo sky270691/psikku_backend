@@ -72,7 +72,7 @@ public class GayaBelajar1ResultTestCalculator implements UniqueResultTestCalcula
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         TestResult testResult = new TestResult();
         testResult.setUser(userRepository.findUserByUsername(username));
-        testResult.setTest(testRepository.findTestByName(testName.toLowerCase()).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
+        testResult.setTest(testRepository.findTestByInternalName(testName.toLowerCase()).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
         testResult.setResult(getResult());
 //        testResultRepository.save(testResult);
         logger.info("username: '"+username+"' GB1 answer calculated successfully");

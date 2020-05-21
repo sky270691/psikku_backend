@@ -41,6 +41,7 @@ public class TestResultServiceImpl implements TestResultService {
     public TestFinalResultDto convertToTestResultDto(TestResult testResult) {
         TestFinalResultDto testResultDto = new TestFinalResultDto();
         if(testResult.getId() != 0){
+            testResultDto.setInternalName(testResult.getTest().getInternalName());
             testResultDto.setTestName(testResult.getTest().getName());
             testResultDto.setTestDateTime(testResult.getDateOfTest());
             testResultDto.setResult(testResult.getResult());

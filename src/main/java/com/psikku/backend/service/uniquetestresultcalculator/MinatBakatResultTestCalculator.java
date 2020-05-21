@@ -182,7 +182,7 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
 
         TestResult testResult = new TestResult();
         testResult.setUser(userRepository.findUserByUsername(username));
-        testResult.setTest(testRepository.findTestByName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
+        testResult.setTest(testRepository.findTestByInternalName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
         testResult.setResult(getResult());
 //        testResultRepository.save(testResult);
         logger.info("username: '"+username+"' MINATBAKAT answer calculated successfully");

@@ -44,7 +44,7 @@ public class CovidResultTestCalculator implements UniqueResultTestCalculator{
         User user = userRepository.findUserByUsername(username);
 
         String testName = submittedAnswerDtoList.get(0).getQuestionId().split("_")[0];
-        Test test = testRepository.findTestByName(testName).orElseThrow(()-> {
+        Test test = testRepository.findTestByInternalName(testName).orElseThrow(()-> {
             logger.error("Finding test error");
             return new RuntimeException("Test not Found");
         });

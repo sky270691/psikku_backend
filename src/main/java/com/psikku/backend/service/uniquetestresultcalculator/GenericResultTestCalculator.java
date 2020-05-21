@@ -35,7 +35,7 @@ public class GenericResultTestCalculator implements UniqueResultTestCalculator{
         User user = userRepository.findUserByUsername(username);
         String testname = submittedAnswerDtoList.get(0).getQuestionId().split("_")[0];
         List<Answer> answersFromDb = answerRepository.findByIdStartingWith(testname);
-        Test test = testRepository.findTestByName(testname).orElseThrow(()->new TestException(getClass().getSimpleName()+": Test Not Found"));
+        Test test = testRepository.findTestByInternalName(testname).orElseThrow(()->new TestException(getClass().getSimpleName()+": Test Not Found"));
         int correctAnswer = 0;
 
         for(SubmittedAnswerDto answerDto : submittedAnswerDtoList){

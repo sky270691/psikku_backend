@@ -160,7 +160,7 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
 
         TestResult testResult = new TestResult();
         testResult.setUser(user);
-        testResult.setTest(testRepository.findTestByName("cfit3").orElseThrow(()->new RuntimeException(getClass().getSimpleName()+" Test not found")));
+        testResult.setTest(testRepository.findTestByInternalName("cfit3").orElseThrow(()->new RuntimeException(getClass().getSimpleName()+" Test not found")));
         testResult.setResult(getResult());
 //        testResultRepository.save(testResult);
         logger.info("username: '"+username+"' CF" + "IT answer calculated successfully");

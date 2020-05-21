@@ -220,6 +220,11 @@ public class TestServiceImpl implements TestService{
     }
 
     @Override
+    public Test findTestByInternalName(String internalName) {
+        return  testRepository.findTestByInternalName(internalName).orElseThrow(()->new TestException("test with internal_name: "+ internalName +"not found"));
+    }
+
+    @Override
     public List<MinimalTestDto> getAllMinTestList() {
 
         List<Test> testList = testRepository.findAll();

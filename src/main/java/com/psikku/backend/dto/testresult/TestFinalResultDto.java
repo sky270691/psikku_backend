@@ -8,6 +8,8 @@ public class TestFinalResultDto {
 
     @JsonProperty("test_name")
     private String testName;
+    @JsonProperty("internal_name")
+    private String internalName;
     private LocalDateTime testDateTime;
     private String result;
 
@@ -17,6 +19,14 @@ public class TestFinalResultDto {
 
     public void setTestName(String testName) {
         this.testName = testName;
+    }
+
+    public String getInternalName() {
+        return internalName;
+    }
+
+    public void setInternalName(String internalName) {
+        this.internalName = internalName;
     }
 
     public LocalDateTime getTestDateTime() {

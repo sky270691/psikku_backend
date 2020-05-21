@@ -109,7 +109,7 @@ public class BullyResultTestCalculator implements UniqueResultTestCalculator{
         setTestResult(sb.toString());
 
         TestResult testResult = new TestResult();
-        testResult.setTest(testRepository.findTestByName("bully").orElseThrow(()-> new RuntimeException(getClass().getName()+": Test Not Found")));
+        testResult.setTest(testRepository.findTestByInternalName("bully").orElseThrow(()-> new RuntimeException(getClass().getName()+": Test Not Found")));
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         testResult.setUser(userRepository.findUserByUsername(username));
         testResult.setResult(getTestResult());

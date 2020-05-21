@@ -92,7 +92,7 @@ public class SurveyKarakterResultTestCalculator implements UniqueResultTestCalcu
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         TestResult testResult = new TestResult();
         testResult.setUser(userRepository.findUserByUsername(username));
-        testResult.setTest(testRepository.findTestByName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
+        testResult.setTest(testRepository.findTestByInternalName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
         testResult.setResult(getTestResult());
 //        testResultRepository.save(testResult);
         logger.info("username: '"+username+"' SURVEYKARAKTER answer calculated successfully");

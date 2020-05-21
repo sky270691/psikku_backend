@@ -109,7 +109,7 @@ public class EQResultTestCalculator implements UniqueResultTestCalculator{
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         TestResult testResult = new TestResult();
         testResult.setUser(userRepository.findUserByUsername(username));
-        testResult.setTest(testRepository.findTestByName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
+        testResult.setTest(testRepository.findTestByInternalName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
         testResult.setResult(getResult());
 //        testResultRepository.save(testResult);
         logger.info("username: '"+username+"' EQ answer calculated successfully");
