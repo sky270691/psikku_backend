@@ -26,6 +26,9 @@ public class Voucher {
     @Column(name = "valid")
     private boolean valid;
 
+    @Column(name = "used")
+    private boolean used;
+
     @ManyToOne(cascade = {CascadeType.REFRESH,CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST},fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id")
     private TestPackage testPackage;
@@ -103,6 +106,14 @@ public class Voucher {
 
     public void setValid(boolean valid) {
         this.valid = valid;
+    }
+
+    public boolean isUsed() {
+        return used;
+    }
+
+    public void setUsed(boolean used) {
+        this.used = used;
     }
 
     public Company getCompany() {

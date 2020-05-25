@@ -202,6 +202,7 @@ public class TestServiceImpl implements TestService{
     public MinimalTestDto convertToMinimalTestDto(Test test) {
         MinimalTestDto minimalTestDto = new MinimalTestDto();
         minimalTestDto.setId(test.getId());
+        minimalTestDto.setInternalName(test.getInternalName());
         minimalTestDto.setName(test.getName());
         minimalTestDto.setDescription(test.getDescription());
         int duration = test.getSubtestList().stream()
@@ -216,6 +217,11 @@ public class TestServiceImpl implements TestService{
         List<Test> testList = voucher.getTestPackage().getTestList();
         List<MinimalTestDto> minimalTestDtoList = new ArrayList<>();
         testList.forEach(test -> minimalTestDtoList.add(convertToMinimalTestDto(test)));
+        minimalTestDtoList.forEach(x -> {
+            if(!x.getInternalName().contains("depression")){
+                x.setView(true);
+            }
+        });
         return minimalTestDtoList;
     }
 

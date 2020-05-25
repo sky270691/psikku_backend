@@ -19,9 +19,6 @@ public class CustomClientTokenService implements TokenService{
     @Value(value = "${auth-server.endpoint.tokensource}")
     private String endpoint;
 
-    @Autowired
-    private UserService userService;
-
     @Override
     public ResponseEntity<TokenFactory> getToken(String username, String password) {
 

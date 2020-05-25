@@ -79,8 +79,14 @@ public class Coba {
 //        System.out.println("num1: "+num1+"\nnum2: "+num2);
 
 
-        System.out.println(generateAlphaNumeric(20));
+//        System.out.println(generateAlphaNumeric(20));
 
+        List<String> strings = Arrays.asList("a","b","c","a","b");
+        Set<String> removeDuplicate = new LinkedHashSet<>(strings);
+        for (String s : removeDuplicate) {
+            System.out.println(s);
+        }
+        System.out.println(generateAlphaNumeric(20));
 
     }
 

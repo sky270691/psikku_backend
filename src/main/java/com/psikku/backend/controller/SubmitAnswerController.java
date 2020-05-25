@@ -75,4 +75,14 @@ public class SubmitAnswerController {
         logger.info("username: '"+username+"' answer's calculated successfully");
         return new ResponseEntity<>(testFinalResultDto,HttpStatus.OK);
     }
+//@PostMapping
+//public ResponseEntity<TestFinalResultDto> submitAnswers(@RequestBody UserAnswerDto userAnswerDto,
+//                                                        @RequestHeader("Voucher") String voucher){
+//    String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+//    logger.info("username: '"+username+"' try to submit answer");
+//    TestFinalResultDto testFinalResultDto= submitAnswerService.calculateResultTestV2(userAnswerDto);
+//
+//    logger.info("username: '"+username+"' answer's calculated successfully");
+//    return new ResponseEntity<>(testFinalResultDto,HttpStatus.OK);
+//}
 }

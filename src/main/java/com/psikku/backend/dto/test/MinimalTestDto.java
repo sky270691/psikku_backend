@@ -1,10 +1,16 @@
 package com.psikku.backend.dto.test;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class MinimalTestDto {
     private int id;
+    @JsonProperty("internal_name")
+    private String internalName;
     private String name;
     private String description;
     private int duration;
+    //Todo disable this later
+    private boolean view;
 
     public int getId() {
         return id;
@@ -12,6 +18,14 @@ public class MinimalTestDto {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getInternalName() {
+        return internalName;
+    }
+
+    public void setInternalName(String internalName) {
+        this.internalName = internalName;
     }
 
     public String getName() {
@@ -24,6 +38,14 @@ public class MinimalTestDto {
 
     public String getDescription() {
         return description;
+    }
+
+    public boolean isView() {
+        return view;
+    }
+
+    public void setView(boolean view) {
+        this.view = view;
     }
 
     public void setDescription(String description) {

@@ -3,12 +3,16 @@ package com.psikku.backend.service.user;
 import com.psikku.backend.dto.user.*;
 import com.psikku.backend.entity.TokenFactory;
 import com.psikku.backend.entity.User;
+import com.psikku.backend.mapper.user.UserMapper;
 import com.psikku.backend.repository.UserRepository;
 import com.psikku.backend.service.jwttoken.TokenService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.stereotype.Service;
@@ -21,11 +25,16 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     TokenService clientTokenService;
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    UserMapper userMapper;
 
     @Value(value = "${auth-server.endpoint.users}")
     private String usersEndpoint;
@@ -38,6 +47,16 @@ public class UserServiceImpl implements UserService {
 //        return userRepository.findAll(Sort.by("email").ascending());
 
         return userRepository.findAll();
+    }
+
+    @Override
+    public List<UserDto> getAllUserDto() {
+        List<User> userList = findAll();
+        List<UserDto> userDtoList = new ArrayList<>();
+        for(User user : userList){
+            userDtoList.add(userMapper.convertToUserDto(user));
+        }
+        return userDtoList;
     }
 
     @Override
@@ -64,7 +83,7 @@ public class UserServiceImpl implements UserService {
         userRegisterDto.setRoles(roleRegisterDtoList);
         ResponseEntity<UserRegisterAuthServerResponse> responseJson = restTemplate.postForEntity(usersEndpoint,userRegisterDto, UserRegisterAuthServerResponse.class);
         
-        User user =  convertToUserEntity(responseJson.getBody());
+        User user =  userMapper.convertRegisteredAuthServerUserToUserEntity(responseJson.getBody());
         if(user.getId()==0){ // if user.getId() from auth server equals to 0 then return error response
             UserRegisterResponse urr = new UserRegisterResponse();
             urr.setUsername(userRegisterDto.getUsername());
@@ -73,7 +92,7 @@ public class UserServiceImpl implements UserService {
             return new ResponseEntity<>(urr, HttpStatus.BAD_REQUEST);
         }
         userRepository.save(user);
-        UserRegisterResponse userRegisterResponse = convertUserEntityToUserRegisterResponse(user);
+        UserRegisterResponse userRegisterResponse = userMapper.convertUserEntityToUserRegisterResponse(user);
         return new ResponseEntity<>(userRegisterResponse, HttpStatus.OK);
     }
 
@@ -115,55 +134,6 @@ public class UserServiceImpl implements UserService {
         return tf;
     }
 
-    private User convertToUserEntity(UserRegisterAuthServerResponse userRegisterAuthServerResponse) {
-
-        User user = new User();
-        user.setUsername(userRegisterAuthServerResponse.getUsername());
-        user.setId(userRegisterAuthServerResponse.getId());
-        user.setFirstname(userRegisterAuthServerResponse.getFirstname());
-        user.setLastname(userRegisterAuthServerResponse.getLastname());
-        user.setSex(userRegisterAuthServerResponse.getSex());
-        user.setEmail(userRegisterAuthServerResponse.getEmail());
-        user.setCreateTime(userRegisterAuthServerResponse.getCreateTime());
-        user.setModifiedTime(userRegisterAuthServerResponse.getModifiedTime());
-        user.setDateOfBirth(userRegisterAuthServerResponse.getDateOfBirth());
-
-
-        return user;
-    }
-
-    private UserRegisterResponse convertUserEntityToUserRegisterResponse (User user){
-        UserRegisterResponse userRegisterResponse = new UserRegisterResponse();
-        userRegisterResponse.setId(user.getId());
-        userRegisterResponse.setUsername(user.getUsername());
-        if(user != null){
-            userRegisterResponse.setStatus("success");
-            userRegisterResponse.setMessage("User " + user.getUsername() +" has been successfully registered");
-        }else{
-            userRegisterResponse.setStatus("Failed");
-            userRegisterResponse.setMessage("Error Registering: " + user.getUsername());
-        }
-
-        return userRegisterResponse;
-    }
-
-    @Override
-    public UserDto convertToUserDto(User user){
-        UserDto userDto = new UserDto();
-        userDto.setId(user.getId());
-        userDto.setUsername(user.getUsername());
-        userDto.setEmail(user.getEmail());
-        userDto.setFirstname(user.getFirstname());
-        userDto.setLastname(user.getLastname());
-        userDto.setSex(user.getSex());
-        userDto.setDateOfBirth(user.getDateOfBirth());
-        userDto.setCreateTime(user.getCreateTime());
-        userDto.setProvince(user.getProvince());
-        userDto.setCity(user.getCity());
-        userDto.setAddress(user.getAddress());
-        return userDto;
-    }
-
     @Override
     public String getUserNameFromToken(String token){
         Jwt jwt = JwtHelper.decode(token);
@@ -172,6 +142,23 @@ public class UserServiceImpl implements UserService {
         String[] userNamePairSplit = userNamePair.split(":");
         String userName = userNamePairSplit[1];
         return userName.substring(1,userName.length()-1);
+    }
+
+    @Override
+    public UserDto getCurrentUserInfo() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        logger.info("username: '"+username+"' get user info");
+        User user = findByUsername(username);
+        UserDto userDto = userMapper.convertToUserDto(user);
+        userDto.setFirstname(firstLetterUpperCase(userDto.getFirstname()));
+        userDto.setLastname(firstLetterUpperCase(userDto.getLastname()));
+        return userDto;
+    }
+
+    private String firstLetterUpperCase(String textToCapitalize){
+        String[] textSplit = textToCapitalize.split("");
+        String result = textSplit[0].toUpperCase()+textToCapitalize.substring(1);
+        return result;
     }
 
 }

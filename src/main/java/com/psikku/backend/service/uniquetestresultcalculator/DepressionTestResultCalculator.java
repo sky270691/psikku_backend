@@ -58,7 +58,7 @@ public class DepressionTestResultCalculator implements UniqueResultTestCalculato
         testResult.setUser(user);
         testResult.setTest(test);
 
-        return null;
+        return testResult;
     }
 
     private String perCategoryPredicate(int resultValue){

@@ -2,6 +2,7 @@ package com.psikku.backend.exception;
 
 import com.psikku.backend.entity.TestResult;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,10 +38,11 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     //==========================================================================================
     //==========================override response entity exception handler======================
 
+    // validate the payload
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
 
-        Map<String, Object> body = new LinkedHashMap();
+        Map<String, Object> body = new LinkedHashMap<>();
         body.put("status", status.value());
         body.put("exception","payload exception");
         body.put("timestamp", LocalDateTime.now().format(getDtf()));
@@ -51,9 +54,22 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 
     }
 
+    // detect if all the required header included in the request
+    @Override
+    protected ResponseEntity<Object> handleServletRequestBindingException(
+            ServletRequestBindingException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("status",status.value());
+        body.put("exception","null header exception");
+        body.put("timestamp",LocalDateTime.now().format(getDtf()));
+        body.put("error",ex.getMessage());
+        return new ResponseEntity<>(body,headers,status);
+    }
+
+    // handle different data type passed in request parameter
     @Override
     protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        Map<String, Object> body = new LinkedHashMap();
+        Map<String, Object> body = new LinkedHashMap<>();
         body.put("status", status.value());
         body.put("exception","path variable exception");
         body.put("timestamp", LocalDateTime.now().format(getDtf()));
@@ -71,7 +87,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         body.put("exception","validation exception");
         body.put("timestamp", LocalDateTime.now().format(getDtf()));
         List<String> errors = ex.getBindingResult().getFieldErrors().stream()
-                                .map(x->x.getDefaultMessage())
+                                .map(DefaultMessageSourceResolvable::getDefaultMessage)
                                 .collect(Collectors.toList());
 
         body.put("errors",errors);

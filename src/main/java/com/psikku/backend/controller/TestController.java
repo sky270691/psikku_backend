@@ -5,6 +5,7 @@ import com.psikku.backend.dto.test.MinimalTestDto;
 import com.psikku.backend.dto.test.TestInsertResponseDto;
 import com.psikku.backend.entity.Test;
 import com.psikku.backend.exception.TestException;
+import com.psikku.backend.exception.VoucherException;
 import com.psikku.backend.service.test.TestService;
 import com.psikku.backend.service.user.UserService;
 import com.psikku.backend.service.voucher.VoucherService;

@@ -24,7 +24,7 @@ public class VoucherServiceImpl implements VoucherService {
 
     private final VoucherRepository voucherRepository;
     private final CompanyService companyService;
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public VoucherServiceImpl(VoucherRepository voucherRepository, CompanyService companyService){

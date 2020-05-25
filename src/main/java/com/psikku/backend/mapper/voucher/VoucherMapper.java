@@ -15,6 +15,7 @@ public class VoucherMapper {
         voucherDto.setId(voucher.getId());
         voucherDto.setVoucherCode(voucher.getVoucherCode());
         voucherDto.setValid(voucher.isValid());
+        voucherDto.setValid(voucher.isValid());
         voucherDto.setUserCount(voucher.getUserCount());
         voucherDto.setCreateTime(voucher.getCreateTime());
         voucherDto.setValidUntil(voucher.getValidUntil());
