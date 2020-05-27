@@ -3,6 +3,7 @@ package com.psikku.backend.dto.test;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class MinimalTestDto {
+
     private int id;
     @JsonProperty("internal_name")
     private String internalName;

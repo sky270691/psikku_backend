@@ -3,6 +3,7 @@ package com.psikku.backend.service.user;
 import com.psikku.backend.dto.user.*;
 import com.psikku.backend.entity.TokenFactory;
 import com.psikku.backend.entity.User;
+import com.psikku.backend.exception.UserExistException;
 import com.psikku.backend.mapper.user.UserMapper;
 import com.psikku.backend.repository.UserRepository;
 import com.psikku.backend.service.jwttoken.TokenService;
@@ -85,11 +86,12 @@ public class UserServiceImpl implements UserService {
         
         User user =  userMapper.convertRegisteredAuthServerUserToUserEntity(responseJson.getBody());
         if(user.getId()==0){ // if user.getId() from auth server equals to 0 then return error response
-            UserRegisterResponse urr = new UserRegisterResponse();
-            urr.setUsername(userRegisterDto.getUsername());
-            urr.setMessage("Email or username already registered");
-            urr.setStatus("Failed");
-            return new ResponseEntity<>(urr, HttpStatus.BAD_REQUEST);
+//            UserRegisterResponse urr = new UserRegisterResponse();
+//            urr.setUsername(userRegisterDto.getUsername());
+//            urr.setMessage("Email or username already registered");
+//            urr.setStatus("Failed");
+//            return new ResponseEntity<>(urr, HttpStatus.BAD_REQUEST);
+            throw new UserExistException("Username / email already exist");
         }
         userRepository.save(user);
         UserRegisterResponse userRegisterResponse = userMapper.convertUserEntityToUserRegisterResponse(user);

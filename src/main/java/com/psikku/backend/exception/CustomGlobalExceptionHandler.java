@@ -166,6 +166,16 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(UserExistException.class)
+    public ResponseEntity<UserExistExceptionResponse> handleUserExistException(UserExistException e){
+
+        UserExistExceptionResponse response = new UserExistExceptionResponse();
+        response.setMessage(e.getMessage());
+        response.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
+        response.setTimestamp(LocalDateTime.now());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
 
 
 }
