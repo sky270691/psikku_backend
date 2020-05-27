@@ -8,6 +8,7 @@ import com.psikku.backend.exception.TestException;
 import com.psikku.backend.service.testresult.TestResultService;
 import com.psikku.backend.service.voucher.VoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -209,6 +210,7 @@ public class TestServiceImpl implements TestService{
         minimalTestDto.setInternalName(test.getInternalName());
         minimalTestDto.setName(test.getName());
         minimalTestDto.setDescription(test.getDescription());
+        minimalTestDto.setView(test.isView());
         int duration = test.getSubtestList().stream()
                                             .mapToInt(Subtest::getDuration)
                                             .sum();
@@ -218,10 +220,11 @@ public class TestServiceImpl implements TestService{
 
     @Override
     public List<MinimalTestDto> getMinTestByVoucher(String voucherCode){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Voucher voucher = voucherService.getVoucherByCode(voucherCode);
         List<Test> testList = voucher.getTestPackage().getTestList();
         // get all the test result that submitted before to prevent the user do the test again
-        List<TestResult> testResultList = testResultService.findAllResultByVoucherId(voucher.getId());
+        List<TestResult> testResultList = testResultService.findAllResultByVoucherIdAndUsername(voucher.getId(),username);
         List<MinimalTestDto> minimalTestDtoList = new ArrayList<>();
         List<Test> doneTestList = new ArrayList<>();
         if(!testResultList.isEmpty()){
@@ -232,11 +235,6 @@ public class TestServiceImpl implements TestService{
         }
         testList.forEach(test -> {
             minimalTestDtoList.add(convertToMinimalTestDto(test));
-        });
-        minimalTestDtoList.forEach(x -> {
-            if(!x.getInternalName().contains("depression")){
-                x.setView(true);
-            }
         });
 
         // check if the minimalTestDto contains finished test or not
@@ -257,7 +255,6 @@ public class TestServiceImpl implements TestService{
 
     @Override
     public List<MinimalTestDto> getAllMinTestList() {
-
         List<Test> testList = testRepository.findAll();
         List<MinimalTestDto> minimalTestDtoList = new ArrayList<>();
         testList.forEach(test -> {

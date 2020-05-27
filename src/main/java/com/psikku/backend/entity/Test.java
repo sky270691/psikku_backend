@@ -23,6 +23,9 @@ public class Test {
     @Column(name = "is_survey")
     private boolean isSurvey;
 
+    @Column(name = "view")
+    private boolean view;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "test_id")
     private List<Subtest> subtestList;
@@ -77,6 +80,14 @@ public class Test {
 
     public void setIsSurvey(boolean isSurvey) {
         this.isSurvey = isSurvey;
+    }
+
+    public boolean isView() {
+        return view;
+    }
+
+    public void setView(boolean view) {
+        this.view = view;
     }
 
     public List<Subtest> getSubtestList() {
