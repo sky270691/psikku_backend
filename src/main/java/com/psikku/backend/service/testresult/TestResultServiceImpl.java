@@ -53,4 +53,9 @@ public class TestResultServiceImpl implements TestResultService {
     public List<TestResult> findAllResultByTestId(int id) {
         return null;
     }
+
+    @Override
+    public List<TestResult> findAllResultByVoucherId(long voucherId) {
+        return testResultRepository.findAllByVoucher_Id(voucherId);
+    }
 }

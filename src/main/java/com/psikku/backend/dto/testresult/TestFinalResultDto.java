@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 public class TestFinalResultDto {
 
-    @JsonProperty("test_name")
+    @JsonProperty("name")
     private String testName;
     @JsonProperty("internal_name")
     private String internalName;

@@ -8,6 +8,7 @@ import com.psikku.backend.exception.TestResultException;
 import com.psikku.backend.repository.*;
 import com.psikku.backend.service.testresult.TestResultService;
 import com.psikku.backend.service.uniquetestresultcalculator.*;
+import com.psikku.backend.service.voucher.VoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,6 +68,9 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
 
     @Autowired
     DepressionTestResultCalculator depressionTestResultCalculator;
+
+    @Autowired
+    VoucherService voucherService;
 
 
     @Transactional
@@ -221,10 +225,11 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
 
     @Override
     @Transactional
-    public TestFinalResultDto calculateResultTestV2(UserAnswerDto userAnswerDto) {
+    public TestFinalResultDto calculateResultTestV2(UserAnswerDto userAnswerDto, String voucherCode) {
 
         List<SubmittedAnswerDto> submittedAnswerDtoList = userAnswerDto.getSubmittedAnswerDtoList();
         LocalDateTime creationDate = formatLdt(userAnswerDto.getCreationDateTime());
+        Voucher voucher = voucherService.getVoucherByCode(voucherCode);
         TestResult testResult = null;
 
         //filter the specific answer only from the submission
@@ -272,62 +277,72 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
         // Depression test only
         List<SubmittedAnswerDto> depressionOnly =
                 getSpecificAnswerDtoList(submittedAnswerDtoList, "depression".toLowerCase());
-
         // calculate each unique test independently
 
         if(!cfitAnswer.isEmpty()){
             testResult = cfitResultTestCalculator.calculateNewResult(cfitAnswer);
             testResult.setDateOfTest(creationDate);
+            testResult.setVoucher(voucher);
             testResultRepository.save(testResult);
         }
         if(!bullyTestOnly.isEmpty()){
             testResult = bullyResultTestCalculator.calculateNewResult(bullyTestOnly);
             testResult.setDateOfTest(creationDate);
+            testResult.setVoucher(voucher);
             testResultRepository.save(testResult);
         }
         if(!eqTestOnly.isEmpty()){
             testResult = eqResultTestCalculator.calculateNewResult(eqTestOnly);
             testResult.setDateOfTest(creationDate);
+            testResult.setVoucher(voucher);
             testResultRepository.save(testResult);
         }
         if(!gayaBelajar1Only.isEmpty()){
             testResult = gayaBelajar1ResultTestCalculator.calculateNewResult(gayaBelajar1Only);
             testResult.setDateOfTest(creationDate);
+            testResult.setVoucher(voucher);
             testResultRepository.save(testResult);
         }
         if(!gayaBelajar2Only.isEmpty()){
             testResult = gayaBelajar2ResultTestCalculator.calculateNewResult(gayaBelajar2Only);
             testResult.setDateOfTest(creationDate);
+            testResult.setVoucher(voucher);
             testResultRepository.save(testResult);
         }
         if(!minatBakatTestOnly.isEmpty()){
             testResult = minatBakatResultTestCalculator.calculateNewResult(minatBakatTestOnly);
             testResult.setDateOfTest(creationDate);
+            testResult.setVoucher(voucher);
             testResultRepository.save(testResult);
         }
         if(!surveyKarakterOnly.isEmpty()){
             testResult = surveyKarakterResultTestCalculator.calculateNewResult(surveyKarakterOnly);
             testResult.setDateOfTest(creationDate);
+            testResult.setVoucher(voucher);
             testResultRepository.save(testResult);
         }
         if(!covidOnly.isEmpty()){
             testResult = covidResultTestCalculator.calculateNewResult(covidOnly);
             testResult.setDateOfTest(creationDate);
+            testResult.setVoucher(voucher);
             testResultRepository.save(testResult);
         }
         if(!stateAnxietyOnly.isEmpty()){
             testResult = stateAnxietyTestResultCalculator.calculateNewResult(stateAnxietyOnly);
             testResult.setDateOfTest(creationDate);
+            testResult.setVoucher(voucher);
             testResultRepository.save(testResult);
         }
         if(!belaNegaraOnly.isEmpty()){
             testResult = genericResultTestCalculator.calculateNewResult(belaNegaraOnly);
             testResult.setDateOfTest(creationDate);
+            testResult.setVoucher(voucher);
             testResultRepository.save(testResult);
         }
         if(!depressionOnly.isEmpty()){
             testResult = depressionTestResultCalculator.calculateNewResult(depressionOnly);
             testResult.setDateOfTest(creationDate);
+            testResult.setVoucher(voucher);
             testResultRepository.save(testResult);
         }
 

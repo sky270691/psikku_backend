@@ -11,6 +11,7 @@ public class MinimalTestDto {
     private int duration;
     //Todo disable this later
     private boolean view;
+    private boolean finish;
 
     public int getId() {
         return id;
@@ -58,5 +59,13 @@ public class MinimalTestDto {
 
     public void setDuration(int duration) {
         this.duration = duration;
+    }
+
+    public boolean isFinish() {
+        return finish;
+    }
+
+    public void setFinish(boolean finish) {
+        this.finish = finish;
     }
 }

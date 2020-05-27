@@ -23,6 +23,10 @@ public class TestResult {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "voucher_id")
+    private Voucher voucher;
+
     private String result;
 
 //    @CreationTimestamp
@@ -67,5 +71,13 @@ public class TestResult {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Voucher getVoucher() {
+        return voucher;
+    }
+
+    public void setVoucher(Voucher voucher) {
+        this.voucher = voucher;
     }
 }

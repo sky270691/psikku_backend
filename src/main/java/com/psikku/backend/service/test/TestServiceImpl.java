@@ -5,6 +5,7 @@ import com.psikku.backend.dto.test.MinimalTestDto;
 import com.psikku.backend.entity.*;
 import com.psikku.backend.repository.*;
 import com.psikku.backend.exception.TestException;
+import com.psikku.backend.service.testresult.TestResultService;
 import com.psikku.backend.service.voucher.VoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,9 @@ public class TestServiceImpl implements TestService{
 
     @Autowired
     VoucherService voucherService;
+
+    @Autowired
+    TestResultService testResultService;
 
 
     @Transactional
@@ -212,16 +216,37 @@ public class TestServiceImpl implements TestService{
         return minimalTestDto;
     }
 
+    @Override
     public List<MinimalTestDto> getMinTestByVoucher(String voucherCode){
         Voucher voucher = voucherService.getVoucherByCode(voucherCode);
         List<Test> testList = voucher.getTestPackage().getTestList();
+        // get all the test result that submitted before to prevent the user do the test again
+        List<TestResult> testResultList = testResultService.findAllResultByVoucherId(voucher.getId());
         List<MinimalTestDto> minimalTestDtoList = new ArrayList<>();
-        testList.forEach(test -> minimalTestDtoList.add(convertToMinimalTestDto(test)));
+        List<Test> doneTestList = new ArrayList<>();
+        if(!testResultList.isEmpty()){
+            doneTestList = testResultList.stream()
+                    .map(TestResult::getTest)
+                    .collect(Collectors.toList());
+//            testList.removeAll(doneTestList);
+        }
+        testList.forEach(test -> {
+            minimalTestDtoList.add(convertToMinimalTestDto(test));
+        });
         minimalTestDtoList.forEach(x -> {
             if(!x.getInternalName().contains("depression")){
                 x.setView(true);
             }
         });
+
+        // check if the minimalTestDto contains finished test or not
+        for (Test doneTest : doneTestList) {
+            minimalTestDtoList.forEach(minimalTestDto -> {
+                if(minimalTestDto.getId() == doneTest.getId()){
+                    minimalTestDto.setFinish(true);
+                }
+            });
+        }
         return minimalTestDtoList;
     }
 
