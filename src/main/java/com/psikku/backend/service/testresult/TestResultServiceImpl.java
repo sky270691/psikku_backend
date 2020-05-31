@@ -59,4 +59,9 @@ public class TestResultServiceImpl implements TestResultService {
 
         return testResultRepository.findAllByVoucher_IdAndUser_Username(voucherId,userName);
     }
+
+    @Override
+    public List<TestResult> findAllResultByTestIdAndVoucherId(int id, long voucherId) {
+        return testResultRepository.findAllByTest_IdAndVoucher_Id(id,voucherId);
+    }
 }

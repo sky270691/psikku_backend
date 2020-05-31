@@ -277,6 +277,7 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
         // Depression test only
         List<SubmittedAnswerDto> depressionOnly =
                 getSpecificAnswerDtoList(submittedAnswerDtoList, "depression".toLowerCase());
+
         // calculate each unique test independently
 
         if(!cfitAnswer.isEmpty()){

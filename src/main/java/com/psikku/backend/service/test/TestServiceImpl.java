@@ -233,6 +233,21 @@ public class TestServiceImpl implements TestService{
                     .collect(Collectors.toList());
 //            testList.removeAll(doneTestList);
         }
+
+        //Todo
+        // this is a temp code, only valid for kesbangpol event
+        testResultList.forEach(result -> {
+                    if (result.getTest().getInternalName().equalsIgnoreCase("stateanxiety")
+                            && result.getResult().equalsIgnoreCase("kecemasan berat")) {
+                        minimalTestDtoList.forEach(testMin->{
+                            if(testMin.getInternalName().equals("depression")){
+                                testMin.setView(true);
+                            }
+                        });
+                    }
+                });
+
+
         testList.forEach(test -> {
             minimalTestDtoList.add(convertToMinimalTestDto(test));
         });
