@@ -26,6 +26,7 @@ public class TestPackageMapper {
         TestPackage testPackage = new TestPackage();
         testPackage.setName(testPackageCreationDto.getName());
         testPackage.setPrice(testPackageCreationDto.getPrice());
+        testPackage.setDescription(testPackageCreationDto.getDescription());
         testPackage.setTestList(new ArrayList<>());
         testPackageCreationDto.getTestIdList().forEach((testId)-> {
             Test tempTest = testService.findTestById(testId);

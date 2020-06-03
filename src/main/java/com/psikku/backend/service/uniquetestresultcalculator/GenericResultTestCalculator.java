@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class GenericResultTestCalculator implements UniqueResultTestCalculator{
@@ -36,17 +37,26 @@ public class GenericResultTestCalculator implements UniqueResultTestCalculator{
         String testname = submittedAnswerDtoList.get(0).getQuestionId().split("_")[0];
         List<Answer> answersFromDb = answerRepository.findByIdStartingWith(testname);
         Test test = testRepository.findTestByInternalName(testname).orElseThrow(()->new TestException(getClass().getSimpleName()+": Test Not Found"));
-        int correctAnswer = 0;
 
-        for(SubmittedAnswerDto answerDto : submittedAnswerDtoList){
-            for(Answer ansFromDb : answersFromDb){
-                if(ansFromDb.getId().equals(answerDto.getAnswers().get(0))){
-                    correctAnswer += ansFromDb.getIsCorrect();
-                }
-            }
-        }
+        //Todo
+        // Real implementation
+//        int correctAnswer = 0;
+//
+//        for(SubmittedAnswerDto answerDto : submittedAnswerDtoList){
+//            for(Answer ansFromDb : answersFromDb){
+//                if(ansFromDb.getId().equals(answerDto.getAnswers().get(0))){
+//                    correctAnswer += ansFromDb.getIsCorrect();
+//                }
+//            }
+//        }
+//
+//        double points = (double) correctAnswer / (double)getCountQuestion(test) * 100;
 
-        double points = (double) correctAnswer / (double)getCountQuestion(test) * 100;
+        //Todo
+        // fake implementation
+        Random random = new Random();
+        int correctAnswer = random.nextInt(7)+31;
+        int points = correctAnswer*2;
 
         StringBuilder sb = new StringBuilder();
 
