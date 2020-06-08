@@ -49,10 +49,12 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
     @Autowired
     TestResultRepository testResultRepository;
 
+    @Override
     public String getResult() {
         return this.result;
     }
 
+    @Override
     public void setResult(String result) {
         this.result = result;
     }
@@ -160,6 +162,7 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
 
         TestResult testResult = new TestResult();
         testResult.setUser(user);
+        testResult.setResultCalculation("jumlah benar:"+points);
         testResult.setTest(testRepository.findTestByInternalName("cfit3").orElseThrow(()->new RuntimeException(getClass().getSimpleName()+" Test not found")));
         testResult.setResult(getResult());
 //        testResultRepository.save(testResult);

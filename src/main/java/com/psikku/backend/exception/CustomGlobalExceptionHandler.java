@@ -157,7 +157,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     }
 
     @ExceptionHandler(AnswerException.class)
-    public ResponseEntity<AnswerExceptionResponse> handleVoucherException(AnswerException e){
+    public ResponseEntity<AnswerExceptionResponse> handleAnswerException(AnswerException e){
 
         AnswerExceptionResponse response = new AnswerExceptionResponse();
         response.setMessage(e.getMessage());
@@ -167,9 +167,29 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
     }
 
     @ExceptionHandler(UserExistException.class)
-    public ResponseEntity<UserExistExceptionResponse> handleUserExistException(UserExistException e){
+    public ResponseEntity<UserExistExceptionResponse> handleUserException(UserExistException e){
 
         UserExistExceptionResponse response = new UserExistExceptionResponse();
+        response.setMessage(e.getMessage());
+        response.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
+        response.setTimestamp(LocalDateTime.now());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(QuestionException.class)
+    public ResponseEntity<QuestionExceptionResponse> handleQuestionExistException(QuestionException e){
+
+        QuestionExceptionResponse response = new QuestionExceptionResponse();
+        response.setMessage(e.getMessage());
+        response.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
+        response.setTimestamp(LocalDateTime.now());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SubtestException.class)
+    public ResponseEntity<SubtestExceptionResponse> handleSubtestException(SubtestException e){
+
+        SubtestExceptionResponse response = new SubtestExceptionResponse();
         response.setMessage(e.getMessage());
         response.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
         response.setTimestamp(LocalDateTime.now());

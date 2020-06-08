@@ -5,13 +5,10 @@ import com.psikku.backend.entity.Answer;
 import com.psikku.backend.entity.Test;
 import com.psikku.backend.entity.TestResult;
 import com.psikku.backend.entity.User;
-import com.psikku.backend.exception.TestException;
-import com.psikku.backend.repository.AnswerRepository;
-import com.psikku.backend.repository.TestRepository;
-import com.psikku.backend.repository.UserRepository;
 import com.psikku.backend.service.answer.AnswerService;
 import com.psikku.backend.service.test.TestService;
 import com.psikku.backend.service.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -20,16 +17,16 @@ import java.util.List;
 @Service
 public class StateAnxietyTestResultCalculator implements UniqueResultTestCalculator{
 
-    private final TestService testService;
-    private final UserService userService;
-    private final AnswerService answerService;
+    private TestService testService;
+    private UserService userService;
+    private AnswerService answerService;
     private String result;
 
+    @Autowired
     public StateAnxietyTestResultCalculator(TestService testService, UserService userService, AnswerService answerService) {
         this.testService = testService;
         this.userService = userService;
         this.answerService = answerService;
-        this.result = "";
     }
 
     @Override
@@ -61,6 +58,7 @@ public class StateAnxietyTestResultCalculator implements UniqueResultTestCalcula
         testResult.setResult(getResult());
         testResult.setUser(user);
         testResult.setTest(test);
+        testResult.setResultCalculation("point kecemasan:"+answerPoints);
 
 //        testResultRepository.save(testResult);
 
@@ -77,10 +75,12 @@ public class StateAnxietyTestResultCalculator implements UniqueResultTestCalcula
         }
     }
 
+    @Override
     public String getResult() {
         return result;
     }
 
+    @Override
     public void setResult(String result) {
         this.result = result;
     }

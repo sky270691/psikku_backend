@@ -59,6 +59,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!--disable on deployment-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+
         <!--deploy only for WAR-->
         <!--
         <dependency>

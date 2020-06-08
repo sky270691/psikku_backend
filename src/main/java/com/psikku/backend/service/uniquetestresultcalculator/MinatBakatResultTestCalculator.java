@@ -184,6 +184,7 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
         testResult.setUser(userRepository.findUserByUsername(username));
         testResult.setTest(testRepository.findTestByInternalName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
         testResult.setResult(getResult());
+        testResult.setResultCalculation("an:"+anPercentage+",ge:"+gePercentage+",ra:"+raPercentage+",zr:"+zrPercentage);
 //        testResultRepository.save(testResult);
         logger.info("username: '"+username+"' MINATBAKAT answer calculated successfully");
         return testResult;
@@ -246,10 +247,12 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
 
     }
 
+    @Override
     public String getResult() {
         return result;
     }
 
+    @Override
     public void setResult(String result) {
         this.result = result;
     }

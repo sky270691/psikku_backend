@@ -93,12 +93,11 @@ public class GayaBelajar2ResultTestCalculator implements UniqueResultTestCalcula
                                          .map(x->x.getKey())
                                          .collect(Collectors.toList());
         String highestCategory = sortedHighestResultKey.get(0);
-        String secondHighestCategory = sortedHighestResultKey.get(1);
-        String thirdHighestCategory = sortedHighestResultKey.get(2);
-        String fourthHighestCategory = sortedHighestResultKey.get(3);
+//        String secondHighestCategory = sortedHighestResultKey.get(1);
+//        String thirdHighestCategory = sortedHighestResultKey.get(2);
+//        String fourthHighestCategory = sortedHighestResultKey.get(3);
 
         StringBuilder sb = new StringBuilder();
-//        sb.append(resultKeyValue).append("\n");
         sb.append("Highest Category:").append(highestCategory).append(",");
         sb.append("Combination Category:").append(ceAc.get(0)).append("+").append(roAe.get(0));
 
@@ -109,15 +108,17 @@ public class GayaBelajar2ResultTestCalculator implements UniqueResultTestCalcula
         testResult.setUser(userRepository.findUserByUsername(username));
         testResult.setTest(testRepository.findTestByInternalName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
         testResult.setResult(getResult());
-//        testResultRepository.save(testResult);
+        testResult.setResultCalculation("ce:"+ce+","+"ac:"+ac+","+"ro:"+ro+","+"ae:"+ae);
         logger.info("username: '"+username+"' GB2 answer calculated successfully");
         return testResult;
     }
 
+    @Override
     public String getResult() {
         return result;
     }
 
+    @Override
     public void setResult(String result) {
         this.result = result;
     }

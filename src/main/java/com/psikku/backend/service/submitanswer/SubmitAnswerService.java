@@ -14,7 +14,7 @@ public interface SubmitAnswerService {
     List<SubmittedAnswer> saveUserAnswer(List<SubmittedAnswer> answerList);
     List<SubmittedAnswer> convertToSubmittedAnswerList(List<SubmittedAnswerDto> submittedAnswerDto, User user);
     List<SubmittedAnswerDto> convertToSubmittedAnswerDtoList(List<SubmittedAnswer> submittedAnswerList);
-    TestFinalResultDto calculateGenericTest(UserAnswerDto submittedAnswerList);
+    TestFinalResultDto calculateGenericTest(UserAnswerDto submittedAnswerList, String voucherCode);
     TestFinalResultDto calculateResultTestV2(UserAnswerDto userAnswerDto, String voucherCode);
 //    void getListTest(List<SubmittedAnswer> submittedAnswerList);
 }

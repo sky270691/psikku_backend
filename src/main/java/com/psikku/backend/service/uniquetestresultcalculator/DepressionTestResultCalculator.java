@@ -8,6 +8,7 @@ import com.psikku.backend.entity.User;
 import com.psikku.backend.service.answer.AnswerService;
 import com.psikku.backend.service.test.TestService;
 import com.psikku.backend.service.user.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +17,12 @@ import java.util.List;
 @Service
 public class DepressionTestResultCalculator implements UniqueResultTestCalculator{
 
-    private final TestService testService;
-    private final UserService userService;
-    private final AnswerService answerService;
+    private TestService testService;
+    private UserService userService;
+    private AnswerService answerService;
     private String result;
 
+    @Autowired
     public DepressionTestResultCalculator(TestService testService, UserService userService, AnswerService answerService) {
         this.testService = testService;
         this.userService = userService;
@@ -57,6 +59,7 @@ public class DepressionTestResultCalculator implements UniqueResultTestCalculato
         testResult.setResult(getResult());
         testResult.setUser(user);
         testResult.setTest(test);
+        testResult.setResultCalculation("depression point:"+answerPoints);
 
         return testResult;
     }
@@ -71,10 +74,12 @@ public class DepressionTestResultCalculator implements UniqueResultTestCalculato
         }
     }
 
+    @Override
     public String getResult() {
         return result;
     }
 
+    @Override
     public void setResult(String result) {
         this.result = result;
     }

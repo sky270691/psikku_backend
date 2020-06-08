@@ -29,6 +29,9 @@ public class TestResult {
 
     private String result;
 
+    @Column(name = "result_calculation")
+    private String resultCalculation;
+
 //    @CreationTimestamp
     @Column(name = "creation_date")
     private LocalDateTime dateOfTest;
@@ -79,5 +82,13 @@ public class TestResult {
 
     public void setVoucher(Voucher voucher) {
         this.voucher = voucher;
+    }
+
+    public String getResultCalculation() {
+        return resultCalculation;
+    }
+
+    public void setResultCalculation(String resultCalculation) {
+        this.resultCalculation = resultCalculation;
     }
 }

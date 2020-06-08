@@ -70,6 +70,7 @@ public class CovidResultTestCalculator implements UniqueResultTestCalculator{
         TestResult testResult = new TestResult();
         testResult.setUser(user);
         testResult.setTest(test);
+        testResult.setResultCalculation(getResult());
         testResult.setResult(getResult());
 
 //        testResultRepository.save(testResult);
@@ -88,10 +89,12 @@ public class CovidResultTestCalculator implements UniqueResultTestCalculator{
         }
     }
 
+    @Override
     public String getResult() {
         return result;
     }
 
+    @Override
     public void setResult(String result) {
         this.result = result;
     }

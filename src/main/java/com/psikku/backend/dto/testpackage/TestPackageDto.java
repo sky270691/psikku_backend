@@ -1,10 +1,11 @@
 package com.psikku.backend.dto.testpackage;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.psikku.backend.dto.test.MinimalTestDto;
 
 import java.util.List;
 
-public class PackageDto {
+public class TestPackageDto {
 
     private int id;
 
@@ -12,8 +13,10 @@ public class PackageDto {
 
     private int price;
 
+    private String description;
+
     @JsonProperty("tests")
-    private List<Integer> testIdList;
+    private List<MinimalTestDto> minimalTestDtoList;
 
     public int getId() {
         return id;
@@ -39,11 +42,19 @@ public class PackageDto {
         this.price = price;
     }
 
-    public List<Integer> getTestIdList() {
-        return testIdList;
+    public List<MinimalTestDto> getMinimalTestDtoList() {
+        return minimalTestDtoList;
     }
 
-    public void setTestIdList(List<Integer> testIdList) {
-        this.testIdList = testIdList;
+    public void setMinimalTestDtoList(List<MinimalTestDto> minimalTestDtoList) {
+        this.minimalTestDtoList = minimalTestDtoList;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

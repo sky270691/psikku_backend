@@ -83,7 +83,7 @@ public class TestServiceImpl implements TestService{
         test.setName(fullTestDto.getName());
         test.setInternalName(fullTestDto.getInternalName());
         test.setDescription(fullTestDto.getDescription());
-
+        test.setIsSurvey(fullTestDto.getIsSurvey());
         List<SubtestDto> subtestDtoList = fullTestDto.getSubtests();
         List<Subtest> entitySubtestList = new ArrayList<>();
         int subtestNumber = 1;

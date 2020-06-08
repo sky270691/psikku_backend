@@ -4,12 +4,17 @@ import com.psikku.backend.dto.testresult.TestFinalResultDto;
 import com.psikku.backend.dto.useranswer.SubmittedAnswerDto;
 import com.psikku.backend.dto.useranswer.UserAnswerDto;
 import com.psikku.backend.entity.*;
-import com.psikku.backend.exception.TestResultException;
+import com.psikku.backend.exception.VoucherException;
 import com.psikku.backend.repository.*;
+import com.psikku.backend.service.question.QuestionService;
+import com.psikku.backend.service.subtest.SubtestService;
+import com.psikku.backend.service.test.TestService;
 import com.psikku.backend.service.testresult.TestResultService;
 import com.psikku.backend.service.uniquetestresultcalculator.*;
+import com.psikku.backend.service.user.UserService;
 import com.psikku.backend.service.voucher.VoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -21,57 +26,38 @@ import java.util.stream.Collectors;
 @Service
 public class SubmitAnswerServiceImpl implements SubmitAnswerService {
 
-    @Autowired
-    QuestionRepository questionRepository;
+    private final QuestionService questionService;
+    private final SubmitAnswerRepository submitAnswerRepository;
+    private final SubtestService subtestService;
+    private final TestResultService testResultService;
+    private final GenericObjectiveResultTestCalculator genericObjectiveResultTestCalculator;
+    private final VoucherService voucherService;
+    private final TestService testService;
+    private final UserService userService;
+    private final TestResultCalculatorFactory testResultCalculatorFactory;
 
     @Autowired
-    SubmitAnswerRepository submitAnswerRepository;
+    public SubmitAnswerServiceImpl(QuestionService questionService,
+                                   SubmitAnswerRepository submitAnswerRepository,
+                                   SubtestService subtestService,
+                                   TestResultService testResultService,
+                                   GenericObjectiveResultTestCalculator genericObjectiveResultTestCalculator,
+                                   VoucherService voucherService,
+                                   TestService testService,
+                                   UserService userService,
+                                   TestResultCalculatorFactory testResultCalculatorFactory) {
 
-    @Autowired
-    SubtestRepository subtestRepository;
+        this.questionService = questionService;
+        this.submitAnswerRepository = submitAnswerRepository;
+        this.subtestService = subtestService;
+        this.testResultService = testResultService;
+        this.genericObjectiveResultTestCalculator = genericObjectiveResultTestCalculator;
+        this.voucherService = voucherService;
+        this.testService = testService;
+        this.userService = userService;
+        this.testResultCalculatorFactory = testResultCalculatorFactory;
 
-    @Autowired
-    TestResultRepository testResultRepository;
-
-    @Autowired
-    CfitResultTestCalculator cfitResultTestCalculator;
-
-    @Autowired
-    BullyResultTestCalculator bullyResultTestCalculator;
-
-    @Autowired
-    EQResultTestCalculator eqResultTestCalculator;
-
-    @Autowired
-    GayaBelajar1ResultTestCalculator gayaBelajar1ResultTestCalculator;
-
-    @Autowired
-    GayaBelajar2ResultTestCalculator gayaBelajar2ResultTestCalculator;
-
-    @Autowired
-    MinatBakatResultTestCalculator minatBakatResultTestCalculator;
-
-    @Autowired
-    SurveyKarakterResultTestCalculator surveyKarakterResultTestCalculator;
-
-    @Autowired
-    CovidResultTestCalculator covidResultTestCalculator;
-
-    @Autowired
-    StateAnxietyTestResultCalculator stateAnxietyTestResultCalculator;
-
-    @Autowired
-    TestResultService testResultService;
-
-    @Autowired
-    GenericResultTestCalculator genericResultTestCalculator;
-
-    @Autowired
-    DepressionTestResultCalculator depressionTestResultCalculator;
-
-    @Autowired
-    VoucherService voucherService;
-
+    }
 
     @Transactional
     @Override
@@ -83,16 +69,14 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
     @Override
     public List<SubmittedAnswer> convertToSubmittedAnswerList(List<SubmittedAnswerDto> submittedAnswerDto, User user){
         List<SubmittedAnswer> submittedAnswerList = new ArrayList<>();
-//        long submittedAnswerId = 1;
         for(SubmittedAnswerDto answerDto : submittedAnswerDto){
             SubmittedAnswer submittedAnswer = new SubmittedAnswer();
-//            submittedAnswer.setId(user.getId()+ "_" +submittedAnswerId++);
-            submittedAnswer.setQuestion(questionRepository.findQuestionByIdEquals(answerDto.getQuestionId()).orElse(null));
+            submittedAnswer.setQuestion(questionService.findQuestionByIdEquals(answerDto.getQuestionId()));
             StringBuilder stringBuilder = new StringBuilder();
 
             String[] questionIdSplit = answerDto.getQuestionId().split("_");
             String subtestId = questionIdSplit[0]+"_"+questionIdSplit[1];
-            String testType = subtestRepository.findById(subtestId).orElseThrow(()-> new RuntimeException("Subtest Not Found")).getTestType();
+            String testType = subtestService.findById(subtestId).getTestType();
 
             if(testType.equalsIgnoreCase("user_input_string") || testType.equalsIgnoreCase("user_input_number")){
                 submittedAnswer.setAnswers(answerDto.getAnswers().get(0));
@@ -136,92 +120,29 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
         System.out.println(submittedAnswer.getQuestion().getId());
         String[] answerId = submittedAnswer.getQuestion().getId().split("_");
         String subtestId = answerId[0]+"_"+answerId[1];
-        String testType = subtestRepository.findById(subtestId).orElse(new Subtest()).getTestType();
+        String testType = subtestService.findById(subtestId).getTestType();
         return testType;
     }
 
-    // calculate result test generic
+
     @Override
-    public TestFinalResultDto calculateGenericTest(UserAnswerDto userAnswerDto) {
-        List<SubmittedAnswerDto> answerFromUser = userAnswerDto.getSubmittedAnswerDtoList();
-        TestResult testResult = genericResultTestCalculator.calculateNewResult(answerFromUser);
-        TestFinalResultDto testFinalResultDto = testResultService.convertToTestResultDto(testResult);
-        testResult.setDateOfTest(formatLdt(userAnswerDto.getCreationDateTime()));
-        testResultService.saveTestResult(testResult);
-        return testFinalResultDto;
+    public TestFinalResultDto calculateGenericTest(UserAnswerDto userAnswerDto, String voucherCode){
+        List<SubmittedAnswerDto> submittedAnswerDtosList = userAnswerDto.getSubmittedAnswerDtoList();
+        LocalDateTime creationDate = formatLdt(userAnswerDto.getCreationDateTime());
+        Voucher voucher = voucherService.getVoucherByCode(voucherCode);
+        String testId = submittedAnswerDtosList.get(0).getQuestionId().split("_")[0];
+        Test test = testService.findTestByInternalName(testId);
+        List<Test> voucherTestList = voucher.getTestPackage().getTestList();
+        if(voucherTestList.contains(test)){
+            TestResult testResult = genericObjectiveResultTestCalculator.calculateNewResult(submittedAnswerDtosList,test);
+            testResult.setVoucher(voucher);
+            testResult.setDateOfTest(creationDate);
+            testResultService.saveTestResult(testResult);
+            return testResultService.convertToTestResultDto(testResult);
+        }else{
+            throw new VoucherException("Voucher did not valid for the submitted Test");
+        }
     }
-
-//    public String calculateResultTest(List<SubmittedAnswerDto> submittedAnswerDtoList){
-//
-//        // get cfit3 answer only
-//        List<SubmittedAnswerDto> cfitAnswer =
-//                getSpecificAnswerDtoList(submittedAnswerDtoList, "cfit");
-//
-//        // get gaya belajar1 test only
-//        List<SubmittedAnswerDto> gayaBelajar1Only =
-//                getSpecificAnswerDtoList(submittedAnswerDtoList, "gayaBelajar1".toLowerCase());
-//
-//        // get gaya belajar2 test only
-//        List<SubmittedAnswerDto> gayaBelajar2Only =
-//                getSpecificAnswerDtoList(submittedAnswerDtoList, "gayaBelajar2".toLowerCase());
-//
-//        // get bully test only
-//        List<SubmittedAnswerDto> bullyTestOnly =
-//                getSpecificAnswerDtoList(submittedAnswerDtoList, "bully".toLowerCase());
-//
-//        // get eq test only
-//        List<SubmittedAnswerDto> eqTestOnly =
-//                getSpecificAnswerDtoList(submittedAnswerDtoList, "eq".toLowerCase());
-//
-//        // minatbakat test only
-//        List<SubmittedAnswerDto> minatBakatTestOnly =
-//                getSpecificAnswerDtoList(submittedAnswerDtoList, "bakat".toLowerCase());
-//
-//        // survey karakter test only
-//        List<SubmittedAnswerDto> surveyKarakterOnly =
-//                getSpecificAnswerDtoList(submittedAnswerDtoList, "surveyKarakter".toLowerCase());
-//
-//        // covid test only
-//        List<SubmittedAnswerDto> covidOnly =
-//                getSpecificAnswerDtoList(submittedAnswerDtoList, "covid".toLowerCase());
-//
-//
-//        if(!cfitAnswer.isEmpty()){
-//            cfitResultTestCalculator.calculateNewResult(cfitAnswer);
-//        }
-//        if(!bullyTestOnly.isEmpty()){
-//            bullyResultTestCalculator.calculateNewResult(bullyTestOnly);
-//        }
-//        if(!eqTestOnly.isEmpty()){
-//            eqResultTestCalculator.calculateNewResult(eqTestOnly);
-//        }
-//        if(!gayaBelajar1Only.isEmpty()){
-//            gayaBelajar1ResultTestCalculator.calculateNewResult(gayaBelajar1Only);
-//        }
-//        if(!gayaBelajar2Only.isEmpty()){
-//            gayaBelajar2ResultTestCalculator.calculateNewResult(gayaBelajar2Only);
-//        }
-//        if(!minatBakatTestOnly.isEmpty()){
-//            minatBakatResultTestCalculator.calculateNewResult(minatBakatTestOnly);
-//        }
-//        if(!surveyKarakterOnly.isEmpty()){
-//            surveyKarakterResultTestCalculator.calculateNewResult(surveyKarakterOnly);
-//        }
-//        if(!covidOnly.isEmpty()){
-//            covidResultTestCalculator.calculateNewResult(covidOnly);
-//        }
-//
-//
-//        return eqResultTestCalculator.getResult()
-//                +"\n\n"+bullyResultTestCalculator.getTestResult()
-//                +"\n\n"+gayaBelajar1ResultTestCalculator.getResult()
-//                +"\n\n"+gayaBelajar2ResultTestCalculator.getResult()
-//                +"\n\n"+minatBakatResultTestCalculator.getResult()
-//                +"\n\n"+surveyKarakterResultTestCalculator.getTestResult()
-//                +"\n\n"+cfitResultTestCalculator.getResult()
-//                +"\n\n"+covidResultTestCalculator.getResult();
-//}
-
 
     @Override
     @Transactional
@@ -230,129 +151,21 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
         List<SubmittedAnswerDto> submittedAnswerDtoList = userAnswerDto.getSubmittedAnswerDtoList();
         LocalDateTime creationDate = formatLdt(userAnswerDto.getCreationDateTime());
         Voucher voucher = voucherService.getVoucherByCode(voucherCode);
-        TestResult testResult = null;
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByUsername(username);
+        String testInternalName = userAnswerDto.getSubmittedAnswerDtoList().get(0).getQuestionId().split("_")[0];
 
-        //filter the specific answer only from the submission
+        TestResult testResult;
 
-        // get cfit3 answer only
-        List<SubmittedAnswerDto> cfitAnswer =
-                getSpecificAnswerDtoList(submittedAnswerDtoList, "cfit");
+        UniqueResultTestCalculator testCalculator = testResultCalculatorFactory.getTestCalculator(testInternalName);
+        testResult = testCalculator.calculateNewResult(submittedAnswerDtoList);
+        testResult.setVoucher(voucher);
+        testResult.setUser(user);
+        testResult.setDateOfTest(creationDate);
+        testResultService.saveTestResult(testResult);
 
-        // get gaya belajar1 test only
-        List<SubmittedAnswerDto> gayaBelajar1Only =
-                getSpecificAnswerDtoList(submittedAnswerDtoList, "gayaBelajar1".toLowerCase());
-
-        // get gaya belajar2 test only
-        List<SubmittedAnswerDto> gayaBelajar2Only =
-                getSpecificAnswerDtoList(submittedAnswerDtoList, "gayaBelajar2".toLowerCase());
-
-        // get bully test only
-        List<SubmittedAnswerDto> bullyTestOnly =
-                getSpecificAnswerDtoList(submittedAnswerDtoList, "bully".toLowerCase());
-
-        // get eq test only
-        List<SubmittedAnswerDto> eqTestOnly =
-                getSpecificAnswerDtoList(submittedAnswerDtoList, "eq".toLowerCase());
-
-        // minatbakat test only
-        List<SubmittedAnswerDto> minatBakatTestOnly =
-                getSpecificAnswerDtoList(submittedAnswerDtoList, "bakat".toLowerCase());
-
-        // survey karakter test only
-        List<SubmittedAnswerDto> surveyKarakterOnly =
-                getSpecificAnswerDtoList(submittedAnswerDtoList, "surveyKarakter".toLowerCase());
-
-        // covid test only
-        List<SubmittedAnswerDto> covidOnly =
-                getSpecificAnswerDtoList(submittedAnswerDtoList, "covid".toLowerCase());
-
-        // stateAnxiety test only
-        List<SubmittedAnswerDto> stateAnxietyOnly =
-                getSpecificAnswerDtoList(submittedAnswerDtoList, "stateAnxiety".toLowerCase());
-
-        // kesbang test only
-        List<SubmittedAnswerDto> belaNegaraOnly =
-                getSpecificAnswerDtoList(submittedAnswerDtoList, "belaNegara".toLowerCase());
-
-        // Depression test only
-        List<SubmittedAnswerDto> depressionOnly =
-                getSpecificAnswerDtoList(submittedAnswerDtoList, "depression".toLowerCase());
-
-        // calculate each unique test independently
-
-        if(!cfitAnswer.isEmpty()){
-            testResult = cfitResultTestCalculator.calculateNewResult(cfitAnswer);
-            testResult.setDateOfTest(creationDate);
-            testResult.setVoucher(voucher);
-            testResultRepository.save(testResult);
-        }
-        if(!bullyTestOnly.isEmpty()){
-            testResult = bullyResultTestCalculator.calculateNewResult(bullyTestOnly);
-            testResult.setDateOfTest(creationDate);
-            testResult.setVoucher(voucher);
-            testResultRepository.save(testResult);
-        }
-        if(!eqTestOnly.isEmpty()){
-            testResult = eqResultTestCalculator.calculateNewResult(eqTestOnly);
-            testResult.setDateOfTest(creationDate);
-            testResult.setVoucher(voucher);
-            testResultRepository.save(testResult);
-        }
-        if(!gayaBelajar1Only.isEmpty()){
-            testResult = gayaBelajar1ResultTestCalculator.calculateNewResult(gayaBelajar1Only);
-            testResult.setDateOfTest(creationDate);
-            testResult.setVoucher(voucher);
-            testResultRepository.save(testResult);
-        }
-        if(!gayaBelajar2Only.isEmpty()){
-            testResult = gayaBelajar2ResultTestCalculator.calculateNewResult(gayaBelajar2Only);
-            testResult.setDateOfTest(creationDate);
-            testResult.setVoucher(voucher);
-            testResultRepository.save(testResult);
-        }
-        if(!minatBakatTestOnly.isEmpty()){
-            testResult = minatBakatResultTestCalculator.calculateNewResult(minatBakatTestOnly);
-            testResult.setDateOfTest(creationDate);
-            testResult.setVoucher(voucher);
-            testResultRepository.save(testResult);
-        }
-        if(!surveyKarakterOnly.isEmpty()){
-            testResult = surveyKarakterResultTestCalculator.calculateNewResult(surveyKarakterOnly);
-            testResult.setDateOfTest(creationDate);
-            testResult.setVoucher(voucher);
-            testResultRepository.save(testResult);
-        }
-        if(!covidOnly.isEmpty()){
-            testResult = covidResultTestCalculator.calculateNewResult(covidOnly);
-            testResult.setDateOfTest(creationDate);
-            testResult.setVoucher(voucher);
-            testResultRepository.save(testResult);
-        }
-        if(!stateAnxietyOnly.isEmpty()){
-            testResult = stateAnxietyTestResultCalculator.calculateNewResult(stateAnxietyOnly);
-            testResult.setDateOfTest(creationDate);
-            testResult.setVoucher(voucher);
-            testResultRepository.save(testResult);
-        }
-        if(!belaNegaraOnly.isEmpty()){
-            testResult = genericResultTestCalculator.calculateNewResult(belaNegaraOnly);
-            testResult.setDateOfTest(creationDate);
-            testResult.setVoucher(voucher);
-            testResultRepository.save(testResult);
-        }
-        if(!depressionOnly.isEmpty()){
-            testResult = depressionTestResultCalculator.calculateNewResult(depressionOnly);
-            testResult.setDateOfTest(creationDate);
-            testResult.setVoucher(voucher);
-            testResultRepository.save(testResult);
-        }
-
-        if(testResult != null){
-            System.out.println("reach here");
-            return testResultService.convertToTestResultDto(testResult);
-        }else{
-            throw new TestResultException("Test Result Error");
-        }
+        System.out.println("reach here");
+        return testResultService.convertToTestResultDto(testResult);
 
     }
 
@@ -364,9 +177,10 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
     }
 
 
-    private List<SubmittedAnswerDto> getSpecificAnswerDtoList(List<SubmittedAnswerDto> submittedAnswerDtoList, String testName) {
+    @Deprecated
+    private List<SubmittedAnswerDto> getSpecificAnswerDtoList(List<SubmittedAnswerDto> submittedAnswerDtoList, String testInternalName) {
         return submittedAnswerDtoList.stream()
-                .filter(answer -> answer.getQuestionId().contains(testName))
+                .filter(answer -> answer.getQuestionId().contains(testInternalName))
                 .collect(Collectors.toList());
     }
 }

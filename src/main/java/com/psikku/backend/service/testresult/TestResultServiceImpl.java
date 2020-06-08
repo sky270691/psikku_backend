@@ -16,9 +16,8 @@ public class TestResultServiceImpl implements TestResultService {
     TestResultRepository testResultRepository;
 
     @Override
-    public boolean saveTestResult(TestResult testResult) {
-        testResultRepository.save(testResult);
-        return true;
+    public TestResult saveTestResult(TestResult testResult) {
+        return testResultRepository.save(testResult);
     }
 
     @Override

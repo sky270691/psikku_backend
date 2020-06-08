@@ -3,60 +3,58 @@ package com.psikku.backend.service.uniquetestresultcalculator;
 import com.psikku.backend.dto.useranswer.SubmittedAnswerDto;
 import com.psikku.backend.entity.*;
 import com.psikku.backend.exception.TestException;
-import com.psikku.backend.repository.AnswerRepository;
-import com.psikku.backend.repository.TestRepository;
-import com.psikku.backend.repository.UserRepository;
+import com.psikku.backend.service.answer.AnswerService;
+import com.psikku.backend.service.test.TestService;
+import com.psikku.backend.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Random;
 
 @Service
-public class GenericResultTestCalculator implements UniqueResultTestCalculator{
+public class BelaNegaraResultTestCalculator implements UniqueResultTestCalculator{
 
     private String result;
 
-    UserRepository userRepository;
-    AnswerRepository answerRepository;
-    TestRepository testRepository;
+    private TestService testService;
+    private UserService userService;
+    private AnswerService answerService;
 
     @Autowired
-    public GenericResultTestCalculator(UserRepository userRepository, AnswerRepository answerRepository, TestRepository testRepository) {
-        this.userRepository = userRepository;
-        this.answerRepository = answerRepository;
-        this.testRepository = testRepository;
+    public BelaNegaraResultTestCalculator(TestService testService, UserService userService, AnswerService answerService) {
+        this.testService = testService;
+        this.userService = userService;
+        this.answerService = answerService;
     }
+
 
     @Override
     public TestResult calculateNewResult(List<SubmittedAnswerDto> submittedAnswerDtoList) {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userRepository.findUserByUsername(username);
+        User user = userService.findByUsername(username);
         String testname = submittedAnswerDtoList.get(0).getQuestionId().split("_")[0];
-        List<Answer> answersFromDb = answerRepository.findByIdStartingWith(testname);
-        Test test = testRepository.findTestByInternalName(testname).orElseThrow(()->new TestException(getClass().getSimpleName()+": Test Not Found"));
+        List<Answer> answersFromDb = answerService.findByIdStartingWith(testname);
+        Test test = testService.findTestByInternalName(testname);
 
-        //Todo
         // Real implementation
-//        int correctAnswer = 0;
-//
-//        for(SubmittedAnswerDto answerDto : submittedAnswerDtoList){
-//            for(Answer ansFromDb : answersFromDb){
-//                if(ansFromDb.getId().equals(answerDto.getAnswers().get(0))){
-//                    correctAnswer += ansFromDb.getIsCorrect();
-//                }
-//            }
-//        }
-//
-//        double points = (double) correctAnswer / (double)getCountQuestion(test) * 100;
+        int correctAnswer = 0;
 
-        //Todo
-        // fake implementation
-        Random random = new Random();
-        int correctAnswer = random.nextInt(7)+31;
-        int points = correctAnswer*2;
+        for(SubmittedAnswerDto answerDto : submittedAnswerDtoList){
+            for(Answer ansFromDb : answersFromDb){
+                if(ansFromDb.getId().equals(answerDto.getAnswers().get(0))){
+                    correctAnswer += ansFromDb.getIsCorrect();
+                }
+            }
+        }
+
+        double points = (double) correctAnswer / (double)getCountQuestion(test) * 100;
+
+//        // fake implementation
+//        Random random = new Random();
+//        int correctAnswer = random.nextInt(7)+31;
+//        int points = correctAnswer*2;
 
         StringBuilder sb = new StringBuilder();
 
@@ -71,6 +69,7 @@ public class GenericResultTestCalculator implements UniqueResultTestCalculator{
         testResult.setTest(test);
         testResult.setUser(user);
         testResult.setResult(getResult());
+        testResult.setResultCalculation("points:"+points);
         return testResult;
     }
 
@@ -81,10 +80,12 @@ public class GenericResultTestCalculator implements UniqueResultTestCalculator{
         return totalQuestion;
     }
 
+    @Override
     public String getResult() {
         return result;
     }
 
+    @Override
     public void setResult(String result) {
         this.result = result;
     }

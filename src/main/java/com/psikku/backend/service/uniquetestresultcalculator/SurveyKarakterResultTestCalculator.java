@@ -36,7 +36,7 @@ public class SurveyKarakterResultTestCalculator implements UniqueResultTestCalcu
     private String testResult;
 
     @Override
-    public TestResult calculateNewResult(List<SubmittedAnswerDto> surveyKarakterAnsDtoOnly) {
+    public TestResult calculateNewResult(List<SubmittedAnswerDto> surveyKarakterAnsDtoOnly){
 
         String[] surveyKarakterAnsSplit = surveyKarakterAnsDtoOnly.get(0).getQuestionId().split("_");
         String testName = surveyKarakterAnsSplit[0];
@@ -87,14 +87,15 @@ public class SurveyKarakterResultTestCalculator implements UniqueResultTestCalcu
         sb.append("Well being:").append((int)wellbeingPercentage).append(":").append(perCategoryPredicate(wellbeingPercentage)).append(",");
         sb.append("pluralisme:").append((int)pluralismePercentage).append(":").append(perCategoryPredicate(pluralismePercentage));
 
-        setTestResult(sb.toString());
+        setResult(sb.toString());
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         TestResult testResult = new TestResult();
         testResult.setUser(userRepository.findUserByUsername(username));
         testResult.setTest(testRepository.findTestByInternalName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
-        testResult.setResult(getTestResult());
-//        testResultRepository.save(testResult);
+        testResult.setResult(getResult());
+        testResult.setResultCalculation("toleransi:"+toleransiPercentage+",gotong royong:"+gotongRoyongPercentage+",well being:"+wellbeingPercentage+
+                ",pluralisme:"+pluralismePercentage);
         logger.info("username: '"+username+"' SURVEYKARAKTER answer calculated successfully");
         return testResult;
     }
@@ -113,11 +114,13 @@ public class SurveyKarakterResultTestCalculator implements UniqueResultTestCalcu
         }
     }
 
-    public String getTestResult() {
+    @Override
+    public String getResult() {
         return testResult;
     }
 
-    public void setTestResult(String testResult) {
+    @Override
+    public void setResult(String testResult) {
         this.testResult = testResult;
     }
 }

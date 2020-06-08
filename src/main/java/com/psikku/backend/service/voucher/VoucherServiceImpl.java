@@ -12,11 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -34,7 +29,6 @@ public class VoucherServiceImpl implements VoucherService {
 
     @Override
     public boolean verifyVoucher(String code) {
-
         Voucher voucher = getVoucherByCode(code);
         return (voucher != null && voucher.isValid());
     }

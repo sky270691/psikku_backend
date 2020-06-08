@@ -74,15 +74,17 @@ public class GayaBelajar1ResultTestCalculator implements UniqueResultTestCalcula
         testResult.setUser(userRepository.findUserByUsername(username));
         testResult.setTest(testRepository.findTestByInternalName(testName.toLowerCase()).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
         testResult.setResult(getResult());
-//        testResultRepository.save(testResult);
+        testResult.setResultCalculation(getResult());
         logger.info("username: '"+username+"' GB1 answer calculated successfully");
         return testResult;
     }
 
+    @Override
     public String getResult() {
         return result;
     }
 
+    @Override
     public void setResult(String result) {
         this.result = result;
     }

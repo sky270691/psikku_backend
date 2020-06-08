@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface UniqueResultTestCalculator {
     TestResult calculateNewResult(List<SubmittedAnswerDto> submittedAnswerDtoList);
+    void setResult(String result);
+    String getResult();
 }

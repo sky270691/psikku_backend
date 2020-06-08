@@ -111,7 +111,9 @@ public class EQResultTestCalculator implements UniqueResultTestCalculator{
         testResult.setUser(userRepository.findUserByUsername(username));
         testResult.setTest(testRepository.findTestByInternalName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
         testResult.setResult(getResult());
-//        testResultRepository.save(testResult);
+        testResult.setResultCalculation("mengenal emosi diri:"+mengenalEmosiDiriPercentage+","+"mengelola emosi diri:"+mengelolaEmosiPercentage+
+                "memotivasi diri:"+memotivasiDiriPercentage+","+"mengenal emosi orang lain:"+mengenalEmosiOrgLainPercentage+","+
+                "membina hubungan:"+membinaHubunganPercentage+","+"total EQ:"+eqTotal);
         logger.info("username: '"+username+"' EQ answer calculated successfully");
         return testResult;
     }
@@ -128,10 +130,12 @@ public class EQResultTestCalculator implements UniqueResultTestCalculator{
         }
     }
 
+    @Override
     public String getResult() {
         return result;
     }
 
+    @Override
     public void setResult(String result) {
         this.result = result;
     }

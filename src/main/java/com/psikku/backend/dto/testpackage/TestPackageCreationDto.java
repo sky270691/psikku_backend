@@ -18,7 +18,7 @@ public class TestPackageCreationDto {
     private long companyId;
 
     @JsonProperty("test_list")
-    private List<@Positive(message = "testidList m") Integer> testIdList;
+    private List<@Positive(message = "testidList must be positive value") Integer> testIdList;
 
     @JsonProperty("user_count")
     @Positive(message = "'user_count' must be a positive value")

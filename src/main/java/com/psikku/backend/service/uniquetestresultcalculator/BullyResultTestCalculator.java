@@ -106,13 +106,15 @@ public class BullyResultTestCalculator implements UniqueResultTestCalculator{
         sb.append("relasional:"+(int)relasionalPercentage).append(":").append(perCategoryPredicate(relasionalPercentage)).append(",");
         sb.append("cyber:"+(int)cyberPercentage).append(":").append(perCategoryPredicate(cyberPercentage));
 
-        setTestResult(sb.toString());
+        setResult(sb.toString());
 
         TestResult testResult = new TestResult();
         testResult.setTest(testRepository.findTestByInternalName("bully").orElseThrow(()-> new RuntimeException(getClass().getName()+": Test Not Found")));
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         testResult.setUser(userRepository.findUserByUsername(username));
-        testResult.setResult(getTestResult());
+        testResult.setResultCalculation("bully fisik:"+fisikPercentage+","+"bully verbal:"+verbalPercentage+","+
+                "bully nonverbal:"+nonVerbalPercentage+","+"bully relasional:"+relasionalPercentage+","+"bully cyber:"+cyberPercentage);
+        testResult.setResult(getResult());
         logger.info("username: '"+username+"' BULLY answer calculated successfully");
         return testResult;
 //        resultRepository.save(testResult);
@@ -128,11 +130,13 @@ public class BullyResultTestCalculator implements UniqueResultTestCalculator{
         }
     }
 
-    public String getTestResult() {
+    @Override
+    public String getResult() {
         return testResult;
     }
 
-    public void setTestResult(String testResult) {
+    @Override
+    public void setResult(String testResult) {
         this.testResult = testResult;
     }
 }
