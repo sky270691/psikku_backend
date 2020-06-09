@@ -12,7 +12,7 @@ import java.util.Optional;
 @Service
 public class QuestionServiceImpl implements QuestionService {
 
-    private QuestionRepository questionRepository;
+    private final QuestionRepository questionRepository;
 
     @Autowired
     public QuestionServiceImpl(QuestionRepository questionRepository) {
@@ -28,5 +28,10 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public List<Question> findByIdStartingWith(String prefix) {
         return questionRepository.findByIdStartingWith(prefix);
+    }
+
+    @Override
+    public Question save(Question question) {
+        return questionRepository.save(question);
     }
 }

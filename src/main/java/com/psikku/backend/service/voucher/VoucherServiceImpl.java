@@ -19,12 +19,13 @@ public class VoucherServiceImpl implements VoucherService {
 
     private final VoucherRepository voucherRepository;
     private final CompanyService companyService;
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger;
 
     @Autowired
     public VoucherServiceImpl(VoucherRepository voucherRepository, CompanyService companyService){
         this.voucherRepository = voucherRepository;
         this.companyService = companyService;
+        this.logger = LoggerFactory.getLogger(this.getClass());
     }
 
     @Override

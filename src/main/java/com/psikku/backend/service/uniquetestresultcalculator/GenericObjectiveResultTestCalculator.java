@@ -17,8 +17,8 @@ public class GenericObjectiveResultTestCalculator{
 
     private String result;
 
-    private UserService userService;
-    private AnswerService answerService;
+    private final UserService userService;
+    private final AnswerService answerService;
 
 
     @Autowired
@@ -26,7 +26,6 @@ public class GenericObjectiveResultTestCalculator{
         this.userService = userService;
         this.answerService = answerService;
     }
-
 
 
     public TestResult calculateNewResult(List<SubmittedAnswerDto> submittedAnswerDtoList, Test test) {

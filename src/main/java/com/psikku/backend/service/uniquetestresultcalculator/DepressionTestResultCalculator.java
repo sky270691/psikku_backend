@@ -17,9 +17,10 @@ import java.util.List;
 @Service
 public class DepressionTestResultCalculator implements UniqueResultTestCalculator{
 
-    private TestService testService;
-    private UserService userService;
-    private AnswerService answerService;
+    private final TestService testService;
+    private final UserService userService;
+    private final AnswerService answerService;
+
     private String result;
 
     @Autowired

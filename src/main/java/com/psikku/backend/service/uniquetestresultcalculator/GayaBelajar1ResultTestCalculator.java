@@ -7,6 +7,9 @@ import com.psikku.backend.repository.AnswerRepository;
 import com.psikku.backend.repository.TestRepository;
 import com.psikku.backend.repository.TestResultRepository;
 import com.psikku.backend.repository.UserRepository;
+import com.psikku.backend.service.answer.AnswerService;
+import com.psikku.backend.service.test.TestService;
+import com.psikku.backend.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,28 +21,27 @@ import java.util.List;
 @Service
 public class GayaBelajar1ResultTestCalculator implements UniqueResultTestCalculator {
 
-    public final Logger logger = LoggerFactory.getLogger(GayaBelajar1ResultTestCalculator.class);
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    TestResultRepository testResultRepository;
-
-    @Autowired
-    TestRepository testRepository;
-
-    @Autowired
-    AnswerRepository answerRepository;
+    private final Logger logger;
+    private final UserService userService;
+    private final TestService testService;
+    private final AnswerService answerService;
 
     private String result;
+
+    public GayaBelajar1ResultTestCalculator(UserService userService, TestService testService, AnswerService answerService) {
+        this.userService = userService;
+        this.testService = testService;
+        this.answerService = answerService;
+        this.logger = LoggerFactory.getLogger(GayaBelajar1ResultTestCalculator.class);
+        this.result = "";
+    }
 
     @Override
     public TestResult calculateNewResult(List<SubmittedAnswerDto> gayaBelajar1Only) {
 
         String[] gayaBelajar1QuestionIdSplit = gayaBelajar1Only.get(0).getQuestionId().split("_");
         String testName = gayaBelajar1QuestionIdSplit[0].toLowerCase();
-        List<Answer> gayaBelajar1AnswerFromDb = answerRepository.findByIdStartingWith(testName);
+        List<Answer> gayaBelajar1AnswerFromDb = answerService.findByIdStartingWith(testName);
 
         int visual = 0;
         int auditori = 0;
@@ -71,8 +73,8 @@ public class GayaBelajar1ResultTestCalculator implements UniqueResultTestCalcula
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         TestResult testResult = new TestResult();
-        testResult.setUser(userRepository.findUserByUsername(username));
-        testResult.setTest(testRepository.findTestByInternalName(testName.toLowerCase()).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
+        testResult.setUser(userService.findByUsername(username));
+        testResult.setTest(testService.findTestByInternalName(testName.toLowerCase()));
         testResult.setResult(getResult());
         testResult.setResultCalculation(getResult());
         logger.info("username: '"+username+"' GB1 answer calculated successfully");

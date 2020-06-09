@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 public class SubtestServiceImpl implements SubtestService {
 
-    private SubtestRepository subtestRepository;
+    private final SubtestRepository subtestRepository;
 
     @Autowired
     public SubtestServiceImpl(SubtestRepository subtestRepository) {
@@ -21,5 +21,10 @@ public class SubtestServiceImpl implements SubtestService {
     @Override
     public Subtest findById(String id) {
         return subtestRepository.findById(id).orElseThrow(()-> new SubtestException("subtest by id: "+id+" not found"));
+    }
+
+    @Override
+    public Subtest save(Subtest subtest) {
+        return subtestRepository.save(subtest);
     }
 }

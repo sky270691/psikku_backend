@@ -196,6 +196,27 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(FileStorageException.class)
+    public ResponseEntity<FileStorageExceptionResponse> handleFileStorageException(FileStorageException e){
+
+        FileStorageExceptionResponse response = new FileStorageExceptionResponse();
+        response.setMessage(e.getMessage());
+        response.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
+        response.setTimestamp(LocalDateTime.now());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DataAlreadyExistException.class)
+    public ResponseEntity<DataAlreadyExistExceptionResponse> handleAlreadyExistDataException(DataAlreadyExistException e){
+
+        DataAlreadyExistExceptionResponse response = new DataAlreadyExistExceptionResponse();
+        response.setMessage(e.getMessage());
+        response.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
+        response.setTimestamp(LocalDateTime.now());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+
 
 
 }

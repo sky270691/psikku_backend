@@ -8,5 +8,5 @@ public interface AnswerService {
 
     Answer findById(String id);
     List<Answer> findByIdStartingWith(String prefix);
-
+    Answer save(Answer answer);
 }

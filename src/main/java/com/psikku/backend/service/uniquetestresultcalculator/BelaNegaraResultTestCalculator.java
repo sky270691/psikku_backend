@@ -16,16 +16,18 @@ import java.util.List;
 public class BelaNegaraResultTestCalculator implements UniqueResultTestCalculator{
 
     private String result;
-
-    private TestService testService;
-    private UserService userService;
-    private AnswerService answerService;
+    private final TestService testService;
+    private final UserService userService;
+    private final AnswerService answerService;
 
     @Autowired
-    public BelaNegaraResultTestCalculator(TestService testService, UserService userService, AnswerService answerService) {
+    public BelaNegaraResultTestCalculator(TestService testService,
+                                          UserService userService,
+                                          AnswerService answerService) {
         this.testService = testService;
         this.userService = userService;
         this.answerService = answerService;
+        result = "";
     }
 
 

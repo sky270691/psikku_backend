@@ -49,9 +49,6 @@ public class Voucher {
     private int userCount;
 
 
-
-
-
     public long getId() {
         return id;
     }

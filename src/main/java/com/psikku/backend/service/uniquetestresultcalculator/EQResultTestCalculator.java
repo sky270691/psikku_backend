@@ -5,6 +5,10 @@ import com.psikku.backend.entity.Answer;
 import com.psikku.backend.entity.Question;
 import com.psikku.backend.entity.TestResult;
 import com.psikku.backend.repository.*;
+import com.psikku.backend.service.answer.AnswerService;
+import com.psikku.backend.service.question.QuestionService;
+import com.psikku.backend.service.test.TestService;
+import com.psikku.backend.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,24 +21,28 @@ import java.util.List;
 @Service
 public class EQResultTestCalculator implements UniqueResultTestCalculator{
 
-    public final Logger logger = LoggerFactory.getLogger(EQResultTestCalculator.class);
+    private final Logger logger = LoggerFactory.getLogger(EQResultTestCalculator.class);
 
-    @Autowired
-    AnswerRepository answerRepository;
+    private final AnswerService answerService;
 
-    @Autowired
-    QuestionRepository questionRepository;
+    private final QuestionService questionService;
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserService userService;
 
-    @Autowired
-    TestResultRepository testResultRepository;
-
-    @Autowired
-    TestRepository testRepository;
+    private final TestService testService;
 
     private String result;
+
+    public EQResultTestCalculator(AnswerService answerService,
+                                  QuestionService questionService,
+                                  UserService userService,
+                                  TestService testService) {
+        this.answerService = answerService;
+        this.questionService = questionService;
+        this.userService = userService;
+        this.testService = testService;
+        this.result = "";
+    }
 
     @Transactional
     @Override
@@ -42,8 +50,8 @@ public class EQResultTestCalculator implements UniqueResultTestCalculator{
         String[] EQAnsOnlyIdSplit = EQAnsDtoOnly.get(0).getQuestionId().split("_");
         String testName = EQAnsOnlyIdSplit[0].toLowerCase();
         List<Answer> EQansFromDb =
-                answerRepository.findByIdStartingWith(testName);
-        List<Question> questionsFromDb = questionRepository.findByIdStartingWith(testName);
+                answerService.findByIdStartingWith(testName);
+        List<Question> questionsFromDb = questionService.findByIdStartingWith(testName);
         int mengenalEmosiDiri = 0;
         int mengelolaEmosi = 0;
         int memotivasiDiri = 0;
@@ -108,8 +116,8 @@ public class EQResultTestCalculator implements UniqueResultTestCalculator{
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         TestResult testResult = new TestResult();
-        testResult.setUser(userRepository.findUserByUsername(username));
-        testResult.setTest(testRepository.findTestByInternalName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
+        testResult.setUser(userService.findByUsername(username));
+        testResult.setTest(testService.findTestByInternalName(testName));
         testResult.setResult(getResult());
         testResult.setResultCalculation("mengenal emosi diri:"+mengenalEmosiDiriPercentage+","+"mengelola emosi diri:"+mengelolaEmosiPercentage+
                 "memotivasi diri:"+memotivasiDiriPercentage+","+"mengenal emosi orang lain:"+mengenalEmosiOrgLainPercentage+","+

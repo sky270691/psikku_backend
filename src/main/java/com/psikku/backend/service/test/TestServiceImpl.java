@@ -5,6 +5,9 @@ import com.psikku.backend.dto.test.MinimalTestDto;
 import com.psikku.backend.entity.*;
 import com.psikku.backend.repository.*;
 import com.psikku.backend.exception.TestException;
+import com.psikku.backend.service.answer.AnswerService;
+import com.psikku.backend.service.question.QuestionService;
+import com.psikku.backend.service.subtest.SubtestService;
 import com.psikku.backend.service.testresult.TestResultService;
 import com.psikku.backend.service.voucher.VoucherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,30 +21,28 @@ import java.util.stream.Collectors;
 @Service
 public class TestServiceImpl implements TestService{
 
-    @Autowired
-    TestRepository testRepository;
+    private final TestRepository testRepository;
+    private final SubtestService subtestService;
+    private final QuestionService questionService;
+    private final AnswerService answerService;
+    private final VoucherService voucherService;
+    private final TestResultService testResultService;
 
     @Autowired
-    UserRepository userRepository;
+    public TestServiceImpl(TestRepository testRepository,
+                           SubtestService subtestService,
+                           QuestionService questionService,
+                           AnswerService answerService,
+                           VoucherService voucherService,
+                           TestResultService testResultService){
 
-    @Autowired
-    SurveyCategoryRepository surveyCategoryRepository;
-
-    @Autowired
-    SubtestRepository subtestRepository;
-
-    @Autowired
-    QuestionRepository questionRepository;
-
-    @Autowired
-    AnswerRepository answerRepository;
-
-    @Autowired
-    VoucherService voucherService;
-
-    @Autowired
-    TestResultService testResultService;
-
+        this.testRepository = testRepository;
+        this.subtestService = subtestService;
+        this.questionService = questionService;
+        this.answerService = answerService;
+        this.voucherService = voucherService;
+        this.testResultService = testResultService;
+    }
 
     @Transactional
     @Override
@@ -51,11 +52,11 @@ public class TestServiceImpl implements TestService{
         if(!findTest.isPresent()){
             testRepository.save(entityTest);
             for(Subtest subtest:entityTest.getSubtestList()){
-                subtestRepository.save(subtest);
+                subtestService.save(subtest);
                 for(Question question: subtest.getQuestionList()){
-                    questionRepository.save(question);
+                    questionService.save(question);
                     for(Answer answer: question.getAnswerList()){
-                        answerRepository.save(answer);
+                        answerService.save(answer);
                     }
                 }
             }
@@ -289,7 +290,7 @@ public class TestServiceImpl implements TestService{
     @Override
     @Transactional
     public Subtest findSubtestById(String id) {
-        return subtestRepository.findById(id).orElseThrow(()->new TestException("Subtest not found"));
+        return subtestService.findById(id);
     }
 
 }

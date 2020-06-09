@@ -8,6 +8,8 @@ import com.psikku.backend.repository.AnswerRepository;
 import com.psikku.backend.repository.TestRepository;
 import com.psikku.backend.repository.TestResultRepository;
 import com.psikku.backend.repository.UserRepository;
+import com.psikku.backend.service.answer.AnswerService;
+import com.psikku.backend.service.test.TestService;
 import com.psikku.backend.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,27 +29,29 @@ import java.util.stream.Collectors;
 @Service
 public class CfitResultTestCalculator implements UniqueResultTestCalculator {
 
-    public final Logger logger = LoggerFactory.getLogger(CfitResultTestCalculator.class);
+    public final Logger logger;
 
     private String result;
 
     @Value("${cfit-pku.location}")
     private String cfitPkuLocation;
 
-    @Autowired
     UserService userService;
-
-    @Autowired
-    AnswerRepository answerRepository;
-
-    @Autowired
-    TestRepository testRepository;
-
-    @Autowired
+    AnswerService answerService;
+    TestService testService;
     ResourceLoader resourceLoader;
 
     @Autowired
-    TestResultRepository testResultRepository;
+    public CfitResultTestCalculator(UserService userService,
+                                    AnswerService answerService,
+                                    TestService testService,
+                                    ResourceLoader resourceLoader) {
+        this.userService = userService;
+        this.answerService = answerService;
+        this.testService = testService;
+        this.resourceLoader = resourceLoader;
+        this.logger = LoggerFactory.getLogger(CfitResultTestCalculator.class);
+    }
 
     @Override
     public String getResult() {
@@ -82,8 +86,7 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
 
         // subtest 1 3 4 calculation
         cfitAnswer.forEach(answerSub134Dto -> {
-            Answer tempAnswer = answerRepository.findById(answerSub134Dto.getAnswers().get(0).toLowerCase()).orElseThrow(()->
-                    new RuntimeException("tempAnswer not Found"));
+            Answer tempAnswer = answerService.findById(answerSub134Dto.getAnswers().get(0).toLowerCase());
             Answer[] answers = {tempAnswer};
             if(tempAnswer.getIsCorrect() == 1){
                 correctAnswer.add(answers);
@@ -96,8 +99,8 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
             String answer2String = Optional.of(answerSub2Dto.getAnswers().get(1).toLowerCase()).orElse("");
 
             if(!answer1String.equals("") && !answer2String.equals("")){
-                Answer answer1 = answerRepository.findById(answer1String).orElse(null);
-                Answer answer2 = answerRepository.findById(answer2String).orElse(null);
+                Answer answer1 = answerService.findById(answer1String);
+                Answer answer2 = answerService.findById(answer2String);
 
                 // check if all the answers are correct then add the list of the correctAnswer
                 if(answer1.getIsCorrect() == 1 && answer2.getIsCorrect() ==1){
@@ -163,7 +166,7 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
         TestResult testResult = new TestResult();
         testResult.setUser(user);
         testResult.setResultCalculation("jumlah benar:"+points);
-        testResult.setTest(testRepository.findTestByInternalName("cfit3").orElseThrow(()->new RuntimeException(getClass().getSimpleName()+" Test not found")));
+        testResult.setTest(testService.findTestByInternalName("cfit3"));
         testResult.setResult(getResult());
 //        testResultRepository.save(testResult);
         logger.info("username: '"+username+"' CF" + "IT answer calculated successfully");

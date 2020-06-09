@@ -7,6 +7,9 @@ import com.psikku.backend.repository.AnswerRepository;
 import com.psikku.backend.repository.TestRepository;
 import com.psikku.backend.repository.TestResultRepository;
 import com.psikku.backend.repository.UserRepository;
+import com.psikku.backend.service.answer.AnswerService;
+import com.psikku.backend.service.test.TestService;
+import com.psikku.backend.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,22 +22,21 @@ import java.util.stream.Collectors;
 @Service
 public class GayaBelajar2ResultTestCalculator implements UniqueResultTestCalculator{
 
-    public final Logger logger = LoggerFactory.getLogger(GayaBelajar2ResultTestCalculator.class);
+    private final Logger logger;
 
-    @Autowired
-    AnswerRepository answerRepository;
-
-    @Autowired
-    TestRepository testRepository;
-
-    @Autowired
-    TestResultRepository testResultRepository;
-
-    @Autowired
-    UserRepository userRepository;
+    private final AnswerService answerService;
+    private final TestService testService;
+    private final UserService userService;
 
     private String result;
 
+    public GayaBelajar2ResultTestCalculator(AnswerService answerService, TestService testService, UserService userService) {
+        this.answerService = answerService;
+        this.testService = testService;
+        this.userService = userService;
+        this.logger = LoggerFactory.getLogger(GayaBelajar2ResultTestCalculator.class);
+        this.result = "";
+    }
 
     @Override
     public TestResult calculateNewResult(List<SubmittedAnswerDto> gayaBelajar2AnsOnly) {
@@ -42,7 +44,7 @@ public class GayaBelajar2ResultTestCalculator implements UniqueResultTestCalcula
         String[] gayaBelajar2DtoSplit = gayaBelajar2AnsOnly.get(0).getQuestionId().split("_");
         String testName = gayaBelajar2DtoSplit[0].toLowerCase();
         List<Answer> gayaBelajar2AnsFromDb =
-                answerRepository.findByIdStartingWith(testName);
+                answerService.findByIdStartingWith(testName);
         int ce = 0;
         int ac = 0;
         int ro = 0;
@@ -93,9 +95,6 @@ public class GayaBelajar2ResultTestCalculator implements UniqueResultTestCalcula
                                          .map(x->x.getKey())
                                          .collect(Collectors.toList());
         String highestCategory = sortedHighestResultKey.get(0);
-//        String secondHighestCategory = sortedHighestResultKey.get(1);
-//        String thirdHighestCategory = sortedHighestResultKey.get(2);
-//        String fourthHighestCategory = sortedHighestResultKey.get(3);
 
         StringBuilder sb = new StringBuilder();
         sb.append("Highest Category:").append(highestCategory).append(",");
@@ -105,8 +104,8 @@ public class GayaBelajar2ResultTestCalculator implements UniqueResultTestCalcula
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         TestResult testResult = new TestResult();
-        testResult.setUser(userRepository.findUserByUsername(username));
-        testResult.setTest(testRepository.findTestByInternalName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
+        testResult.setUser(userService.findByUsername(username));
+        testResult.setTest(testService.findTestByInternalName(testName));
         testResult.setResult(getResult());
         testResult.setResultCalculation("ce:"+ce+","+"ac:"+ac+","+"ro:"+ro+","+"ae:"+ae);
         logger.info("username: '"+username+"' GB2 answer calculated successfully");

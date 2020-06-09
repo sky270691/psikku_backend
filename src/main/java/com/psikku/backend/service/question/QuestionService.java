@@ -10,4 +10,6 @@ public interface QuestionService {
     Question findQuestionByIdEquals(String id);
 
     List<Question> findByIdStartingWith(String prefix);
+
+    Question save(Question question);
 }

@@ -8,6 +8,9 @@ import com.psikku.backend.repository.AnswerRepository;
 import com.psikku.backend.repository.TestRepository;
 import com.psikku.backend.repository.TestResultRepository;
 import com.psikku.backend.repository.UserRepository;
+import com.psikku.backend.service.answer.AnswerService;
+import com.psikku.backend.service.test.TestService;
+import com.psikku.backend.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,24 +25,26 @@ import java.util.stream.Collectors;
 @Service
 public class MinatBakatResultTestCalculator implements UniqueResultTestCalculator {
 
-    public final Logger logger = LoggerFactory.getLogger(MinatBakatResultTestCalculator.class);
-
-    @Autowired
-    AnswerRepository answerRepository;
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    TestRepository testRepository;
+    private final Logger logger;
+    private final AnswerService answerService;
+    private final UserService userService;
+    private final TestService testService;
 
     private String result;
+
+    @Autowired
+    public MinatBakatResultTestCalculator(AnswerService answerService, UserService userService, TestService testService) {
+        this.logger = LoggerFactory.getLogger(this.getClass());
+        this.answerService = answerService;
+        this.userService = userService;
+        this.testService = testService;
+    }
 
     @Override
     public TestResult calculateNewResult(List<SubmittedAnswerDto> submittedAnswerDtoList) {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        User user = userRepository.findUserByUsername(username);
+        User user = userService.findByUsername(username);
         int userAgeInMonth = user.getAge(LocalDate.now());
 
 
@@ -79,14 +84,14 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
         int raCorrectAnswers = 0;
         int zrCorrectAnswers = 0;
 
-        int anMaxCorrectByAge = 0;
-        int geMaxCorrectByAge = 0;
-        int raMaxCorrectByAge = 0;
-        int zrMaxCorrectByAge = 0;
+        int anMaxCorrectByAge;
+        int geMaxCorrectByAge;
+        int raMaxCorrectByAge;
+        int zrMaxCorrectByAge;
 
         String[] answerDtoQuestionIdSplit = submittedAnswerDtoList.get(0).getQuestionId().split("_");
         String testName = answerDtoQuestionIdSplit[0];
-        List<Answer> allMinatBakatAnswerFromDb = answerRepository.findByIdStartingWith(testName);
+        List<Answer> allMinatBakatAnswerFromDb = answerService.findByIdStartingWith(testName);
 
         // calculate "an" answer
         for (SubmittedAnswerDto anAnswerDto : an) {
@@ -181,8 +186,8 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
         setResult(sb.toString());
 
         TestResult testResult = new TestResult();
-        testResult.setUser(userRepository.findUserByUsername(username));
-        testResult.setTest(testRepository.findTestByInternalName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
+        testResult.setUser(user);
+        testResult.setTest(testService.findTestByInternalName(testName));
         testResult.setResult(getResult());
         testResult.setResultCalculation("an:"+anPercentage+",ge:"+gePercentage+",ra:"+raPercentage+",zr:"+zrPercentage);
 //        testResultRepository.save(testResult);

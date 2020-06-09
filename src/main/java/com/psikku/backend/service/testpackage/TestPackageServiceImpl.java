@@ -12,6 +12,7 @@ import com.psikku.backend.repository.TestPackageRepository;
 import com.psikku.backend.service.payment.PaymentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class TestPackageServiceImpl implements TestPackageService{
     private final TestPackageMapper testPackageMapper;
     private final TestMapper testMapper;
 
+    @Autowired
     public TestPackageServiceImpl(TestPackageRepository testPackageRepository, PaymentService paymentService, TestPackageMapper testPackageMapper, TestMapper testMapper) {
         this.testMapper = testMapper;
         this.logger = LoggerFactory.getLogger(this.getClass());

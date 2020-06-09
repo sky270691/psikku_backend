@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 public class LiveCountServiceImpl implements LiveCountService {
 
 
-    private TestResultService testResultService;
-    private VoucherService voucherService;
+    private final TestResultService testResultService;
+    private final VoucherService voucherService;
 
     @Autowired
     public LiveCountServiceImpl(TestResultService testResultService, VoucherService voucherService) {

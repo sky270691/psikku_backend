@@ -5,6 +5,10 @@ import com.psikku.backend.entity.Answer;
 import com.psikku.backend.entity.Question;
 import com.psikku.backend.entity.TestResult;
 import com.psikku.backend.repository.*;
+import com.psikku.backend.service.answer.AnswerService;
+import com.psikku.backend.service.question.QuestionService;
+import com.psikku.backend.service.test.TestService;
+import com.psikku.backend.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,24 +21,25 @@ import java.util.List;
 @Service
 public class BullyResultTestCalculator implements UniqueResultTestCalculator{
 
-    public final Logger logger = LoggerFactory.getLogger(BullyResultTestCalculator.class);
-
-    @Autowired
-    AnswerRepository answerRepository;
-
-    @Autowired
-    QuestionRepository questionRepository;
-
-    @Autowired
-    TestRepository testRepository;
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    TestResultRepository resultRepository;
+    private final Logger logger;
+    private final AnswerService answerService;
+    private final QuestionService questionService;
+    private final TestService testService;
+    private final UserService userService;
 
     private String testResult;
+
+    public BullyResultTestCalculator(AnswerService answerService,
+                                     QuestionService questionService,
+                                     TestService testService,
+                                     UserService userService) {
+        this.logger = LoggerFactory.getLogger(BullyResultTestCalculator.class);
+        this.answerService = answerService;
+        this.questionService = questionService;
+        this.testService = testService;
+        this.userService = userService;
+        this.testResult = "";
+    }
 
     @Transactional
     @Override
@@ -44,12 +49,12 @@ public class BullyResultTestCalculator implements UniqueResultTestCalculator{
         String testName = bullyAnsDtoOnlySplit[0];
 
         List<Answer> bullyAnsFromDb =
-                answerRepository.findByIdStartingWith(testName);
+                answerService.findByIdStartingWith(testName);
 
         String[] bullyAnsSplit = bullyAnsDtoOnly.get(0).getQuestionId().split("_");
 
 
-        List<Question> questionsFromDb = questionRepository.findByIdStartingWith(bullyAnsSplit[0].toLowerCase());
+        List<Question> questionsFromDb = questionService.findByIdStartingWith(bullyAnsSplit[0].toLowerCase());
 //        for (Question question : questionsFromDb) {
 //            System.out.println(question.getId());
 //        }
@@ -109,9 +114,9 @@ public class BullyResultTestCalculator implements UniqueResultTestCalculator{
         setResult(sb.toString());
 
         TestResult testResult = new TestResult();
-        testResult.setTest(testRepository.findTestByInternalName("bully").orElseThrow(()-> new RuntimeException(getClass().getName()+": Test Not Found")));
+        testResult.setTest(testService.findTestByInternalName("bully"));
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        testResult.setUser(userRepository.findUserByUsername(username));
+        testResult.setUser(userService.findByUsername(username));
         testResult.setResultCalculation("bully fisik:"+fisikPercentage+","+"bully verbal:"+verbalPercentage+","+
                 "bully nonverbal:"+nonVerbalPercentage+","+"bully relasional:"+relasionalPercentage+","+"bully cyber:"+cyberPercentage);
         testResult.setResult(getResult());

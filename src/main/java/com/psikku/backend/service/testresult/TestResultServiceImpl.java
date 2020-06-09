@@ -12,8 +12,13 @@ import java.util.List;
 @Service
 public class TestResultServiceImpl implements TestResultService {
 
+
+    private final TestResultRepository testResultRepository;
+
     @Autowired
-    TestResultRepository testResultRepository;
+    public TestResultServiceImpl(TestResultRepository testResultRepository) {
+        this.testResultRepository = testResultRepository;
+    }
 
     @Override
     public TestResult saveTestResult(TestResult testResult) {
@@ -29,7 +34,6 @@ public class TestResultServiceImpl implements TestResultService {
             throw new TestResultException("test result not found");
         }
     }
-
 
     @Override
     public List<TestResult> findAllByUserName(String username) {

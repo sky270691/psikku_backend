@@ -7,5 +7,5 @@ import java.util.Optional;
 public interface SubtestService {
 
     Subtest findById(String id);
-
+    Subtest save(Subtest subtest);
 }

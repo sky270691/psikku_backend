@@ -34,4 +34,9 @@ public class AnswerServiceImpl implements AnswerService {
     public List<Answer> findByIdStartingWith(String prefix) {
         return answerRepository.findByIdStartingWith(prefix);
     }
+
+    @Override
+    public Answer save(Answer answer) {
+        return answerRepository.save(answer);
+    }
 }
