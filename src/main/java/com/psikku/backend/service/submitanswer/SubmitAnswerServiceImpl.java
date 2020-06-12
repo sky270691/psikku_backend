@@ -56,7 +56,6 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
         this.testService = testService;
         this.userService = userService;
         this.testResultCalculatorFactory = testResultCalculatorFactory;
-
     }
 
     @Transactional
