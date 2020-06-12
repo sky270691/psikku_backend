@@ -29,17 +29,17 @@ import java.util.stream.Collectors;
 @Service
 public class CfitResultTestCalculator implements UniqueResultTestCalculator {
 
-    public final Logger logger;
+    private final UserService userService;
+    private final AnswerService answerService;
+    private final TestService testService;
+    private final ResourceLoader resourceLoader;
 
+    private final Logger logger;
     private String result;
+    private final String name;
 
     @Value("${cfit-pku.location}")
     private String cfitPkuLocation;
-
-    UserService userService;
-    AnswerService answerService;
-    TestService testService;
-    ResourceLoader resourceLoader;
 
     @Autowired
     public CfitResultTestCalculator(UserService userService,
@@ -51,6 +51,8 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
         this.testService = testService;
         this.resourceLoader = resourceLoader;
         this.logger = LoggerFactory.getLogger(CfitResultTestCalculator.class);
+        this.result = "";
+        this.name = "cfit";
     }
 
     @Override
@@ -61,6 +63,11 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
     @Override
     public void setResult(String result) {
         this.result = result;
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
     }
 
     @Transactional

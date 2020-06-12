@@ -23,6 +23,7 @@ public class EventSurveyCalculator implements UniqueResultTestCalculator{
     private final AnswerService answerService;
     private final Logger logger;
     private String result;
+    private final String name;
 
     @Autowired
     public EventSurveyCalculator(TestService testService, UserService userService, AnswerService answerService) {
@@ -31,8 +32,14 @@ public class EventSurveyCalculator implements UniqueResultTestCalculator{
         this.answerService = answerService;
         this.logger = LoggerFactory.getLogger(this.getClass());
         this.result = "";
+        this.name = "evaluiasievent";
     }
 
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
 
     @Override
     public TestResult calculateNewResult(List<SubmittedAnswerDto> submittedAnswerDtoList) {

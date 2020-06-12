@@ -11,10 +11,12 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.NonUniqueResultException;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
@@ -31,6 +33,8 @@ public class FileStorageServiceImpl implements FileStorageService {
         this.fileDataRepository = fileDataRepository;
     }
 
+
+    // method to reset the fileStorageLocation pointer to default file allocation directory
     public void reset(){
         this.fileStorageLocation = Paths.get(storageProperties.getUploadDir()).toAbsolutePath().normalize();
     }
@@ -46,6 +50,7 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Override
     public boolean storeFile(MultipartFile file, String subFolder) {
         String fileName = file.getOriginalFilename();
+
         Path targetLocation;
         FileData fileData = new FileData();
         try{
@@ -94,18 +99,30 @@ public class FileStorageServiceImpl implements FileStorageService {
             }
             Resource resource = new UrlResource(filePath.toUri());
             if(resource.exists()){
+                reset();
                 return resource;
             }else{
+                reset();
                 throw new FileStorageException("file not found");
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
+            reset();
             return null;
         }
     }
 
-    //Todo
-    // implement the deleting uploaded file method
+    @Override
+    public void deleteByFilePathAndFileName(String filePath, String fileName) {
+        Path fileToRemove = this.fileStorageLocation.resolve(filePath).resolve(fileName);
+        try {
+            Files.deleteIfExists(fileToRemove);
+            fileDataRepository.findByFilePathAndFileName(filePath,fileName).ifPresent(fileDataRepository::delete);
+            reset();
+        } catch (IOException e) {
+            throw new FileStorageException("Error deleting file");
+        }
+    }
 
 
 }

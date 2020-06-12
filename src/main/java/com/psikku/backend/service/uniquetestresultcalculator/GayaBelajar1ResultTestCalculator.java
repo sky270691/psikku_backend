@@ -25,6 +25,7 @@ public class GayaBelajar1ResultTestCalculator implements UniqueResultTestCalcula
     private final UserService userService;
     private final TestService testService;
     private final AnswerService answerService;
+    private final String name;
 
     private String result;
 
@@ -34,6 +35,12 @@ public class GayaBelajar1ResultTestCalculator implements UniqueResultTestCalcula
         this.answerService = answerService;
         this.logger = LoggerFactory.getLogger(GayaBelajar1ResultTestCalculator.class);
         this.result = "";
+        this.name = "gayabelajar1";
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
     }
 
     @Override

@@ -21,27 +21,32 @@ import java.util.List;
 @Service
 public class EQResultTestCalculator implements UniqueResultTestCalculator{
 
-    private final Logger logger = LoggerFactory.getLogger(EQResultTestCalculator.class);
-
+    private final Logger logger;
     private final AnswerService answerService;
-
     private final QuestionService questionService;
-
     private final UserService userService;
-
     private final TestService testService;
+    private final String name;
 
     private String result;
+
 
     public EQResultTestCalculator(AnswerService answerService,
                                   QuestionService questionService,
                                   UserService userService,
                                   TestService testService) {
+        this.logger = LoggerFactory.getLogger(EQResultTestCalculator.class);
         this.answerService = answerService;
         this.questionService = questionService;
         this.userService = userService;
         this.testService = testService;
         this.result = "";
+        this.name = "";
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
     }
 
     @Transactional

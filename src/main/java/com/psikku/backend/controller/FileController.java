@@ -48,4 +48,10 @@ public class FileController {
 
     }
 
+    @DeleteMapping
+    public ResponseEntity<?> deleteFile(@RequestPart("category") String fileCategory, @RequestPart("filename") String fileName){
+        storageService.deleteByFilePathAndFileName(fileCategory,fileName);
+        return new ResponseEntity<>("File deleted Successfully",HttpStatus.OK);
+    }
+
 }

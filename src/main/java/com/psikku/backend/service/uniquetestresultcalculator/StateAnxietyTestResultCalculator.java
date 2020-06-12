@@ -17,9 +17,10 @@ import java.util.List;
 @Service
 public class StateAnxietyTestResultCalculator implements UniqueResultTestCalculator{
 
-    private TestService testService;
-    private UserService userService;
-    private AnswerService answerService;
+    private final TestService testService;
+    private final UserService userService;
+    private final AnswerService answerService;
+    private final String name;
     private String result;
 
     @Autowired
@@ -27,6 +28,13 @@ public class StateAnxietyTestResultCalculator implements UniqueResultTestCalcula
         this.testService = testService;
         this.userService = userService;
         this.answerService = answerService;
+        this.name = "stateanxiety";
+        this.result = "";
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
     }
 
     @Override

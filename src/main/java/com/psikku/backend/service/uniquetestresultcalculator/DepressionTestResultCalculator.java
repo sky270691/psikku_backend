@@ -20,8 +20,10 @@ public class DepressionTestResultCalculator implements UniqueResultTestCalculato
     private final TestService testService;
     private final UserService userService;
     private final AnswerService answerService;
+    private final String name;
 
     private String result;
+
 
     @Autowired
     public DepressionTestResultCalculator(TestService testService, UserService userService, AnswerService answerService) {
@@ -29,6 +31,12 @@ public class DepressionTestResultCalculator implements UniqueResultTestCalculato
         this.userService = userService;
         this.answerService = answerService;
         this.result = "";
+        this.name = "depression";
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
     }
 
     @Override

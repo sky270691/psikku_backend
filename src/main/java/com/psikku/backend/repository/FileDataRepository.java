@@ -9,4 +9,5 @@ public interface FileDataRepository extends JpaRepository<FileData,Integer> {
 
     Optional<FileData> findByFileName(String fileName);
     Optional<FileData> findByFilePathAndFileName(String path,String fileName);
+    void deleteByFilePathAndFileName(String filePath, String fileName);
 }

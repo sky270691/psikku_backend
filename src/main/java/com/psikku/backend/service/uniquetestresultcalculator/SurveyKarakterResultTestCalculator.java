@@ -4,10 +4,12 @@ import com.psikku.backend.dto.useranswer.SubmittedAnswerDto;
 import com.psikku.backend.entity.Answer;
 import com.psikku.backend.entity.Question;
 import com.psikku.backend.entity.TestResult;
-import com.psikku.backend.repository.*;
+import com.psikku.backend.service.answer.AnswerService;
+import com.psikku.backend.service.question.QuestionService;
+import com.psikku.backend.service.test.TestService;
+import com.psikku.backend.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -16,24 +18,31 @@ import java.util.List;
 @Service
 public class SurveyKarakterResultTestCalculator implements UniqueResultTestCalculator{
 
-    public final Logger logger = LoggerFactory.getLogger(SurveyKarakterResultTestCalculator.class);
-
-    @Autowired
-    AnswerRepository answerRepository;
-
-    @Autowired
-    QuestionRepository questionRepository;
-
-    @Autowired
-    TestRepository testRepository;
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    TestResultRepository testResultRepository;
+    private final Logger logger;
+    private final AnswerService answerService;
+    private final QuestionService questionService;
+    private final TestService testService;
+    private final UserService userService;
+    private final String name;
 
     private String testResult;
+
+    public SurveyKarakterResultTestCalculator(AnswerService answerService,
+                                              QuestionService questionService,
+                                              TestService testService,
+                                              UserService userService) {
+        this.answerService = answerService;
+        this.questionService = questionService;
+        this.testService = testService;
+        this.userService = userService;
+        this.logger = LoggerFactory.getLogger(SurveyKarakterResultTestCalculator.class);
+        this.name = "surveykarakter";
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
 
     @Override
     public TestResult calculateNewResult(List<SubmittedAnswerDto> surveyKarakterAnsDtoOnly){
@@ -41,8 +50,8 @@ public class SurveyKarakterResultTestCalculator implements UniqueResultTestCalcu
         String[] surveyKarakterAnsSplit = surveyKarakterAnsDtoOnly.get(0).getQuestionId().split("_");
         String testName = surveyKarakterAnsSplit[0];
         List<Answer> surveyKarakterAnsFromDb =
-                answerRepository.findByIdStartingWith(testName);
-        List<Question> questionsFromDb = questionRepository.findByIdStartingWith(testName);
+                answerService.findByIdStartingWith(testName);
+        List<Question> questionsFromDb = questionService.findByIdStartingWith(testName);
 
         int toleransi = 0;
         int gotongRoyong = 0;
@@ -91,8 +100,8 @@ public class SurveyKarakterResultTestCalculator implements UniqueResultTestCalcu
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         TestResult testResult = new TestResult();
-        testResult.setUser(userRepository.findUserByUsername(username));
-        testResult.setTest(testRepository.findTestByInternalName(testName).orElseThrow(()->new RuntimeException(getClass().getSimpleName()+"Test not found")));
+        testResult.setUser(userService.findByUsername(username));
+        testResult.setTest(testService.findTestByInternalName(testName));
         testResult.setResult(getResult());
         testResult.setResultCalculation("toleransi:"+toleransiPercentage+",gotong royong:"+gotongRoyongPercentage+",well being:"+wellbeingPercentage+
                 ",pluralisme:"+pluralismePercentage);

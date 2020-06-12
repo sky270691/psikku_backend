@@ -29,6 +29,7 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
     private final AnswerService answerService;
     private final UserService userService;
     private final TestService testService;
+    private final String name;
 
     private String result;
 
@@ -38,6 +39,13 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
         this.answerService = answerService;
         this.userService = userService;
         this.testService = testService;
+        this.result = "";
+        this.name = "minatbakat";
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
     }
 
     @Override

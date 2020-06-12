@@ -6,6 +6,7 @@ import com.psikku.backend.entity.TestResult;
 import java.util.List;
 
 public interface UniqueResultTestCalculator {
+    String getName();
     TestResult calculateNewResult(List<SubmittedAnswerDto> submittedAnswerDtoList);
     void setResult(String result);
     String getResult();

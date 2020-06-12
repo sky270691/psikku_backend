@@ -19,6 +19,7 @@ public class BelaNegaraResultTestCalculator implements UniqueResultTestCalculato
     private final TestService testService;
     private final UserService userService;
     private final AnswerService answerService;
+    private final String name;
 
     @Autowired
     public BelaNegaraResultTestCalculator(TestService testService,
@@ -28,8 +29,14 @@ public class BelaNegaraResultTestCalculator implements UniqueResultTestCalculato
         this.userService = userService;
         this.answerService = answerService;
         result = "";
+        this.name = "belanegara";
     }
 
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
 
     @Override
     public TestResult calculateNewResult(List<SubmittedAnswerDto> submittedAnswerDtoList) {

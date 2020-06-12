@@ -28,6 +28,7 @@ public class BullyResultTestCalculator implements UniqueResultTestCalculator{
     private final UserService userService;
 
     private String testResult;
+    private final String name;
 
     public BullyResultTestCalculator(AnswerService answerService,
                                      QuestionService questionService,
@@ -39,6 +40,12 @@ public class BullyResultTestCalculator implements UniqueResultTestCalculator{
         this.testService = testService;
         this.userService = userService;
         this.testResult = "";
+        this.name = "bully";
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
     }
 
     @Transactional

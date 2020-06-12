@@ -5,10 +5,9 @@ import com.psikku.backend.entity.Answer;
 import com.psikku.backend.entity.Test;
 import com.psikku.backend.entity.TestResult;
 import com.psikku.backend.entity.User;
-import com.psikku.backend.repository.AnswerRepository;
-import com.psikku.backend.repository.TestRepository;
-import com.psikku.backend.repository.TestResultRepository;
-import com.psikku.backend.repository.UserRepository;
+import com.psikku.backend.service.answer.AnswerService;
+import com.psikku.backend.service.test.TestService;
+import com.psikku.backend.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,36 +19,39 @@ import java.util.List;
 @Service
 public class CovidResultTestCalculator implements UniqueResultTestCalculator{
 
-    public final Logger logger = LoggerFactory.getLogger(CovidResultTestCalculator.class);
-
-    @Autowired
-    private AnswerRepository answerRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private TestRepository testRepository;
-
-    @Autowired
-    private TestResultRepository testResultRepository;
-
+    private final Logger logger;
+    private final AnswerService answerService;
+    private final UserService userService;
+    private final TestService testService;
     private String result;
+    private final String name;
+
+    @Autowired
+    public CovidResultTestCalculator(AnswerService answerService, UserService userService, TestService testService) {
+        this.logger = LoggerFactory.getLogger(CovidResultTestCalculator.class);
+        this.answerService = answerService;
+        this.userService = userService;
+        this.testService = testService;
+        this.result = "";
+        this.name = "covid";
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
 
     @Override
     public TestResult calculateNewResult(List<SubmittedAnswerDto> submittedAnswerDtoList) {
 
         // get username from Security Context (from Token)
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        User user = userRepository.findUserByUsername(username);
+        User user = userService.findByUsername(username);
 
         String testName = submittedAnswerDtoList.get(0).getQuestionId().split("_")[0];
-        Test test = testRepository.findTestByInternalName(testName).orElseThrow(()-> {
-            logger.error("Finding test error");
-            return new RuntimeException("Test not Found");
-        });
+        Test test = testService.findTestByInternalName(testName);
 
-        List<Answer> answersFromDb = answerRepository.findByIdStartingWith(testName);
+        List<Answer> answersFromDb = answerService.findByIdStartingWith(testName);
 
         int yesAnswerCategory = 0;
 
