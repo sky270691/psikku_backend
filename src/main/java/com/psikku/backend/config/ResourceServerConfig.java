@@ -41,18 +41,15 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
 //        http.httpBasic();
-        http.authorizeRequests().antMatchers("/users/hello").hasRole("ADMIN")
-                .antMatchers("/api/users/info").fullyAuthenticated()
-                .antMatchers("/api/tests*/*").fullyAuthenticated()
-                .antMatchers("/api/users/login").permitAll()
-                .antMatchers("/api/users/register").permitAll()
+        http.authorizeRequests()
+                .mvcMatchers("/api/users/info").fullyAuthenticated()
+                .mvcMatchers("/api/tests*/*").fullyAuthenticated()
+                .mvcMatchers("/api/users/login").permitAll()
+                .mvcMatchers("/api/users/register").permitAll()
                 .mvcMatchers("/api/packages/*").fullyAuthenticated()
                 .mvcMatchers("/api/packages/internal*/*").permitAll()
                 .mvcMatchers("/api/content*/*").fullyAuthenticated()
                 .mvcMatchers("/api/mail-sender*/*").fullyAuthenticated()
-//                .antMatchers("/api/users/login").permitAll()
-//            .antMatchers("/api/**").permitAll()
-//                .antMatchers("/api/**").hasRole("USER")
             .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // setup cors configuration for accepting any request origins, certain request methods, and certain request headers

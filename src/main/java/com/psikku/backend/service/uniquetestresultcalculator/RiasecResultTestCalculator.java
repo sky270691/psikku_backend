@@ -119,20 +119,31 @@ public class RiasecResultTestCalculator implements UniqueResultTestCalculator{
         //outputting this result
 
         StringBuilder sb = new StringBuilder();
-        sb.append("Tipe Dominan\n");
-        sb.append(perCategoryPredicate(riasecResultMapList.get(2).getKey()));
+        String dominant = perCategoryPredicate(riasecResultMapList.get(2).getKey());
+        sb.append("Tipe Dominan:");
+        sb.append(dominant);
+        sb.append(";");
+        sb.append("deskripsi:");
+        sb.append(getResultDescription(dominant));
+        sb.append(";");
+        sb.append("pekerjaan:");
         List<String> jobList = getCombinationData(
                                 riasecResultMapList.get(2).getKey()+
                                 riasecResultMapList.get(1).getKey()+
                                 riasecResultMapList.get(0).getKey());
         for(int j=0; j<jobList.size(); j++){
-            if(j== jobList.size()-1){
+            if(j==jobList.size()-1){
                 sb.append(jobList.get(j));
-            }else{
-                sb.append(jobList.get(j)).append(";");
+                sb.append("]");
+            }else if(j==0){
+                sb.append("[");
+                sb.append(jobList.get(j));
+                sb.append(",");
+            }
+            else{
+                sb.append(jobList.get(j)).append(",");
             }
         }
-
         setResult(sb.toString());
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -190,6 +201,28 @@ public class RiasecResultTestCalculator implements UniqueResultTestCalculator{
             throw new TestResultException("Result error please check console");
         }
         return jobList;
+    }
+
+    private String getResultDescription(String dominantType){
+        Resource resource = this.resourceLoader.getResource(this.riasecPkuLocation+"/riasec.pku");
+        try(Scanner scanner = new Scanner(new BufferedReader(new InputStreamReader(resource.getInputStream())))){
+            while(scanner.hasNextLine()){
+                String pointer = scanner.nextLine();
+                    if(pointer.equals(dominantType)){
+                        pointer = scanner.nextLine();
+                        if(pointer.equals("---")){
+                            break;
+                        }else{
+                            return pointer;
+                        }
+                    }
+            }
+        }catch (IOException e){
+            logger.error("error getting riasec *.pku file for dominant description");
+            e.printStackTrace();
+            throw new TestResultException("answer submission error for this test");
+        }
+        throw new TestResultException("answer submission error for this test");
     }
 
     @Override

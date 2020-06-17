@@ -1,5 +1,6 @@
 package com.psikku.backend.service.voucher;
 
+import com.psikku.backend.dto.payment.GeneratedPaymentDetailDto;
 import com.psikku.backend.dto.voucher.ValidateVoucherDto;
 import com.psikku.backend.entity.Payment;
 import com.psikku.backend.entity.TestPackage;
@@ -8,6 +9,7 @@ import com.psikku.backend.entity.Voucher;
 import com.psikku.backend.exception.VoucherException;
 import com.psikku.backend.repository.VoucherRepository;
 import com.psikku.backend.service.company.CompanyService;
+import com.psikku.backend.service.payment.PaymentService;
 import com.psikku.backend.service.testpackage.TestPackageService;
 import com.psikku.backend.service.user.UserService;
 import org.slf4j.Logger;
@@ -18,7 +20,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
-import java.util.ArrayList;
 import java.util.Random;
 
 @Service
@@ -29,15 +30,18 @@ public class VoucherServiceImpl implements VoucherService {
     private final TestPackageService testPackageService;
     private final Logger logger;
     private final UserService userService;
+    private final PaymentService paymentService;
 
     @Autowired
     public VoucherServiceImpl(VoucherRepository voucherRepository,
                               CompanyService companyService,
                               @Lazy TestPackageService testPackageService,
-                              UserService userService){
+                              UserService userService,
+                              @Lazy PaymentService paymentService){
         this.voucherRepository = voucherRepository;
         this.companyService = companyService;
         this.testPackageService = testPackageService;
+        this.paymentService = paymentService;
         this.logger = LoggerFactory.getLogger(this.getClass());
         this.userService = userService;
     }
@@ -102,6 +106,13 @@ public class VoucherServiceImpl implements VoucherService {
 //        LocalDateTime localDateTime = LocalDateTime.now();
 //        voucher.setValidUntil(localDateTime.plusDays(365));
         saveVoucher(voucher);
+    }
+
+    @Override
+    public GeneratedPaymentDetailDto generateVoucherCurrentPackage(int packageId, int userCount, long companyId) {
+        TestPackage testPackage = testPackageService.getPackageById(packageId);
+        GeneratedPaymentDetailDto generatedPaymentDetailDto = paymentService.generatePayment(testPackage,userCount,companyId,testPackage.getPrice());
+        return generatedPaymentDetailDto;
     }
 
     @Override
