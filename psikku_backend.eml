@@ -123,6 +123,10 @@
 		<level name="Maven: org.springframework:spring-tx:5.2.4.RELEASE" value="project"/>
 		<level name="Maven: org.slf4j:slf4j-api:1.7.30" value="project"/>
 		<level name="Maven: org.springframework:spring-aspects:5.2.4.RELEASE" value="project"/>
+		<level name="Maven: org.springframework.boot:spring-boot-starter-mail:2.2.5.RELEASE" value="project"/>
+		<level name="Maven: org.springframework:spring-context-support:5.2.4.RELEASE" value="project"/>
+		<level name="Maven: com.sun.mail:jakarta.mail:1.6.4" value="project"/>
+		<level name="Maven: com.sun.activation:jakarta.activation:1.2.2" value="project"/>
 		<level name="Maven: mysql:mysql-connector-java:8.0.19" value="project"/>
 		<level name="Maven: org.springframework.boot:spring-boot-starter-test:2.2.5.RELEASE" value="project"/>
 		<level name="Maven: org.springframework.boot:spring-boot-test:2.2.5.RELEASE" value="project"/>

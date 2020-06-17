@@ -13,81 +13,22 @@ public class Coba {
 
 
     public static void main(String[] args) {
-//        try(Scanner scanner = new Scanner(new BufferedReader(new FileReader("src/main/resources/static/testresultdata/bakat/minatbakat.pku")))){
+
+//        Map<String,Integer> testMap = new TreeMap<>();
+//        testMap.put("s",4);
+//        testMap.put("a",2);
+//        testMap.put("c",12);
+//        testMap.put("p",9);
+//        testMap.put("x",10);
+//        testMap.put("b",2);
+//        System.out.println(testMap);
+//        List<Map.Entry<String,Integer>> test =testMap.entrySet().stream()
+//                .sorted((v1,v2)->v1.getValue()-v2.getValue())
+//                .skip(4)
+//                .collect(Collectors.toList());
 //
-//            Map<String,String> anMap = new LinkedHashMap<>();
-//            Map<String,String> geMap = new LinkedHashMap<>();
-//            Map<String,String> raMap = new LinkedHashMap<>();
-//            Map<String,String> zrMap = new LinkedHashMap<>();
-//            String testName;
-//            List<String> inside =new ArrayList<>();
-//            while(scanner.hasNextLine()){
-//                testName = scanner.nextLine();
-//                if(testName.equals("18yo")){ // age range String
-//                    String parameter;
-//                    while(scanner.hasNextLine()){
-//                        parameter = scanner.nextLine();
-//                        if(parameter.equals("---")){
-//                            break;
-//                        }
-//                        // the startwith value should be same with the subtestName parameter
-//                        if(parameter.startsWith("an")){
-//                            String[] keyValueSplit = parameter.split(",");
-//                            anMap.put(keyValueSplit[1],keyValueSplit[2]);
-//                        } else if(parameter.startsWith("ge")){
-//                            String[] keyValueSplit = parameter.split(",");
-//                            geMap.put(keyValueSplit[1],keyValueSplit[2]);
-//                        } else if(parameter.startsWith("ra")){
-//                            String[] keyValueSplit = parameter.split(",");
-//                            raMap.put(keyValueSplit[1],keyValueSplit[2]);
-//                        } else if(parameter.startsWith("zr")){
-//                            String[] keyValueSplit = parameter.split(",");
-//                            zrMap.put(keyValueSplit[1],keyValueSplit[2]);
-//                        }
-//                    }
-//                }
-//            }
-//            System.out.println("an: "+anMap);
-//            System.out.println("ge: "+geMap);
-//            System.out.println("ra: "+raMap);
-//            System.out.println("zr: "+zrMap);
-//        }catch (IOException e){
-//        }
-
-//        int numOcorrectAnswer = 0;
-//        List<Integer> correctAnswers = Arrays.asList(3,2,5);
-//        List<Integer> inputAnswers = Arrays.asList(5,3,2);
-//
-//        correctAnswers.sort(Comparator.naturalOrder());
-//        inputAnswers.sort(Comparator.naturalOrder());
-//
-//        System.out.println(Arrays.equals(correctAnswers.toArray(),inputAnswers.toArray()));
-
-//        int a = 5;
-//        int b = 11;
-//        int c = 9;
-//        int d = 21;
-//
-//        Map<String,Integer> test = new HashMap<>();
-//        test.put("a",a);
-//        test.put("b",b);
-//        test.put("c",c);
-//        test.put("d",d);
-//        List<String> newMap = test.entrySet().stream().sorted((x,y)->y.getValue().compareTo(x.getValue())).map(x->x.getKey()).collect(Collectors.toList());
-//        String num1 = newMap.get(0).toString();
-//        String num2 = newMap.get(1).toString();
-//        System.out.println("num1: "+num1+"\nnum2: "+num2);
-
-
-//        System.out.println(generateAlphaNumeric(20));
-
-        List<String> strings = Arrays.asList("a","b","c","a","b");
-        Set<String> removeDuplicate = new LinkedHashSet<>(strings);
-        for (String s : removeDuplicate) {
-            System.out.println(s);
-        }
-        System.out.println(generateAlphaNumeric(20));
-
+        String bangke = "bangke";
+        System.out.println(bangke.substring(0,1));
     }
 
 

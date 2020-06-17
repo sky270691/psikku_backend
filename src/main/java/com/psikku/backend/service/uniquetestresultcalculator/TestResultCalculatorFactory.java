@@ -78,6 +78,8 @@ public class TestResultCalculatorFactory {
             return getCalculator("depression");
         }else if(testName.equalsIgnoreCase("evaluasievent")){
             return getCalculator("evaluasievent");
+        }else if(testName.equalsIgnoreCase("riasec")){
+            return getCalculator("riasec");
         }else{
             throw new AnswerException("answer is not valid, please re-check your answer");
         }

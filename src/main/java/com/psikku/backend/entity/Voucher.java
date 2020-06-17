@@ -27,14 +27,16 @@ public class Voucher {
     private boolean valid;
 
     @Column(name = "used")
-    private boolean used;
+    private long used;
 
     @ManyToOne(cascade = {CascadeType.REFRESH,CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST},fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id")
     private TestPackage testPackage;
 
-    @ManyToMany(cascade = {CascadeType.REFRESH,CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST},
-            mappedBy = "voucherList")
+    @ManyToMany(cascade = {CascadeType.REFRESH,CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST})
+    @JoinTable(name = "user_voucher",
+                        joinColumns = @JoinColumn(name = "voucher_id"),
+                        inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> userList;
 
     @ManyToOne(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
@@ -105,11 +107,11 @@ public class Voucher {
         this.valid = valid;
     }
 
-    public boolean isUsed() {
+    public long getUsed() {
         return used;
     }
 
-    public void setUsed(boolean used) {
+    public void setUsed(long used) {
         this.used = used;
     }
 

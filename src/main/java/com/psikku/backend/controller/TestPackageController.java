@@ -4,7 +4,6 @@ import com.psikku.backend.dto.payment.GeneratedPaymentDetailDto;
 import com.psikku.backend.dto.test.MinimalTestDto;
 import com.psikku.backend.dto.testpackage.TestPackageCreationDto;
 import com.psikku.backend.dto.testpackage.TestPackageDto;
-import com.psikku.backend.entity.TestPackage;
 import com.psikku.backend.service.testpackage.TestPackageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +18,7 @@ import java.util.List;
 @RequestMapping("/api/packages")
 public class TestPackageController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private TestPackageService testPackageService;
+    private final TestPackageService testPackageService;
 
     @Autowired
     public TestPackageController(TestPackageService testPackageService) {
@@ -39,10 +38,17 @@ public class TestPackageController {
         return new ResponseEntity<>(testPackageService.getAllTestDescByPackageId(id),HttpStatus.OK);
     }
 
+    @GetMapping("/voucher-status/{id}")
+    public ResponseEntity<Boolean> validateVoucherUsage(@PathVariable int id){
+        boolean valid = testPackageService.validateVoucherPackage(id);
+        return new ResponseEntity<>(valid,HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity<List<TestPackageDto>> getAllPackage(){
         return new ResponseEntity<>(testPackageService.getAllPackage(),HttpStatus.OK);
     }
+
 
 
 }

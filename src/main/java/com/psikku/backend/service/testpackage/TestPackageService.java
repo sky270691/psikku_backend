@@ -16,4 +16,5 @@ public interface TestPackageService {
     TestPackage getPackageById(int id);
     List<MinimalTestDto> getAllTestDescByPackageId(int id);
     List<TestPackageDto> getAllPackage();
+    boolean validateVoucherPackage(int idPackage);
 }

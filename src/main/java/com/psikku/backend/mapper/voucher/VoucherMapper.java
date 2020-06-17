@@ -20,6 +20,7 @@ public class VoucherMapper {
         voucherDto.setCreateTime(voucher.getCreateTime());
         voucherDto.setValidUntil(voucher.getValidUntil());
         voucherDto.setCompanyName(voucher.getCompany().getName());
+        voucherDto.setUsed(voucher.getUsed());
         return voucherDto;
     }
 

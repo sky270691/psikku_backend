@@ -29,7 +29,10 @@ public class PaymentServiceImpl implements PaymentService {
     private final VoucherMapper voucherMapper;
 
     @Autowired
-    public PaymentServiceImpl(PaymentRepository paymentRepository, PaymentMapper paymentMapper, VoucherService voucherService, VoucherMapper voucherMapper) {
+    public PaymentServiceImpl(PaymentRepository paymentRepository,
+                              PaymentMapper paymentMapper,
+                              VoucherService voucherService,
+                              VoucherMapper voucherMapper) {
         this.paymentRepository = paymentRepository;
         this.paymentMapper = paymentMapper;
         this.voucherService = voucherService;

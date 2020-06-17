@@ -92,7 +92,7 @@ public class TestServiceImpl implements TestService{
             Subtest subtest = new Subtest();
             subtest.setId(test.getInternalName() + "_" + subtestNumber++);
 
-            // list of guide convert to whole string to save in db
+            // list of guide convert to whole string to save in db with semicolon(;) as separator
             StringBuilder guideSb = new StringBuilder();
             for(int i = 0; i<subtestDto.getGuides().size(); i++){
                 if(i == subtestDto.getGuides().size()-1){

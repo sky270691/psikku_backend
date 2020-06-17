@@ -24,7 +24,7 @@ public class VoucherDto {
     private boolean valid;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private boolean used;
+    private long used;
 
     @JsonProperty("company")
     private String companyName;
@@ -68,11 +68,11 @@ public class VoucherDto {
         return valid;
     }
 
-    public boolean isUsed() {
+    public long getUsed() {
         return used;
     }
 
-    public void setUsed(boolean used) {
+    public void setUsed(long used) {
         this.used = used;
     }
 

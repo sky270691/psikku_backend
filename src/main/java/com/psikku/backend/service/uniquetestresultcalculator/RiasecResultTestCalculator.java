@@ -4,16 +4,24 @@ import com.psikku.backend.dto.useranswer.SubmittedAnswerDto;
 import com.psikku.backend.entity.Answer;
 import com.psikku.backend.entity.Question;
 import com.psikku.backend.entity.TestResult;
+import com.psikku.backend.exception.TestResultException;
 import com.psikku.backend.service.answer.AnswerService;
 import com.psikku.backend.service.question.QuestionService;
 import com.psikku.backend.service.test.TestService;
 import com.psikku.backend.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class RiasecResultTestCalculator implements UniqueResultTestCalculator{
@@ -24,19 +32,26 @@ public class RiasecResultTestCalculator implements UniqueResultTestCalculator{
     private final TestService testService;
     private final UserService userService;
     private final String name;
+    private final ResourceLoader resourceLoader;
+    private final String riasecPkuLocation;
 
     private String testResult;
 
     public RiasecResultTestCalculator(AnswerService answerService,
                                       QuestionService questionService,
                                       TestService testService,
-                                      UserService userService) {
+                                      UserService userService,
+                                      ResourceLoader resourceLoader,
+                                      @Value("${riasec-pku.location}") String riasecPkuLocation) {
         this.answerService = answerService;
         this.questionService = questionService;
         this.testService = testService;
         this.userService = userService;
         this.logger = LoggerFactory.getLogger(RiasecResultTestCalculator.class);
-        this.name = "surveykarakter";
+        this.name = "riasec";
+        this.testResult = "";
+        this.resourceLoader = resourceLoader;
+        this.riasecPkuLocation = riasecPkuLocation;
     }
 
     @Override
@@ -67,18 +82,20 @@ public class RiasecResultTestCalculator implements UniqueResultTestCalculator{
                     for (Question questionFromDb : questionsFromDb) {
                         if(answerDto.getQuestionId().equals(questionFromDb.getId())){
                             // check the answer category and add the category value (0 or 1) into num of category for outputting
-                            if(questionFromDb.getQuestionCategory().equalsIgnoreCase("r")){
-                                r++;
-                            }else if(questionFromDb.getQuestionCategory().equalsIgnoreCase("i")){
-                                i++;
-                            }else if(questionFromDb.getQuestionCategory().equalsIgnoreCase("a")){
-                                a++;
-                            }else if(questionFromDb.getQuestionCategory().equalsIgnoreCase("s")){
-                                s++;
-                            }else if(questionFromDb.getQuestionCategory().equalsIgnoreCase("e")){
-                                e++;
-                            }else{
-                                c++;
+                            if(answerFromDb.getAnswerCategory().equalsIgnoreCase("1")){
+                                if(questionFromDb.getQuestionCategory().equalsIgnoreCase("r")){
+                                    r++;
+                                }else if(questionFromDb.getQuestionCategory().equalsIgnoreCase("i")){
+                                    i++;
+                                }else if(questionFromDb.getQuestionCategory().equalsIgnoreCase("a")){
+                                    a++;
+                                }else if(questionFromDb.getQuestionCategory().equalsIgnoreCase("s")){
+                                    s++;
+                                }else if(questionFromDb.getQuestionCategory().equalsIgnoreCase("e")){
+                                    e++;
+                                }else{
+                                    c++;
+                                }
                             }
                         }
                     }
@@ -86,14 +103,35 @@ public class RiasecResultTestCalculator implements UniqueResultTestCalculator{
             }
         }
 
+        Map<String,Integer> riasecResultMap = new HashMap<>();
+        riasecResultMap.put("r",r);
+        riasecResultMap.put("i",i);
+        riasecResultMap.put("a",a);
+        riasecResultMap.put("s",s);
+        riasecResultMap.put("e",e);
+        riasecResultMap.put("c",c);
+        List<Map.Entry<String,Integer>> riasecResultMapList=
+                riasecResultMap.entrySet().stream()
+                .sorted(Comparator.comparingInt(Map.Entry::getValue))
+                .skip(3)
+                .collect(Collectors.toList());
+
         //outputting this result
 
         StringBuilder sb = new StringBuilder();
-//        sb.append("SURVEY KARAKTER").append("\n");
-//        sb.append("Toleransi:").append((int)toleransiPercentage).append(":").append(perCategoryPredicate(toleransiPercentage)).append(",");
-//        sb.append("Gotong Royong:").append((int)gotongRoyongPercentage).append(":").append(perCategoryPredicate(gotongRoyongPercentage)).append(",");
-//        sb.append("Well being:").append((int)wellbeingPercentage).append(":").append(perCategoryPredicate(wellbeingPercentage)).append(",");
-//        sb.append("pluralisme:").append((int)pluralismePercentage).append(":").append(perCategoryPredicate(pluralismePercentage));
+        sb.append("Tipe Dominan\n");
+        sb.append(perCategoryPredicate(riasecResultMapList.get(2).getKey()));
+        List<String> jobList = getCombinationData(
+                                riasecResultMapList.get(2).getKey()+
+                                riasecResultMapList.get(1).getKey()+
+                                riasecResultMapList.get(0).getKey());
+        for(int j=0; j<jobList.size(); j++){
+            if(j== jobList.size()-1){
+                sb.append(jobList.get(j));
+            }else{
+                sb.append(jobList.get(j)).append(";");
+            }
+        }
 
         setResult(sb.toString());
 
@@ -108,19 +146,51 @@ public class RiasecResultTestCalculator implements UniqueResultTestCalculator{
         return testResult;
     }
 
-//    private String perCategoryPredicate(double resultValue){
-//        if(resultValue < 20){
-//            return "kurang sekali";
-//        }else if(resultValue < 40){
-//            return "kurang";
-//        }else if(resultValue < 60){
-//            return "cukup";
-//        }else if(resultValue < 80){
-//            return "cukup baik";
-//        }else {
-//            return "baik";
-//        }
-//    }
+    private String perCategoryPredicate(String riasec){
+        if(riasec.equalsIgnoreCase("r")){
+            return "realistis";
+        }else if(riasec.equalsIgnoreCase("i")){
+            return "investigasi";
+        }else if(riasec.equalsIgnoreCase("a")){
+            return "artistik";
+        }else if(riasec.equalsIgnoreCase("s")){
+            return "sosial";
+        }else if(riasec.equalsIgnoreCase("e")){
+            return "enterprising";
+        }else if(riasec.equalsIgnoreCase("c")){
+            return "conventional";
+        }else{
+            logger.info("error riasec category");
+            throw new TestResultException("error getting result");
+        }
+    }
+
+    private List<String> getCombinationData(String combination){
+        String filePrefix = combination.substring(0,1);
+        Resource dataResource = resourceLoader.getResource(this.riasecPkuLocation+"/"+filePrefix+".pku");
+        List<String> jobList = new ArrayList<>();
+        try(Scanner scanner = new Scanner(new BufferedReader(new InputStreamReader(dataResource.getInputStream())))){
+            String eachLine;
+            while(scanner.hasNextLine()){
+                eachLine = scanner.nextLine();
+                if(eachLine.equalsIgnoreCase("code-"+combination)){
+                    String job;
+                    while(scanner.hasNextLine()){
+                        job = scanner.nextLine();
+                        if(job.equalsIgnoreCase("---")){
+                            break;
+                        }
+                        jobList.add(job);
+                    }
+                }
+            }
+        }catch(IOException e){
+            e.printStackTrace();
+            logger.error("error getting the riasec *.pku file from classpath");
+            throw new TestResultException("Result error please check console");
+        }
+        return jobList;
+    }
 
     @Override
     public String getResult() {

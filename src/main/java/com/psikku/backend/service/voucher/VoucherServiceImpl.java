@@ -1,17 +1,24 @@
 package com.psikku.backend.service.voucher;
 
+import com.psikku.backend.dto.voucher.ValidateVoucherDto;
 import com.psikku.backend.entity.Payment;
 import com.psikku.backend.entity.TestPackage;
+import com.psikku.backend.entity.User;
 import com.psikku.backend.entity.Voucher;
 import com.psikku.backend.exception.VoucherException;
 import com.psikku.backend.repository.VoucherRepository;
 import com.psikku.backend.service.company.CompanyService;
+import com.psikku.backend.service.testpackage.TestPackageService;
+import com.psikku.backend.service.user.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Random;
 
 @Service
@@ -19,13 +26,20 @@ public class VoucherServiceImpl implements VoucherService {
 
     private final VoucherRepository voucherRepository;
     private final CompanyService companyService;
+    private final TestPackageService testPackageService;
     private final Logger logger;
+    private final UserService userService;
 
     @Autowired
-    public VoucherServiceImpl(VoucherRepository voucherRepository, CompanyService companyService){
+    public VoucherServiceImpl(VoucherRepository voucherRepository,
+                              CompanyService companyService,
+                              @Lazy TestPackageService testPackageService,
+                              UserService userService){
         this.voucherRepository = voucherRepository;
         this.companyService = companyService;
+        this.testPackageService = testPackageService;
         this.logger = LoggerFactory.getLogger(this.getClass());
+        this.userService = userService;
     }
 
     @Override
@@ -51,8 +65,28 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    public void setVoucherValidStatus(boolean voucherValidStatus) {
+    public boolean validateStatus(ValidateVoucherDto validateVoucherDto) {
 
+        Voucher voucherLookup = voucherRepository.findVoucherByVoucherCode(validateVoucherDto.getVoucher())
+                .orElseThrow(()->new VoucherException("voucher not found"));
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByUsername(username);
+        TestPackage testPackage = testPackageService.getPackageById(validateVoucherDto.getTestPackageId());
+
+        //set the used count of the voucher based on the total user in voucher
+        voucherLookup.setUsed(voucherLookup.getUserList().size());
+
+        if(voucherLookup.getUserList().contains(user)){
+            throw new VoucherException("voucher already redeemed");
+        }
+        if(voucherLookup.getTestPackage().getId() == testPackage.getId()
+            && voucherLookup.getUsed() < voucherLookup.getUserCount()){
+            voucherLookup.getUserList().add(user);
+            voucherLookup.setUsed(voucherLookup.getUsed()+1);
+            voucherRepository.save(voucherLookup);
+            return true;
+        }
+        throw new VoucherException("Total users of this voucher already reached it's limit");
     }
 
     @Override

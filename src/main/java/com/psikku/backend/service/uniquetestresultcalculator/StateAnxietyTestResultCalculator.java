@@ -24,7 +24,9 @@ public class StateAnxietyTestResultCalculator implements UniqueResultTestCalcula
     private String result;
 
     @Autowired
-    public StateAnxietyTestResultCalculator(TestService testService, UserService userService, AnswerService answerService) {
+    public StateAnxietyTestResultCalculator(TestService testService,
+                                            UserService userService,
+                                            AnswerService answerService) {
         this.testService = testService;
         this.userService = userService;
         this.answerService = answerService;
