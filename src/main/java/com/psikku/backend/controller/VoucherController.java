@@ -31,8 +31,10 @@ public class VoucherController {
         }
     }
 
-    @PostMapping(value = "/generate",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<GeneratedPaymentDetailDto> generateVoucherWithExistingPackage(int packageId,int totalUser,long companyId){
+    @PostMapping(value = "/generate")
+    public ResponseEntity<GeneratedPaymentDetailDto> generateVoucherWithExistingPackage(@RequestPart("package_id") int packageId,
+                                                                                        @RequestPart("total_user") int totalUser,
+                                                                                        @RequestPart("company_id") long companyId){
         GeneratedPaymentDetailDto paymentDetailDto = voucherService.generateVoucherCurrentPackage(packageId,totalUser,companyId);
         return new ResponseEntity<>(paymentDetailDto,HttpStatus.OK);
     }
