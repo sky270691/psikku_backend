@@ -26,6 +26,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         return tokenStore;
     }
 
+
     @Bean
     JwtAccessTokenConverter accessTokenConverter(){
         JwtAccessTokenConverter tokenConverter = new JwtAccessTokenConverter();
@@ -51,6 +52,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .mvcMatchers("/api/content*/*").fullyAuthenticated()
                 .mvcMatchers("/api/mail-sender*/*").fullyAuthenticated()
             .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
 
         // setup cors configuration for accepting any request origins, certain request methods, and certain request headers
         http.cors(corsConfigurer ->{

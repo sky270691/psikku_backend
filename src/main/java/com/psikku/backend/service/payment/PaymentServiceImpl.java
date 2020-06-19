@@ -59,7 +59,7 @@ public class PaymentServiceImpl implements PaymentService {
         payment = paymentRepository.save(payment);
         Voucher voucher = voucherService.findVoucherByPaymentId(payment.getId());
         voucher.setValidUntil(LocalDateTime.now().plusDays(365));
-//        voucher.setValid(true);
+        voucher.setValid(true);
         voucherService.saveVoucher(voucher);
         VoucherDto voucherDto = voucherMapper.convertEntityToVoucherDto(voucher);
         return voucherDto;

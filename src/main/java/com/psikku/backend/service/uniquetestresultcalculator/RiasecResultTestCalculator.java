@@ -134,11 +134,6 @@ public class RiasecResultTestCalculator implements UniqueResultTestCalculator{
         for(int j=0; j<jobList.size(); j++){
             if(j==jobList.size()-1){
                 sb.append(jobList.get(j));
-                sb.append("]");
-            }else if(j==0){
-                sb.append("[");
-                sb.append(jobList.get(j));
-                sb.append(",");
             }
             else{
                 sb.append(jobList.get(j)).append(",");
