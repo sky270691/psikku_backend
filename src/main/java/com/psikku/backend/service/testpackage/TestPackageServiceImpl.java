@@ -4,19 +4,18 @@ import com.psikku.backend.dto.payment.GeneratedPaymentDetailDto;
 import com.psikku.backend.dto.test.MinimalTestDto;
 import com.psikku.backend.dto.testpackage.TestPackageCreationDto;
 import com.psikku.backend.dto.testpackage.TestPackageDto;
-import com.psikku.backend.entity.TestPackage;
-import com.psikku.backend.entity.User;
-import com.psikku.backend.entity.Voucher;
+import com.psikku.backend.entity.*;
 import com.psikku.backend.exception.PackageException;
 import com.psikku.backend.mapper.test.TestMapper;
 import com.psikku.backend.mapper.testpackage.TestPackageMapper;
 import com.psikku.backend.repository.TestPackageRepository;
 import com.psikku.backend.service.payment.PaymentService;
+import com.psikku.backend.service.testresult.TestResultService;
 import com.psikku.backend.service.user.UserService;
+import com.psikku.backend.service.voucher.VoucherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -29,18 +28,24 @@ public class TestPackageServiceImpl implements TestPackageService{
 
     private final Logger logger;
     private final TestPackageRepository testPackageRepository;
+    private final TestResultService testResultService;
     private final PaymentService paymentService;
     private final TestPackageMapper testPackageMapper;
     private final TestMapper testMapper;
     private final UserService userService;
+    private final VoucherService voucherService;
 
     @Autowired
     public TestPackageServiceImpl(TestPackageRepository testPackageRepository,
+                                  TestResultService testResultService,
                                   PaymentService paymentService,
                                   TestPackageMapper testPackageMapper,
                                   TestMapper testMapper,
-                                  UserService userService) {
+                                  UserService userService,
+                                  VoucherService voucherService) {
+        this.testResultService = testResultService;
         this.testMapper = testMapper;
+        this.voucherService = voucherService;
         this.logger = LoggerFactory.getLogger(this.getClass());
         this.testPackageRepository = testPackageRepository;
         this.paymentService = paymentService;
@@ -72,8 +77,28 @@ public class TestPackageServiceImpl implements TestPackageService{
     @Override
     public List<TestPackageDto> getAllPackage() {
         List<TestPackage> testPackageList = testPackageRepository.findAll();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByUsername(username);
+        List<Voucher> voucherList = user.getVoucherList();
+        List<TestResult> testResultList = testResultService.findAllByUserName(username);
         List<TestPackageDto> testPackageDtoList = new ArrayList<>();
-        testPackageList.forEach(testPackage-> testPackageDtoList.add(testPackageMapper.convertToTestPackageDto(testPackage)));
+
+
+        for (TestPackage testPackage : testPackageList) {
+            testPackageDtoList.add(testPackageMapper.convertToTestPackageDto(testPackage));
+            for (Voucher voucher : voucherList) {
+                if(voucher.getTestPackage().getId() == testPackage.getId()){
+                    for (Test test : testPackage.getTestList()) {
+                        for (TestResult testResult : testResultList) {
+                            if(testResult.getTest().getId()==test.getId()){
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         return testPackageDtoList;
     }
 

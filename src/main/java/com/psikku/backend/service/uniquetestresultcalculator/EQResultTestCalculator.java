@@ -41,7 +41,7 @@ public class EQResultTestCalculator implements UniqueResultTestCalculator{
         this.userService = userService;
         this.testService = testService;
         this.result = "";
-        this.name = "";
+        this.name = "eq";
     }
 
     @Override
