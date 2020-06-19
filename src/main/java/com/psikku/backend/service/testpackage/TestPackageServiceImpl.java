@@ -83,16 +83,17 @@ public class TestPackageServiceImpl implements TestPackageService{
         List<TestResult> testResultList = testResultService.findAllByUserName(username);
         List<TestPackageDto> testPackageDtoList = new ArrayList<>();
 
-
         for (TestPackage testPackage : testPackageList) {
             testPackageDtoList.add(testPackageMapper.convertToTestPackageDto(testPackage));
-            for (Voucher voucher : voucherList) {
-                if(voucher.getTestPackage().getId() == testPackage.getId()){
-                    for (Test test : testPackage.getTestList()) {
-                        for (TestResult testResult : testResultList) {
-                            if(testResult.getTest().getId()==test.getId()){
+        }
 
-                            }
+
+        for (TestPackageDto testPackageDto : testPackageDtoList) {
+            for (TestResult testResult : testResultList) {
+                if(testResult.getVoucher().getTestPackage().getId() == testPackageDto.getId()){
+                    for (MinimalTestDto minimalTestDto : testPackageDto.getMinimalTestDtoList()) {
+                        if(testResult.getTest().getId() == minimalTestDto.getId()){
+                            minimalTestDto.setFinish(true);
                         }
                     }
                 }
