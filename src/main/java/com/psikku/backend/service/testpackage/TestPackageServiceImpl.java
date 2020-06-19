@@ -33,7 +33,6 @@ public class TestPackageServiceImpl implements TestPackageService{
     private final TestPackageMapper testPackageMapper;
     private final TestMapper testMapper;
     private final UserService userService;
-    private final VoucherService voucherService;
 
     @Autowired
     public TestPackageServiceImpl(TestPackageRepository testPackageRepository,
@@ -41,11 +40,9 @@ public class TestPackageServiceImpl implements TestPackageService{
                                   PaymentService paymentService,
                                   TestPackageMapper testPackageMapper,
                                   TestMapper testMapper,
-                                  UserService userService,
-                                  VoucherService voucherService) {
+                                  UserService userService) {
         this.testResultService = testResultService;
         this.testMapper = testMapper;
-        this.voucherService = voucherService;
         this.logger = LoggerFactory.getLogger(this.getClass());
         this.testPackageRepository = testPackageRepository;
         this.paymentService = paymentService;
@@ -78,8 +75,6 @@ public class TestPackageServiceImpl implements TestPackageService{
     public List<TestPackageDto> getAllPackage() {
         List<TestPackage> testPackageList = testPackageRepository.findAll();
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        User user = userService.findByUsername(username);
-        List<Voucher> voucherList = user.getVoucherList();
         List<TestResult> testResultList = testResultService.findAllByUserName(username);
         List<TestPackageDto> testPackageDtoList = new ArrayList<>();
 
