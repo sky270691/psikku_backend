@@ -2,6 +2,7 @@ package com.psikku.backend.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -15,8 +16,8 @@ public class TestControllerInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-
-        logger.info("| Request from:'"+request.getRemoteAddr()+"' | Endpoint:'"+request.getRequestURI()+"' |");
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        logger.info("| Request from:'"+request.getRemoteAddr()+"'| with-username:'"+username+"' | Endpoint:'"+request.getRequestURI()+"' |");
 
         return true;
     }

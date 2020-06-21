@@ -1,12 +1,14 @@
 package com.psikku.backend.controller;
 
 import com.psikku.backend.service.filestorage.FileStorageService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,8 +19,14 @@ import java.io.IOException;
 @RequestMapping("/api/content")
 public class FileController {
 
-    @Autowired
-    FileStorageService storageService;
+
+    private final FileStorageService storageService;
+    private final Logger logger;
+
+    public FileController(FileStorageService storageService) {
+        this.storageService = storageService;
+        this.logger = LoggerFactory.getLogger(this.getClass());
+    }
 
     @PostMapping("/{category}")
     public String uploadFile(@RequestPart("file") MultipartFile file,@PathVariable("category") @Nullable String category){
@@ -52,6 +60,10 @@ public class FileController {
     public ResponseEntity<?> deleteFile(@RequestPart("category") String fileCategory, @RequestPart("filename") String fileName){
         storageService.deleteByFilePathAndFileName(fileCategory,fileName);
         return new ResponseEntity<>("File deleted Successfully",HttpStatus.OK);
+    }
+
+    private String getUsername(){
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
 }

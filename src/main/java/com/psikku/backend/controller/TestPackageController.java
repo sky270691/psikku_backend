@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,12 +18,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/packages")
 public class TestPackageController {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger;
     private final TestPackageService testPackageService;
 
     @Autowired
     public TestPackageController(TestPackageService testPackageService) {
         this.testPackageService = testPackageService;
+        this.logger = LoggerFactory.getLogger(this.getClass());
     }
 
     @PostMapping
@@ -34,7 +36,8 @@ public class TestPackageController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<MinimalTestDto>> getTestDescriptionList(@PathVariable int id){
+    public ResponseEntity<List<MinimalTestDto>> getPackageById(@PathVariable int id){
+        logger.info("username:'"+getUsername()+"' getting test package by id");
         return new ResponseEntity<>(testPackageService.getAllTestDescByPackageId(id),HttpStatus.OK);
     }
 
@@ -49,6 +52,8 @@ public class TestPackageController {
         return new ResponseEntity<>(testPackageService.getAllPackage(),HttpStatus.OK);
     }
 
-
+    private String getUsername(){
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
 
 }

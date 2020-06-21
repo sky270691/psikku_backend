@@ -151,6 +151,7 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
         LocalDateTime creationDate = formatLdt(userAnswerDto.getCreationDateTime());
         Voucher voucher = voucherService.getVoucherByCode(voucherCode);
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        
         User user = userService.findByUsername(username);
         String testInternalName = userAnswerDto.getSubmittedAnswerDtoList().get(0).getQuestionId().split("_")[0];
 

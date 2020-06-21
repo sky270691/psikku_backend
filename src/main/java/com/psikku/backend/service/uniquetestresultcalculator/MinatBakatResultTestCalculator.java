@@ -40,7 +40,7 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
         this.userService = userService;
         this.testService = testService;
         this.result = "";
-        this.name = "minatbakat";
+        this.name = "bakat";
     }
 
     @Override

@@ -3,6 +3,8 @@ package com.psikku.backend.controller;
 import com.psikku.backend.dto.payment.GeneratedPaymentDetailDto;
 import com.psikku.backend.dto.voucher.ValidateVoucherDto;
 import com.psikku.backend.service.voucher.VoucherService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,14 +17,17 @@ import org.springframework.web.bind.annotation.*;
 public class VoucherController {
 
     private final VoucherService voucherService;
+    private final Logger logger;
 
     @Autowired
     public VoucherController(VoucherService voucherService) {
         this.voucherService = voucherService;
+        this.logger = LoggerFactory.getLogger(this.getClass());
     }
 
     @PostMapping("/redeem")
     public ResponseEntity<String> validateVoucher(@RequestBody ValidateVoucherDto validateVoucherDto){
+        logger.info("username:'"+getUsername()+"' trying to redeem voucher:'"+validateVoucherDto.getVoucher()+"'");
         boolean status = voucherService.validateStatus(validateVoucherDto);
         if(status){
             return new ResponseEntity<>("success", HttpStatus.OK);
@@ -38,5 +43,11 @@ public class VoucherController {
         GeneratedPaymentDetailDto paymentDetailDto = voucherService.generateVoucherCurrentPackage(packageId,totalUser,companyId);
         return new ResponseEntity<>(paymentDetailDto,HttpStatus.OK);
     }
+
+
+    private String getUsername(){
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
 
 }

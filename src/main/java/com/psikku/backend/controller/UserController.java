@@ -60,7 +60,7 @@ public class UserController {
     @PostMapping(value = "/login")
     public TokenFactory login (@RequestPart String username, @RequestPart String password){
         try{
-            TokenFactory tokenFactory = userService.loginExistingUser(username.trim(),password);
+            TokenFactory tokenFactory = userService.loginExistingUser(username.trim().toLowerCase(),password);
             logger.info("username: '"+username+"' try to login");
             return tokenFactory;
         }catch (RuntimeException e){

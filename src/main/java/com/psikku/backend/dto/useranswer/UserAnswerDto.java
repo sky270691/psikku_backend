@@ -28,4 +28,12 @@ public class UserAnswerDto {
     public void setCreationDateTime(String creationDateTime) {
         this.creationDateTime = creationDateTime;
     }
+
+    @Override
+    public String toString() {
+        return "UserAnswerDto{" +
+                "submittedAnswerDtoList=" + submittedAnswerDtoList +
+                ", creationDateTime='" + creationDateTime + '\'' +
+                '}';
+    }
 }

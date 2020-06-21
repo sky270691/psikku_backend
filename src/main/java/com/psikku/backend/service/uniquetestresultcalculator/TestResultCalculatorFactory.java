@@ -54,7 +54,7 @@ public class TestResultCalculatorFactory {
 //    }
 
     public UniqueResultTestCalculator getTestCalculator(String testName){
-        if(testName.equalsIgnoreCase("cfit")){
+        if(testName.equalsIgnoreCase("cfit3")||testName.equalsIgnoreCase("cfit3b")){
             return getCalculator("cfit");
         }else if(testName.equalsIgnoreCase("gayabelajar1")){
             return getCalculator("gayabelajar1");

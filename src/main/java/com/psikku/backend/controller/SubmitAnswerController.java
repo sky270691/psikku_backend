@@ -12,12 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/api/user-answers")
 public class SubmitAnswerController {
 
     public final Logger logger;
-
     private final SubmitAnswerService submitAnswerService;
 
     @Autowired
@@ -29,21 +30,23 @@ public class SubmitAnswerController {
     @PostMapping
     public ResponseEntity<TestFinalResultDto> submitAnswers(@RequestBody UserAnswerDto userAnswerDto,
                                                             @RequestHeader("Voucher") String voucher){
-        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        logger.info("username: '"+username+"' try to submit answer");
-        TestFinalResultDto testFinalResultDto= submitAnswerService.calculateResultTestV2(userAnswerDto,voucher);
+        logger.info("username: '"+getUsername()+"' try to submit answer");
+        TestFinalResultDto testFinalResultDto= submitAnswerService.calculateResultTestV2(userAnswerDto,voucher.trim());
 
-        logger.info("username: '"+username+"' answer's calculated successfully");
+        logger.info("username: '"+getUsername()+"' answer's for test:'"+testFinalResultDto.getInternalName()+"' calculated successfully");
         return new ResponseEntity<>(testFinalResultDto,HttpStatus.OK);
     }
     @PostMapping("/generic")
     public ResponseEntity<TestFinalResultDto> submitAnswersGeneric(@RequestBody UserAnswerDto userAnswerDto,
                                                             @RequestHeader("Voucher") String voucher){
-        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        logger.info("username: '"+username+"' try to submit answer");
-        TestFinalResultDto testFinalResultDto= submitAnswerService.calculateGenericTest(userAnswerDto,voucher);
+        logger.info("username: '"+getUsername()+"' try to submit answer");
+        TestFinalResultDto testFinalResultDto= submitAnswerService.calculateGenericTest(userAnswerDto,voucher.trim());
 
-        logger.info("username: '"+username+"' answer's calculated successfully");
+        logger.info("username: '"+getUsername()+"' answer's for test:'"+testFinalResultDto.getInternalName()+"' calculated successfully");
         return new ResponseEntity<>(testFinalResultDto,HttpStatus.OK);
+    }
+
+    private String getUsername(){
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }

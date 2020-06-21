@@ -154,11 +154,11 @@ public class RiasecResultTestCalculator implements UniqueResultTestCalculator{
 
     private String perCategoryPredicate(String riasec){
         if(riasec.equalsIgnoreCase("r")){
-            return "realistis";
+            return "realistic";
         }else if(riasec.equalsIgnoreCase("i")){
-            return "investigasi";
+            return "investigative";
         }else if(riasec.equalsIgnoreCase("a")){
-            return "artistik";
+            return "artistic";
         }else if(riasec.equalsIgnoreCase("s")){
             return "sosial";
         }else if(riasec.equalsIgnoreCase("e")){
@@ -200,6 +200,7 @@ public class RiasecResultTestCalculator implements UniqueResultTestCalculator{
 
     private String getResultDescription(String dominantType){
         Resource resource = this.resourceLoader.getResource(this.riasecPkuLocation+"/riasec.pku");
+        System.out.println("dominan: "+dominantType);
         try(Scanner scanner = new Scanner(new BufferedReader(new InputStreamReader(resource.getInputStream())))){
             while(scanner.hasNextLine()){
                 String pointer = scanner.nextLine();
@@ -217,7 +218,8 @@ public class RiasecResultTestCalculator implements UniqueResultTestCalculator{
             e.printStackTrace();
             throw new TestResultException("answer submission error for this test");
         }
-        throw new TestResultException("answer submission error for this test");
+
+        throw new TestResultException("answer submission error for this test bleeeeee");
     }
 
     @Override

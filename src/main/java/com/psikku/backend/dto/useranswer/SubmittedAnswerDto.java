@@ -47,4 +47,14 @@ public class SubmittedAnswerDto {
     public void setUserId(long userId) {
         this.userId = userId;
     }
+
+    @Override
+    public String toString() {
+        return "SubmittedAnswerDto{" +
+                "id=" + id +
+                ", questionId='" + questionId + '\'' +
+                ", answers=" + answers +
+                ", userId=" + userId +
+                '}';
+    }
 }

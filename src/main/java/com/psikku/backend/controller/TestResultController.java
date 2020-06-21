@@ -52,17 +52,21 @@ public class TestResultController {
 
     @GetMapping
     public List<TestFinalResultDto> getTestResultByUsername(){
-        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-        List<TestResult> testResultList = testResultService.findAllByUserName(username);
+        List<TestResult> testResultList = testResultService.findAllByUserName(getUsername());
         List<TestFinalResultDto> testFinalResultDtoList = new ArrayList<>();
         if(!testResultList.isEmpty()){
             testResultList.forEach(testResult -> testFinalResultDtoList.add(testResultService.convertToTestResultDto(testResult)));
-            logger.info("username: '"+username+"' getting test result success");
+            logger.info("username: '"+getUsername()+"' getting test result success");
             return testFinalResultDtoList;
         }else{
-            logger.error("username: '"+username+"' no test found");
+            logger.error("username: '"+getUsername()+"' no test found");
             throw new TestResultException("No test found");
         }
     }
+
+    private String getUsername(){
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
 
 }

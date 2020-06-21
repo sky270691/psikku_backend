@@ -66,12 +66,15 @@ public class BelaNegaraResultTestCalculator implements UniqueResultTestCalculato
 //        int points = correctAnswer*2;
 
         StringBuilder sb = new StringBuilder();
+        sb.append("Terima kasih.\n" +
+                "Anda telah terdaftar sebagai Kader Bela Negara Sulut.\n" +
+                "E-sertifikat dapat di download oleh seluruh Kader Bela Negara pada puncak kegiatan di bulan Desember 2020 melalui aplikasi ini.");
 
-        sb.append("Jumlah Jawaban Benar:");
-        sb.append(correctAnswer);
-        sb.append(",");
-        sb.append("Nilai Test:");
-        sb.append(points);
+//        sb.append("Jumlah Jawaban Benar:");
+//        sb.append(correctAnswer);
+//        sb.append(",");
+//        sb.append("Nilai Test:");
+//        sb.append(points);
         setResult(sb.toString());
 
         TestResult testResult = new TestResult();

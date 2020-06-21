@@ -4,18 +4,16 @@ import com.psikku.backend.dto.test.FullTestDto;
 import com.psikku.backend.dto.test.MinimalTestDto;
 import com.psikku.backend.dto.test.TestInsertResponseDto;
 import com.psikku.backend.entity.Test;
-import com.psikku.backend.exception.TestException;
-import com.psikku.backend.exception.VoucherException;
 import com.psikku.backend.service.test.TestService;
-import com.psikku.backend.service.user.UserService;
 import com.psikku.backend.service.voucher.VoucherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -23,15 +21,13 @@ import java.util.List;
 @RequestMapping("api/tests")
 public class TestController {
 
-    private final Logger logger = LoggerFactory.getLogger(TestController.class);
+    private final Logger logger;
+    private final TestService testService;
 
-//    private String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-    @Autowired
-    private TestService testService;
-
-    @Autowired
-    private VoucherService voucherService;
+    public TestController(TestService testService) {
+        this.logger = LoggerFactory.getLogger(this.getClass());
+        this.testService = testService;
+    }
 
     @PostMapping
     public ResponseEntity<TestInsertResponseDto> addNewTest(@RequestBody @Valid FullTestDto fullTestDto){
@@ -71,6 +67,7 @@ public class TestController {
     public ResponseEntity<FullTestDto> getTestById(@PathVariable int id){
         Test test =  testService.findTestById(id);
         FullTestDto fullTestDto = testService.convertToFullTestDto(test);
+        logger.info("username: '"+getUsername()+"' getting test: '"+fullTestDto.getInternalName()+"'");
         return new ResponseEntity<>(fullTestDto,HttpStatus.OK);
     }
 
@@ -80,5 +77,8 @@ public class TestController {
         return new ResponseEntity<>(minimalTestDtoList,HttpStatus.OK);
     }
 
+    private String getUsername(){
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
 
 }
