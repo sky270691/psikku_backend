@@ -12,4 +12,5 @@ public interface TestResultRepository extends JpaRepository<TestResult, Integer>
     List<TestResult> findAllByUser_UsernameAndDateOfTest(String username, LocalDateTime dateTime);
     List<TestResult> findAllByVoucher_IdAndUser_Username(long voucherId, String userName);
     List<TestResult> findAllByTest_IdAndVoucher_Id(int testId, long voucherId);
+    List<TestResult> findAllByVoucher_VoucherCodeAndUser_Username(String voucher, String username);
 }

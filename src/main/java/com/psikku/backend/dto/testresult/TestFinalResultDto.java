@@ -11,6 +11,7 @@ public class TestFinalResultDto {
     @JsonProperty("internal_name")
     private String internalName;
     private LocalDateTime testDateTime;
+    private String resultCalculation;
     private String result;
 
     public String getTestName() {
@@ -35,6 +36,14 @@ public class TestFinalResultDto {
 
     public void setTestDateTime(LocalDateTime testDateTime) {
         this.testDateTime = testDateTime;
+    }
+
+    public String getResultCalculation() {
+        return resultCalculation;
+    }
+
+    public void setResultCalculation(String resultCalculation) {
+        this.resultCalculation = resultCalculation;
     }
 
     public String getResult() {

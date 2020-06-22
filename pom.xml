@@ -63,6 +63,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- jasper report for pdf -->
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>6.12.2</version>
+        </dependency>
+
         <!--disable on deployment-->
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.boot</groupId>-->

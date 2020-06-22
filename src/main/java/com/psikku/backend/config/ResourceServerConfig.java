@@ -51,6 +51,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .mvcMatchers("/api/packages/internal*/*").permitAll()
                 .mvcMatchers("/api/content*/*").fullyAuthenticated()
                 .mvcMatchers("/api/mail-sender*/*").fullyAuthenticated()
+                .mvcMatchers("/api/result*/*").permitAll()
             .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 

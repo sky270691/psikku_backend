@@ -14,6 +14,7 @@ public interface TestResultService  {
     List<TestResult> findAllResultByTestId(int id);
     List<TestResult> findAllResultByVoucherIdAndUsername(long voucherId, String userName);
     List<TestResult> findAllResultByTestIdAndVoucherId(int id, long voucherId);
+    List<TestFinalResultDto> findAllResultByVoucherAndUsername(String voucher, String username);
 
     //-------------converter method-------------------------------------------------
     TestFinalResultDto convertToTestResultDto(TestResult testResult);
