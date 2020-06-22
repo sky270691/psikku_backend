@@ -97,7 +97,16 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
         int raMaxCorrectByAge;
         int zrMaxCorrectByAge;
 
-        String[] answerDtoQuestionIdSplit = submittedAnswerDtoList.get(0).getQuestionId().split("_");
+//        String[] answerDtoQuestionIdSplit = submittedAnswerDtoList.get(0).getQuestionId().split("_");
+
+        String[] answerDtoQuestionIdSplit = submittedAnswerDtoList.stream()
+                .findAny()
+                .orElseGet(()->{
+                    SubmittedAnswerDto a = new SubmittedAnswerDto();
+                    a.setQuestionId("bakat_1_1");
+                    return a;
+                }).getQuestionId().split("_");
+
         String testName = answerDtoQuestionIdSplit[0];
         List<Answer> allMinatBakatAnswerFromDb = answerService.findByIdStartingWith(testName);
 

@@ -30,7 +30,10 @@ public class SubmitAnswerController {
     @PostMapping
     public ResponseEntity<TestFinalResultDto> submitAnswers(@RequestBody UserAnswerDto userAnswerDto,
                                                             @RequestHeader("Voucher") String voucher){
-        logger.info("username: '"+getUsername()+"' try to submit answer");
+
+        System.out.println("body: "+userAnswerDto);
+
+        logger.info("username: '"+getUsername()+"' try to submit answer with voucher: '"+voucher+"'");
         TestFinalResultDto testFinalResultDto= submitAnswerService.calculateResultTestV2(userAnswerDto,voucher.trim());
 
         logger.info("username: '"+getUsername()+"' answer's for test:'"+testFinalResultDto.getInternalName()+"' calculated successfully");

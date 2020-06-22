@@ -97,15 +97,15 @@ public class EQResultTestCalculator implements UniqueResultTestCalculator{
 
         double eqTotal = (mengenalEmosiDiriPercentage + mengelolaEmosiPercentage + memotivasiDiriPercentage + mengenalEmosiOrgLainPercentage + membinaHubunganPercentage)/5;
         String eqTotalCategoryString="";
-        if(eqTotal>-1){
+        if(eqTotal<20){
             eqTotalCategoryString = "kurang sekali";
-        }else if(eqTotal>20){
+        }else if(eqTotal<40){
             eqTotalCategoryString = "kurang";
-        }else if(eqTotal>40){
+        }else if(eqTotal<60){
             eqTotalCategoryString = "sedang";
-        }else if(eqTotal>60){
+        }else if(eqTotal<80){
             eqTotalCategoryString = "tinggi";
-        }else if(eqTotal>80){
+        }else{
             eqTotalCategoryString = "tinggi sekali";
         }
 
