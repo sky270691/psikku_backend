@@ -93,7 +93,7 @@ public class SurveyKarakterResultTestCalculator implements UniqueResultTestCalcu
 //        sb.append("SURVEY KARAKTER").append("\n");
         sb.append("Toleransi:").append((int)toleransiPercentage).append(":").append(perCategoryPredicate(toleransiPercentage)).append(",");
         sb.append("Gotong Royong:").append((int)gotongRoyongPercentage).append(":").append(perCategoryPredicate(gotongRoyongPercentage)).append(",");
-        sb.append("Well being:").append((int)wellbeingPercentage).append(":").append(perCategoryPredicate(wellbeingPercentage)).append(",");
+        sb.append("Nasionalisme:").append((int)wellbeingPercentage).append(":").append(perCategoryPredicate(wellbeingPercentage)).append(",");
         sb.append("pluralisme:").append((int)pluralismePercentage).append(":").append(perCategoryPredicate(pluralismePercentage));
 
         setResult(sb.toString());
@@ -103,7 +103,7 @@ public class SurveyKarakterResultTestCalculator implements UniqueResultTestCalcu
         testResult.setUser(userService.findByUsername(username));
         testResult.setTest(testService.findTestByInternalName(testName));
         testResult.setResult(getResult());
-        testResult.setResultCalculation("toleransi:"+toleransiPercentage+",gotong royong:"+gotongRoyongPercentage+",well being:"+wellbeingPercentage+
+        testResult.setResultCalculation("toleransi:"+toleransiPercentage+",gotong royong:"+gotongRoyongPercentage+",nasionalisme:"+wellbeingPercentage+
                 ",pluralisme:"+pluralismePercentage);
         logger.info("username: '"+username+"' SURVEYKARAKTER answer calculated successfully");
         return testResult;

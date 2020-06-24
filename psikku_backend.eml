@@ -173,5 +173,7 @@
 		<level name="Maven: com.fasterxml.jackson.core:jackson-core:2.10.2" value="project"/>
 		<level name="Maven: com.fasterxml.jackson.core:jackson-databind:2.10.2" value="project"/>
 		<level name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.10.2" value="project"/>
+		<level name="Maven: net.sf.jasperreports:jasperreports-functions:6.12.2" value="project"/>
+		<level name="Maven: joda-time:joda-time:2.10.5" value="project"/>
 	</levels>
 </component>

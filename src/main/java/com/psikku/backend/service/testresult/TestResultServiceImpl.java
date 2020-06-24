@@ -2,6 +2,7 @@ package com.psikku.backend.service.testresult;
 
 import com.psikku.backend.dto.testresult.TestFinalResultDto;
 import com.psikku.backend.entity.TestResult;
+import com.psikku.backend.entity.User;
 import com.psikku.backend.exception.TestResultException;
 import com.psikku.backend.mapper.testresult.TestResultMapper;
 import com.psikku.backend.repository.TestResultRepository;
@@ -80,5 +81,11 @@ public class TestResultServiceImpl implements TestResultService {
                 .map(testResultMapper::convertToTestFinalResultDto)
                 .collect(Collectors.toList());
         return testFinalResultDtoList;
+    }
+
+    @Override
+    public List<TestResult> findAllResultByVoucherAndUsername(User user, String voucher) {
+        List<TestResult> testResultList = testResultRepository.findAllByVoucher_VoucherCodeAndUser_Username(voucher,user.getUsername());
+        return testResultList;
     }
 }

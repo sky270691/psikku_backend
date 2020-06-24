@@ -1,0 +1,968 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.12.2.final using JasperReports Library version 6.12.2-75c5e90a222ab406e416cbf590a5397028a52de3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="psikku-result" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Key" uuid="f9b1eb4b-1b79-4c2e-9988-758145b1cb7a">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.report.description" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<subDataset name="Dataset1" uuid="19ea50ed-11c9-401d-92cf-ebb5cf09ad65">
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+	</subDataset>
+	<parameter name="fullname" class="java.lang.String"/>
+	<parameter name="sex" class="java.lang.String"/>
+	<parameter name="dateOfBirth" class="java.lang.String"/>
+	<parameter name="address" class="java.lang.String"/>
+	<parameter name="iqResult" class="java.lang.Integer"/>
+	<parameter name="eqTotalResult" class="java.lang.Double"/>
+	<parameter name="eqMengenalEmosiDiriResult" class="java.lang.Double"/>
+	<parameter name="eqMengelolaEmosiDiriResult" class="java.lang.Double"/>
+	<parameter name="eqMemotivasiDiriResult" class="java.lang.Double"/>
+	<parameter name="eqMengenalEmosiOrangLainResult" class="java.lang.Double"/>
+	<parameter name="eqMembinaHubunganResult" class="java.lang.Double"/>
+	<parameter name="gayaBelajar1Result" class="java.lang.String"/>
+	<parameter name="pengertianGb1" class="java.lang.String"/>
+	<parameter name="kelebihanGb1" class="java.lang.String"/>
+	<parameter name="kekuranganGb1" class="java.lang.String"/>
+	<parameter name="polaPengembanganBelajarGb1" class="java.lang.String"/>
+	<parameter name="pengertianGb2" class="java.lang.String"/>
+	<parameter name="kombinasiGb2" class="java.lang.String"/>
+	<parameter name="pengertianKombinasiGb2" class="java.lang.String"/>
+	<parameter name="gayaBelajar2Result" class="java.lang.String"/>
+	<parameter name="bullyFisikResult" class="java.lang.Double"/>
+	<parameter name="bullyVerbalResult" class="java.lang.Double"/>
+	<parameter name="bullyNonVerbalResult" class="java.lang.Double"/>
+	<parameter name="bullyRelasionalResult" class="java.lang.Double"/>
+	<parameter name="bullyCyberResult" class="java.lang.Double"/>
+	<parameter name="skToleransiResult" class="java.lang.Integer"/>
+	<parameter name="skGotongRoyongResult" class="java.lang.Integer"/>
+	<parameter name="skNasionalismeResult" class="java.lang.Integer"/>
+	<parameter name="skPluralismeResult" class="java.lang.Integer"/>
+	<parameter name="covidTestResult" class="java.lang.String"/>
+	<parameter name="kecemasanResult" class="java.lang.String"/>
+	<parameter name="kecemasanResultPercentage" class="java.lang.Double"/>
+	<parameter name="riasecResult" class="java.lang.String"/>
+	<parameter name="jobRecommendation" class="java.lang.String"/>
+	<parameter name="kognitifExactResult" class="java.lang.Double"/>
+	<parameter name="kognitifLiterasiResult" class="java.lang.Double"/>
+	<parameter name="kognitifNumerasiResult" class="java.lang.Double"/>
+	<parameter name="kognitifNonExactResult" class="java.lang.Double"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<variable name="bullyFisikKet" class="java.lang.String">
+		<variableExpression><![CDATA[IF($P{bullyFisikResult}<=33,"Kurang",IF($P{bullyFisikResult}<66,"Sedang","Tinggi"))]]></variableExpression>
+	</variable>
+	<variable name="bullyVerbalKet" class="java.lang.String">
+		<variableExpression><![CDATA[IF($P{bullyVerbalResult}<=33,"Kurang",IF($P{bullyVerbalResult}<66,"Sedang","Tinggi"))]]></variableExpression>
+	</variable>
+	<variable name="bullyNonVerbalKet" class="java.lang.String">
+		<variableExpression><![CDATA[IF($P{bullyNonVerbalResult}<=33,"Kurang",IF($P{bullyNonVerbalResult}<66,"Sedang","Tinggi"))]]></variableExpression>
+	</variable>
+	<variable name="bullyRelasionalKet" class="java.lang.String">
+		<variableExpression><![CDATA[IF($P{bullyRelasionalResult}<=33,"Kurang",IF($P{bullyRelasionalResult}<66,"Sedang","Tinggi"))]]></variableExpression>
+	</variable>
+	<variable name="bullyCyberKet" class="java.lang.String">
+		<variableExpression><![CDATA[IF($P{bullyCyberResult}<33,"Kurang",IF($P{bullyCyberResult} <66,"Sedang","Tinggi"))]]></variableExpression>
+	</variable>
+	<variable name="eqPredicate" class="java.lang.String">
+		<variableExpression><![CDATA[IF($P{eqTotalResult} <20,"Kurang Sekali",(IF($P{eqTotalResult} < 40 ,"Kurang",(IF($P{eqTotalResult} < 60 ,"Sedang",(IF($P{eqTotalResult} < 80 ,"Tinggi","Tinggi Sekali")))))))]]></variableExpression>
+	</variable>
+	<title>
+		<band height="75">
+			<line>
+				<reportElement x="-20" y="60" width="595" height="1" uuid="145805bd-4ee4-4d3a-af4b-daaf20fab736"/>
+			</line>
+			<image>
+				<reportElement x="-1" y="6" width="181" height="40" uuid="4c8c7050-5db5-415d-bc48-3d30fa043b10"/>
+				<imageExpression><![CDATA["C:/Users/langi/Desktop/psyche.png"]]></imageExpression>
+			</image>
+			<rectangle>
+				<reportElement x="336" y="9" width="216" height="32" forecolor="#FFFFFF" backcolor="#C75DBC" uuid="866218ec-9639-498f-bbee-42b0eea0a2e7"/>
+			</rectangle>
+			<image>
+				<reportElement x="335" y="9" width="217" height="32" uuid="e30c8bbd-d88b-439f-bcf9-790c9a5d40e3"/>
+				<imageExpression><![CDATA["C:/Users/langi/Desktop/smaker 2 binsus tomohon.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="72" splitType="Stretch">
+			<staticText>
+				<reportElement x="4" y="4" width="96" height="23" uuid="47dad86d-c1b5-48b1-a1b0-6a6995df4f68"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[NAMA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="296" y="4" width="96" height="23" uuid="d828a15c-4fed-40d9-a4c6-42ee0448b4fc"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[TANGGAL LAHIR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="34" width="96" height="23" uuid="df0d51c2-32c6-418f-9186-5185ed6a35f2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[JENIS KELAMIN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="296" y="34" width="96" height="23" uuid="b851e078-21fa-4a85-a4b4-75b3e4bb83c1"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<text><![CDATA[ALAMAT]]></text>
+			</staticText>
+			<textField textAdjust="StretchHeight">
+				<reportElement x="104" y="5" width="174" height="22" uuid="2f571399-a737-4f30-95f5-decf319141eb"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fullname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="104" y="34" width="174" height="22" uuid="0fff3011-bbf2-4147-a400-b8f757dfaf55"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{sex}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="396" y="4" width="153" height="22" uuid="19415383-4a31-470f-a817-2a5fecfb3c35"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{dateOfBirth}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="396" y="34" width="153" height="22" uuid="9e41ab2a-d045-4680-9ad2-df4bab3f67a4"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{address}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="34" splitType="Stretch">
+			<staticText>
+				<reportElement x="4" y="0" width="100" height="30" uuid="b8b82866-ab2e-4681-bc75-6d4ad788ff9d"/>
+				<textElement verticalAlignment="Middle">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[HASIL:]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="154">
+			<staticText>
+				<reportElement mode="Transparent" x="32" y="10" width="120" height="24" uuid="cca337cf-e4fc-4dfe-9755-9e6bd7471cb7"/>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[INTELEJENSI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="180" y="124" width="364" height="20" uuid="68ca7a13-4eec-4605-b6dd-722de149d06c"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[*Untuk hasil iq di bawah angka 80, peserta tes biasanya tidak mengerjakan secara sungguh-sungguh]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="199" y="71" width="164" height="40" uuid="16dbfce7-80c2-4428-aed1-531dc8b81e41"/>
+				<textElement textAlignment="Center">
+					<font size="26" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{iqResult}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="260" y="37" width="40" height="24" uuid="acf4fa81-b903-44bd-9d5c-b886107b6f10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[IQ]]></text>
+			</staticText>
+			<line>
+				<reportElement x="6" y="151" width="539" height="1" uuid="114b41b6-b5c7-4684-97e3-3c7d64cda022"/>
+			</line>
+		</band>
+		<band height="330">
+			<staticText>
+				<reportElement mode="Transparent" x="32" y="10" width="160" height="30" uuid="bd124018-3732-41e0-9aeb-a4e811184703"/>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[BAKAT KOGNITIF]]></text>
+			</staticText>
+			<line>
+				<reportElement x="8" y="319" width="539" height="1" uuid="7e1652d6-c3a3-4b9a-b44b-190987b5e1df"/>
+			</line>
+			<pieChart>
+				<chart evaluationTime="Report">
+					<reportElement x="40" y="107" width="200" height="200" uuid="0911691a-fa18-4cff-8d4e-36edf35dd9cc"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend position="Bottom"/>
+				</chart>
+				<pieDataset>
+					<dataset resetType="Report"/>
+					<pieSeries>
+						<keyExpression><![CDATA["LITERASI"]]></keyExpression>
+						<valueExpression><![CDATA[$P{kognitifLiterasiResult}]]></valueExpression>
+						<labelExpression><![CDATA[$P{kognitifLiterasiResult}.toString()]]></labelExpression>
+					</pieSeries>
+					<pieSeries>
+						<keyExpression><![CDATA["NUMERASI"]]></keyExpression>
+						<valueExpression><![CDATA[$P{kognitifNumerasiResult}]]></valueExpression>
+						<labelExpression><![CDATA[$P{kognitifNumerasiResult}.toString()]]></labelExpression>
+					</pieSeries>
+				</pieDataset>
+				<piePlot>
+					<plot/>
+					<itemLabel/>
+				</piePlot>
+			</pieChart>
+			<staticText>
+				<reportElement mode="Transparent" x="57" y="70" width="162" height="24" uuid="ba466779-c257-4314-85b8-dc1d7d9b7910"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[Literasi & Numerasi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="350" y="69" width="162" height="24" uuid="214f9a0f-4f7f-4eb5-9949-0f2bd4724686"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[Corak Berpikir]]></text>
+			</staticText>
+			<pieChart>
+				<chart evaluationTime="Report">
+					<reportElement x="334" y="107" width="200" height="200" uuid="bfd48512-d1de-405f-9d17-155e626ebb68"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset>
+					<dataset resetType="Report"/>
+					<pieSeries>
+						<keyExpression><![CDATA["EKSAKTA"]]></keyExpression>
+						<valueExpression><![CDATA[$P{kognitifExactResult}]]></valueExpression>
+						<labelExpression><![CDATA[$P{kognitifExactResult}.toString()]]></labelExpression>
+					</pieSeries>
+					<pieSeries>
+						<keyExpression><![CDATA["NON-EKSAKTA"]]></keyExpression>
+						<valueExpression><![CDATA[$P{kognitifNonExactResult}]]></valueExpression>
+						<labelExpression><![CDATA[$P{kognitifNonExactResult}.toString()]]></labelExpression>
+					</pieSeries>
+				</pieDataset>
+				<piePlot>
+					<plot/>
+					<itemLabel/>
+				</piePlot>
+			</pieChart>
+		</band>
+		<band height="403">
+			<staticText>
+				<reportElement mode="Transparent" x="32" y="2" width="37" height="30" uuid="fa37181e-82b0-4a97-b709-33b2f053cff7"/>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[EQ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="181" y="46" width="198" height="24" uuid="99fcc370-5890-4ae2-b617-50a548da62e6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[NILAI KESELURUHAN]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="200" y="78" width="160" height="30" uuid="d157814c-49e9-485d-8b53-ba0b61660867"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" markup="html">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{eqTotalResult}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="201" y="110" width="160" height="30" uuid="d1f936ff-477a-4b3f-a5df-f14747e7a261"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{eqPredicate}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="280" y="185" width="1" height="210" uuid="eaec66e5-e60b-48a0-9a95-9e010f48d627"/>
+			</line>
+			<staticText>
+				<reportElement mode="Transparent" x="50" y="151" width="162" height="24" uuid="a15b9c50-2271-4560-bcc0-024a8efd06b0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[INTRA PERSONAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="350" y="151" width="162" height="24" uuid="175e104c-4799-4685-a9fb-3ce020474604"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[INTER PERSONAL]]></text>
+			</staticText>
+			<line>
+				<reportElement x="10" y="398" width="539" height="1" uuid="33e2ae9f-1cbf-49e4-97de-9d5a35bcf7f3"/>
+			</line>
+			<textField>
+				<reportElement x="199" y="195" width="71" height="56" uuid="fb70343a-bb0c-4276-9ade-25c021232e60"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{eqMengenalEmosiDiriResult}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="3" y="195" width="122" height="24" uuid="5b0dff2c-342b-46c9-a3a6-fdcbb12e6dd7"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Mengenali Emosi Diri]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="199" y="265" width="71" height="56" uuid="e4bd7956-130d-4af6-924b-e43f138f12ef"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{eqMengelolaEmosiDiriResult}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="335" width="71" height="56" uuid="2c2d7bb0-bd87-425b-a87c-221180d9945c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{eqMemotivasiDiriResult}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="4" y="265" width="122" height="24" uuid="938dfe3f-db3c-4429-93e9-46781c9b60b6"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Mengelola Emosi Diri]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="3" y="335" width="122" height="24" uuid="b62d51a3-0780-4d54-b082-b6ea5bd2f1f4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Memotivasi Diri]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="3" y="219" width="154" height="26" uuid="363bbb3d-aefa-4b0e-aa45-818e41edebe7"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{eqMengenalEmosiDiriResult}<25,"Sangat Kurang",(IF($P{eqMengenalEmosiDiriResult}<50,"Kurang",(IF($P{eqMengenalEmosiDiriResult}<75,"Cukup baik","Sangat baik")))))+" dalam mengenali emosi diri sendiri"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="3" y="289" width="154" height="26" uuid="e2447d22-ec39-404e-aa3e-27b8e89cca98"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{eqMengelolaEmosiDiriResult}<25,"Sangat Kurang",(IF($P{eqMengelolaEmosiDiriResult}<50,"Kurang",(IF($P{eqMengelolaEmosiDiriResult}<75,"Cukup baik","Sangat baik")))))+" dalam mengenali emosi diri sendiri"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="3" y="359" width="154" height="26" uuid="cc74365f-0262-4827-a486-8f7593160c69"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{eqMemotivasiDiriResult}<25,"Sangat Kurang",(IF($P{eqMemotivasiDiriResult}<50,"Kurang",(IF($P{eqMemotivasiDiriResult}<75,"Cukup baik","Sangat baik")))))+" dalam mengenali emosi diri sendiri"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="479" y="195" width="71" height="56" uuid="3669dd64-0475-4790-a580-71f1ac3a6d44"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{eqMengenalEmosiOrangLainResult}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="479" y="264" width="71" height="56" uuid="a17e7111-40fd-4456-a91a-ed8d297c0ebf"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{eqMembinaHubunganResult}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Transparent" x="285" y="195" width="165" height="24" uuid="463fca09-be42-4e9f-be65-445bfb848d9c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Mengenali Emosi Orang Lain]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="286" y="265" width="114" height="24" uuid="05c9688e-2f85-4dfe-ab4b-a726e73edf5d"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Membina Hubungan]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="285" y="219" width="154" height="26" uuid="f6450e47-71db-40e9-9d8c-4bc9421eeb56"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{eqMengenalEmosiOrangLainResult}<25,"Sangat Kurang",(IF($P{eqMengenalEmosiOrangLainResult}<50,"Kurang",(IF($P{eqMengenalEmosiOrangLainResult}<75,"Cukup baik","Sangat baik")))))+" dalam mengenali emosi diri sendiri"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="285" y="289" width="154" height="26" uuid="1b0577d4-376d-4de0-ae8c-5e61ea401b27"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{eqMembinaHubunganResult}<25,"Sangat Kurang",(IF($P{eqMembinaHubunganResult}<50,"Kurang",(IF($P{eqMembinaHubunganResult}<75,"Cukup baik","Sangat baik")))))+" dalam mengenali emosi diri sendiri"]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="449">
+			<staticText>
+				<reportElement mode="Transparent" x="32" y="10" width="160" height="30" uuid="df251792-c86a-4469-b8bd-ffef118a1637"/>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[GAYA BELAJAR]]></text>
+			</staticText>
+			<line>
+				<reportElement x="280" y="60" width="1" height="380" uuid="372be4fe-6b1a-485d-b152-b213997ee313"/>
+			</line>
+			<textField>
+				<reportElement x="0" y="60" width="270" height="19" uuid="96c84a70-f622-4e0c-abbb-e9e37685d7cb"/>
+				<textElement textAlignment="Center" markup="html">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{gayaBelajar1Result}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="84" width="74" height="23" uuid="0681f561-a767-4758-8340-012902faff17"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Pengertian:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="107" width="270" height="63" uuid="6e3cda4e-a3f9-4537-bc77-3b8ab9385bc1"/>
+				<textFieldExpression><![CDATA[IF($P{gayaBelajar1Result}.equals("VISUAL"),"Gaya belajar yang lebih mudah mempelajari materi pelajarannya melalui melihat, memandangi, atau mengamati objek belajarnya dengan indera penglihatan",(IF($P{gayaBelajar1Result}.equals("AUDITORI"),"Gaya belajar auditori lebih mengutamakan pendengaran sebagai alat bantu utama dalam mencerna dan mengolah informasi atau pelajaran yang di dengarkan secara langsung atau lisan.","Karakteristik Gaya belajar kinestetik adalah aktivitas belajar melalui gerakan tubuh sebagai sarana menerima atau menangkap informasike dalam otak.")))]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="176" width="59" height="23" uuid="f865570b-02e9-45a0-bcc1-cc7e2e4d250a"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Kelebihan:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="199" width="270" height="63" uuid="60b4c260-c178-454f-8084-403c94bea78f"/>
+				<textFieldExpression><![CDATA[IF($P{gayaBelajar1Result}.equals("VISUAL"),"- Mampu mengamati\n- Cenderung suka membaca\n- Memiliki sifat yang teliti dan mendetail\n- Dalam memahami informasi yang dihafal, biasaya individu dapat memvisualisasikan gambar/objek dalam pikirannya",(IF($P{gayaBelajar1Result}.equals("AUDITORI"),"- Lebih mudah menerima informasi dalam bentuk suara\n- Mampu menduplikasikan informasi yang diterima dalam bentuk suara\n- Memiliki perbendaharaan kata yang mumpuni\n- Memiliki kemampuan berbicara didepan umum (Public Speaking)","- Mampu belajar dengan praktik langsung\n- Terampil dalam mengkoordinasikan motorik halus dan motorik kasar\n- Dapat memahami informasi dalam bentuk nonverbal dengan baik\n- Unggul dalam bidang seni dan olahraga")))]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="271" width="74" height="23" uuid="fd6710ea-b668-4ab5-9eb2-fc83b2e75f2b"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Kekurangan:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="294" width="270" height="63" uuid="26165fa1-f54e-4522-8be4-26491ba64ee5"/>
+				<textFieldExpression><![CDATA[IF($P{gayaBelajar1Result}.equals("VISUAL"),"- Sukar mengingat informasi dalam bentuk lisan atau auditori\n- Sukar belajar dalam suasana yang ramai dan bayak gangguan \n- Sering terganggu konsentrasi saat melihat tampilan atau objek yang kurang menarik\n- Kurang dapat memahami suatu penjelasan jika tidak disertai dengan alat peraga ",(IF($P{gayaBelajar1Result}.equals("AUDITORI"),"- Susah mengingat sesuatu jika hanya membaca tanpa menggunakan suara\n- Kurang cakap dalam mnyusun dan menulis sebuah karangan.\n- Kurang suka membaca petunjuk dan lebih suka langsung bertanya untuk mendapatkan informasi.\n- Sulit diam dalam jangka waktu lama","- Cenderung sulit memahami informasi jika tidak dipraktekan\n- Cenderung lemah memahami konsep teoritis\n- Cenderung mudah bosan dengan gaya pembelajaran konvensional \n- Kurang mampu mempertahankan konsentrasi dan mudah teralihkan perhatian")))]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="366" width="158" height="23" uuid="a2bd79b2-d4c6-4c92-be05-06a5dac9310e"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Pola Pengembangan Belajar:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="390" width="270" height="50" uuid="f75635f5-9eeb-4a68-bd84-91b5c1c3e0ce"/>
+				<textFieldExpression><![CDATA[IF($P{gayaBelajar1Result}.equals("VISUAL"),"Metode pembelajaran yang tepat yaitu dengan mencatat setiap informasi yang didapat, video ilustrasi, alat tulis berwarna, pembelajaran menggunakan bentuk.",(IF($P{gayaBelajar1Result}.equals("AUDITORI"),"Menggunakan media auditori seperti musik, dan berdiskusi.","Menggunakan metode pembelajaran dengan bentuk role play")))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="285" y="107" width="270" height="63" uuid="2e82150b-80f3-46e3-afb0-8383fd99af77"/>
+				<textFieldExpression><![CDATA[IF($P{gayaBelajar2Result}.equals("CE"),"Siswa belajar melalui perasaan (feeling), dengan menekankan segi – segi pengalaman kongkret, lebih mementingkan relasi dengan sesama dan sensivitas terhadap perasaan orang lain. Siswa melibatkan diri sepenuhnya melalui pengalaman baru, juga siswa cenderung lebih terbuka dan mampu beradaptasi terhadap perubahan yang dihadapinya",(IF($P{gayaBelajar2Result}.equals("AC"),"Siswa belajar melalui pemikiran (thinking), dan lebih terfokus pada analisis logis dari ide – ide, perencanaan sistematis, dan pemahaman intelektual dari situasi atau perkara yang dihadapi. Siswa menciptkana konsep – konsep yang mengintegrasikan observasinya menjadi teori yang sehat, dengan mengandalkan perencanaan yang sistematis",IF($P{gayaBelajar2Result}.equals("RO"),"Siswa belajar melalui pengamatan (watching), penekanannya mengamati sebelum menilai, menyimak suatu perkara dari berbagai perspektif, dan selalu menyimak makna dari hal – hal yang diamati. Siswa akan menggunakan pikiran dan perasaannya untuk membentuk opini/ pendapat, siswa mengobservasi dan merefleksi pengalamannya dari berbagai segi","Siswa belajar melalui tindakan (doing), cenderung kuat dalam segi kemampuan melakukan tugas, berani mengambil resiko, dan mempengaruhi orang lain lewat perbuatannya. Siswa akan menghargai keberhasilannya dalam menyelesaikan pekerjaan, pengaruhnya pada orang lain dan prestasinya. Siswa menggunakan teori untuk memecahkan masalah dan mengambil keputusan."))))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="285" y="60" width="270" height="19" uuid="faee305c-9864-4f94-8560-bd3ba468486f"/>
+				<textElement textAlignment="Center" markup="html">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{gayaBelajar2Result}.equals("CE"),"EXPERIENCE",(IF($P{gayaBelajar2Result}.equals("AC"),"ABSTRACT CONCEPTUALIZATION",IF($P{gayaBelajar2Result}.equals("RO"),"REFLECTIVE OBSERVATION","ACTIVE EXPERIMENTATION"))))]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="286" y="84" width="74" height="23" uuid="84beb230-042e-42ff-94c3-9c76a727c20b"/>
+				<textElement>
+					<font size="12" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Pengertian:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="286" y="177" width="268" height="22" uuid="aeff6ffb-5987-4b4c-a185-fb4b3b3b918e"/>
+				<textElement>
+					<font size="12" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{kombinasiGb2}.equals("ce+ro"),"GAYA DIVERGER",IF($P{kombinasiGb2}.equals("ac+ro"),"GAYA ASSIMILATION",IF($P{kombinasiGb2}.equals("ac+ae"),"GAYA CONVERGER","GAYA ACCOMODATOR")))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="287" y="205" width="268" height="235" uuid="c16891b1-da69-404d-8eaa-4fea9ab49e6a"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{kombinasiGb2}.equals("ce+ro"),"Tipe ini perpaduan perasaan (feeling) dan pengamatan (watching). Siswa dengan tipe Diverger memiliki keunggulan dalam kemampuan imajinasi dan melihat situasi konkret (nyata) dari sudut pandang yang berbeda, kemudian menghubungkannya menjadi sesuatu yang bulat dan utuh. Pendekatannya pada setiap situasi adalah “mengamati” dan bukan “bertindak”. Siswa dengan tipe ini menyukai tugas belajar yang menuntutnya untuk menghasilkan ide – ide dan gemar mengumpulkan berbagai informasi, menyukai isu tentang kesusastraan, budaya, sejarah, dan ilmu – ilmu sosial lainnya. Mereka biasanya lebih banyak bertanya “Why?”. Peran dan fungsi guru yang cocok untuk menghadapi siswa tipe ini adalah sebagai Motivator.",IF($P{kombinasiGb2}.equals("ac+ro"),"Tipe ini perpaduan dari pemikiran (thinking) dan pengamatan (watching). Siswa dengan tipe Assimilator memiliki keunggulan dalam memahami dan merespon berbagai sajian serta mengorganisasikan merangkumnya dalam suatu format yang logis, singkat, dan jelas. Biasanya siswa tipe ini cenderung lebih teoritis, lebih menyukai bekerja dengan ide serta konsep yang abstrak daripada bekerja dengan orang. Mata pelajaran yang diminatinya adalah bidang sains dan matematika. Mereka biasanya lebih banyak bertanya “What ?”. peran dan fungsi guru yang cocok untuk menghadapi siswa tipe ini adalah sebagai seorang Expert.",IF($P{kombinasiGb2}.equals("ac+ae"),"Tipe ini perpaduan antara berfikir (thinking) dan tindakan (doing). Siswa mampu merespons terhadap berbagai peluang dan mampu bekerja secara aktif dalam setiap tugas yang terdefinisikan secara baik. Siswa gemar belajar bila menghadapi soal dengan jawaban yang pasti, dan segera berusaha mencari jawaban yang tepat. Dia mau belajar secara trial and error hanya dalam lingkungan yang dianggapnya relatif aman dari kegagalan. Siswa dengan tipe Converger unggul dalam menemukan fungsi praktis dari berbagai ide dan teori. Biasanya mereka punya kemampuan yang baik dalam pemecahan masalah dan pengambilan keputusan. Mereka juga cenderung lebih menyukai tugas – tugas teknis (aplikatif). Siswa cenderung tidak emosional dan lebih menyukai bekerja yang berhubungan dengan benda daripada manusia, masalah sosial atau hubungan antar pribadi. Mata pelajaran yang diminati adalah bidang IPA dan teknik. Siswa biasanya lebih banyak bertanya “How?”. Peran dan fungsi guru yang cocok untuk menghadapi siswa tipe ini adalah sebagai Coach, yang dapat menyediakan praktik terbimbing dan dapat memberikan umpan balik yang tepat.","Tipe ini perpaduan antara merasakan (feeling) dengan berbuat (doing). Siswa tipe ini senang mengaplikasikan materi pelajaran dalam berbagai situasi baru untuk memecahkan berbagai masalah nyata yang dihadapinya. Kelebihan siswa tipe ini memiliki kemampuan belajar yang baik dari hasil pengalaman nyata yang dilakukannya sendiri. Mereka suka membuat rencana dan melibatkan dirinya dalam berbagai pengalaman baru yang menantang. Dalam usaha memecahkan masalah, mereka biasanya mempertimbangkan faktor manusia (untuk mendapatkan masukan/informasi) dibanding analisa teknis. Mereka cenderung untuk bertindak berdasarkan intuisi/dorongan hati daripada berdasarkan analisa logis, sering menggunakan trial and error dalam memecahkan masalah, kurang sabar dan ingin segera bertindak.")))]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="8" y="448" width="539" height="1" uuid="9b2dd977-4a7f-4993-ac50-8e3f71837538"/>
+			</line>
+		</band>
+		<band height="154">
+			<staticText>
+				<reportElement mode="Transparent" x="32" y="7" width="98" height="30" uuid="e1bf5733-9441-4bb6-80e4-b3a1a57fb7dd"/>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[BULLY TES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="19" y="63" width="50" height="19" uuid="3b1bfc6e-bcda-491b-be0a-791707dcfbc5"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[FISIK]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="122" y="63" width="67" height="19" uuid="a0aff488-1164-4133-a201-1934263e1690"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[VERBAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="223" y="63" width="98" height="19" uuid="5b05b131-63e7-4df0-a323-4616bb9188f6"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[NON VERBAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="348" y="63" width="98" height="19" uuid="a857921e-d697-45a6-8432-be5a4bcc5185"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[RELASIONAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="485" y="63" width="50" height="19" uuid="1afd6233-d29a-4d77-a107-ef11669b5c4c"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[CYBER]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="12" y="92" width="64" height="31" uuid="84a37a26-20a0-49b8-a74a-d35e19d8ac37"/>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[Double.valueOf($P{bullyFisikResult})+"%"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="123" y="93" width="64" height="30" uuid="63f9bcc3-1c62-439b-9a1f-dfc7d92899a1"/>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[Double.valueOf($P{bullyVerbalResult})+"%"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="240" y="93" width="64" height="30" uuid="d33f8bf4-1d5b-4314-9d64-35a0f3c1bf1f"/>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[Double.valueOf($P{bullyNonVerbalResult})+"%"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="361" y="93" width="64" height="30" uuid="c7908377-93f9-47ee-bc6d-20b9217c5e6f"/>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[Double.valueOf($P{bullyRelasionalResult})+"%"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="478" y="93" width="64" height="30" uuid="efb4a6f1-d791-437a-9db8-9ecc505579b7"/>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[Double.valueOf($P{bullyCyberResult})+"%"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="9" y="127" width="71" height="20" uuid="0e731073-ec12-41fc-9990-36e7393bcf27"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{bullyFisikKet}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="119" y="126" width="73" height="20" uuid="c33bda75-f99b-4cc0-9e28-d66cc52e4f3a"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{bullyVerbalKet}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="237" y="126" width="73" height="20" uuid="d15e841a-cc68-404c-bf8a-57cafa05536f"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{bullyNonVerbalKet}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="362" y="126" width="63" height="20" uuid="3fce1e04-b93e-4fce-84af-4b60e886d734"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{bullyRelasionalKet}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="473" y="127" width="71" height="20" uuid="684cdd12-8979-46a6-89bb-68f7a5394597"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{bullyCyberKet}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="100" y="75" width="1" height="56" uuid="041cf677-df5a-40a3-af40-2794cdef7f0d"/>
+			</line>
+			<line>
+				<reportElement x="212" y="75" width="1" height="56" uuid="e6b170e7-3fdf-4337-be2d-eab7421fb89d"/>
+			</line>
+			<line>
+				<reportElement x="333" y="75" width="1" height="56" uuid="51c9c2e6-3207-4ee0-969d-a2903de80112"/>
+			</line>
+			<line>
+				<reportElement x="459" y="75" width="1" height="56" uuid="95d639f8-16b7-4473-913f-9b458314f391"/>
+			</line>
+			<line>
+				<reportElement x="7" y="149" width="539" height="1" uuid="478b815e-eedd-4be3-a2ef-b8f1ea79b130"/>
+			</line>
+		</band>
+		<band height="367">
+			<staticText>
+				<reportElement mode="Transparent" x="32" y="3" width="160" height="30" uuid="493229eb-537d-4323-9c20-03e161749de1"/>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[SURVEY KARAKTER]]></text>
+			</staticText>
+			<line>
+				<reportElement x="281" y="49" width="1" height="140" uuid="9cae5e97-6f43-421b-8d90-78b6a5493ab4"/>
+			</line>
+			<line>
+				<reportElement x="281" y="208" width="1" height="143" uuid="dc6a51c7-c58b-41c8-950b-0cd05710ffe7"/>
+			</line>
+			<staticText>
+				<reportElement x="87" y="36" width="70" height="19" uuid="6deaabca-1b99-4b69-9080-39b84959ba19"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Toleransi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="365" y="35" width="110" height="19" uuid="e62674f2-aede-45b0-a25c-6c2ae85c181a"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Gotong-royong]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="71" y="216" width="110" height="19" uuid="7cb64d4f-f1fc-4cda-b8c0-b464f7b37c91"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Nasionalisme]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="371" y="216" width="88" height="19" uuid="b9a54160-09ed-4400-baaf-ed62898b7744"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Pluralisme]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="43" y="97" width="158" height="80" uuid="f7b2c9c8-50fd-4520-a9ed-b8f720cf501d">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Suatu sikap untuk saling menghargai atau menghormati serta melarang adanya diskriminasi  terhadap antarkelompok / antarindividu dalam masyarakat atau dalam lingkup lainnya]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="203" width="231" height="1" uuid="e221dcba-ee52-426f-9c87-5bde4e21b2b8"/>
+			</line>
+			<line>
+				<reportElement x="324" y="204" width="231" height="1" uuid="d6276b9a-e195-4479-a3fd-3edcf2c61775"/>
+			</line>
+			<staticText>
+				<reportElement x="298" y="95" width="246" height="104" uuid="835ecb71-ac14-4b93-9bf7-ec39001edd9b"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Gotong-royong merupakan sebuah perwujudan dari sikap persatuan. Serta merupakan suatu perwujudan dari semangat kebersamaan antar masyarakat dalam hal saling membantu atau tolong-menolong. Untuk membangun Indonesia menjadi negara yang maju maka diperlukanlah sebuah sikap gotong royong. Salah satu ciri dari masyarakat Indonesia adalah Gotong royong]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="43" y="282" width="158" height="70" uuid="36563b0c-3207-4ee6-b5f2-960df32fec2b"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Semangat nasionalisme adalah kemampuan untuk mencintai bangsa & negara dalam perwujudan nilai-nilai dasar Pancasila]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="341" y="282" width="158" height="70" uuid="c1c7b61e-8e41-4dcc-b8a7-af2647c50aca">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Pandangan hidup yang mengakui dan menerima adanya keanekaragaman dalam suatu masyarakat]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="90" y="62" width="64" height="27" uuid="ca65a78f-7f38-416a-83f1-45cd4b03a773"/>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[Integer.valueOf($P{skToleransiResult})+"%"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="387" y="62" width="64" height="27" uuid="48c4467d-b029-4f18-9d79-5adb582e5577"/>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[Integer.valueOf($P{skGotongRoyongResult})+"%"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="90" y="243" width="64" height="31" uuid="db52e020-7d9a-44c9-9c56-b0ff90c1a992"/>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[Integer.valueOf($P{skNasionalismeResult})+"%"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="383" y="243" width="64" height="31" uuid="778fc7d6-55b2-46e5-8852-a736dac9baad"/>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[Integer.valueOf($P{skPluralismeResult})+"%"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="12" y="364" width="539" height="1" uuid="a3829154-e6ad-4108-aac7-1403bdafd04e"/>
+			</line>
+		</band>
+		<band height="96">
+			<staticText>
+				<reportElement mode="Transparent" x="32" y="10" width="120" height="30" uuid="e450c86a-9b25-44d8-a9d2-0a0272a2071c"/>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[COVID-19]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="69" y="50" width="188" height="19" uuid="5cdf2e2b-76db-4405-b091-96fccf06db89"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Resiko Terpapar Covid-19:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="290" y="44" width="160" height="30" uuid="e4fafb75-326d-416c-8588-5fefbae5640c"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" markup="html">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{covidTestResult}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="13" y="90" width="539" height="1" uuid="653fdf5c-0a1d-4a87-b150-971c87a1350c"/>
+			</line>
+		</band>
+		<band height="184">
+			<staticText>
+				<reportElement mode="Transparent" x="33" y="6" width="180" height="30" uuid="10720d6d-0301-44e8-b029-7a4209f1f2b5"/>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[TINGKAT KECEMASAN]]></text>
+			</staticText>
+			<line>
+				<reportElement x="12" y="176" width="539" height="1" uuid="76d52479-3807-410e-8cde-92acc3e0fa49"/>
+			</line>
+			<textField>
+				<reportElement x="154" y="40" width="253" height="30" uuid="b429300e-5ccc-493d-a9a0-433693a09e95"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" markup="html">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{kecemasanResult}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="238" y="80" width="87" height="19" uuid="47cca2d7-09a5-4622-8f23-b126e506d86a"/>
+				<textElement textAlignment="Left">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Persentase:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="141" y="133" width="68" height="30" uuid="22824bb6-1a4c-440a-8000-d8570ae80914"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" markup="html">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[Double.valueOf($P{kecemasanResultPercentage})+"%"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="352" y="133" width="68" height="30" uuid="30537f8f-4811-4654-8cd2-8a4a2d278c90"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" markup="html">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[Double.valueOf(100-$P{kecemasanResultPercentage})+"%"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="130" y="110" width="87" height="19" uuid="3a523430-1bcc-48e6-9be7-b9f4999b68a3"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Kecemasan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="110" width="87" height="19" uuid="cc01576f-061d-470b-a9e9-acbe54c8e885"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Well-being]]></text>
+			</staticText>
+		</band>
+		<band height="353">
+			<staticText>
+				<reportElement mode="Transparent" x="32" y="6" width="120" height="30" uuid="9b8f75bb-4b61-48af-b183-7be304b2b854"/>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="16" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[MINAT KARIR]]></text>
+			</staticText>
+			<line>
+				<reportElement x="13" y="340" width="539" height="1" uuid="4f56d39c-3698-4bd1-bacc-5131af59c172"/>
+			</line>
+			<staticText>
+				<reportElement x="225" y="40" width="110" height="19" uuid="95234c27-b8cf-46fc-84ce-eef97cae8df3"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Tipe Dominan]]></text>
+			</staticText>
+			<textField textAdjust="ScaleFont">
+				<reportElement x="154" y="70" width="253" height="30" uuid="e0f68c53-e692-4716-8295-4b39946dcfaf"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" markup="html">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{riasecResult}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="32" y="112" width="87" height="19" uuid="22fa65cc-5c2a-4771-b769-7d400a818d87"/>
+				<textElement textAlignment="Left">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Pengertian]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="32" y="140" width="238" height="184" uuid="3bfeac9b-cf6e-4923-bc7b-055958633903"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[IF($P{riasecResult}.equals("REALISTIC"),"Orang-orang dalam kategori realistis biasanya lebih memilih untuk bekerja dengan benda-benda dan hal-hal.",IF($P{riasecResult}.equals("INVESTIGATIVE"),"Orang-orang dalam kategori investigasi sering memiliki keinginan yang kuat untuk memahami sebab dan akibat, dan memecahkan teka-teki dan masalah.",IF($P{riasecResult}.equals("ARTISTIC"),"Orang-orang dalam kategori artistik lebih memilih untuk menjadi ekspresif. Mereka suka kesempatan untuk menciptakan hal-hal baru dan inovatif.",IF($P{riasecResult}.equals("SOCIAL"),"Orang-orang dalam kategori sosial lebih suka bekerja dengan orang lain dengan cara yang mendukung",IF($P{riasecResult}.equals("ENTERPRISING"),"Orang-orang dalam kategori giat biasanya lebih memilih kegiatan menjual dan mempromosikan. Mereka menikmati mempengaruhi orang lain dan berada dalam posisi kepemimpinan.","Orang-orang dalam kategori konvensional biasanya lebih teratur, biasanya kerja yang sistematis, dengan data. Tugas pekerjaan sering termasuk menyimpan catatan, dan mengorganisir bahan tertulis, dan numerik sesuai dengan rencana. ")))))]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="280" y="120" width="1" height="204" uuid="87baf5d9-ce28-4722-82a3-7c8531fefc91"/>
+			</line>
+			<staticText>
+				<reportElement x="288" y="116" width="138" height="19" uuid="60e1a26a-538d-4747-8db4-1696e8de2c44"/>
+				<textElement textAlignment="Left">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Rekomendasi Pekerjaan]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="288" y="140" width="238" height="184" uuid="cdbaabca-f44c-4dbd-ba28-225c12c16d6a"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{jobRecommendation}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="21" splitType="Stretch"/>
+	</summary>
+</jasperReport>

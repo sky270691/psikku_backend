@@ -3,6 +3,7 @@ package com.psikku.backend.service.testresult;
 import com.psikku.backend.dto.testresult.TestFinalResultDto;
 import com.psikku.backend.entity.Test;
 import com.psikku.backend.entity.TestResult;
+import com.psikku.backend.entity.User;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public interface TestResultService  {
     List<TestResult> findAllResultByVoucherIdAndUsername(long voucherId, String userName);
     List<TestResult> findAllResultByTestIdAndVoucherId(int id, long voucherId);
     List<TestFinalResultDto> findAllResultByVoucherAndUsername(String voucher, String username);
+    List<TestResult> findAllResultByVoucherAndUsername(User user, String voucher);
 
     //-------------converter method-------------------------------------------------
     TestFinalResultDto convertToTestResultDto(TestResult testResult);

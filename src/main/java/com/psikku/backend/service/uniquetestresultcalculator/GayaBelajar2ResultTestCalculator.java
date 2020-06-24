@@ -20,7 +20,7 @@
     import java.util.stream.Collectors;
 
     @Service
-    public class GayaBelajar2ResultTestCalculator implements UniqueResultTestCalculator{
+    public class    GayaBelajar2ResultTestCalculator implements UniqueResultTestCalculator{
 
         private final Logger logger;
 

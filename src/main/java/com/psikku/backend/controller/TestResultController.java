@@ -3,7 +3,7 @@ package com.psikku.backend.controller;
 import com.psikku.backend.dto.testresult.TestFinalResultDto;
 import com.psikku.backend.entity.TestResult;
 import com.psikku.backend.exception.TestResultException;
-import com.psikku.backend.service.report.JasperReportService;
+import com.psikku.backend.service.report.ReportService;
 import com.psikku.backend.service.testresult.TestResultService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +26,7 @@ public class TestResultController {
     TestResultService testResultService;
 
     @Autowired
-    JasperReportService jasperReportService;
+    ReportService reportService;
 
 //    @GetMapping("/{user-id}")
 //    public List<TestResultDto> getTestResultByUserId(@PathVariable("user-id") long userId){
@@ -73,7 +73,7 @@ public class TestResultController {
     @GetMapping("/{voucher}/{username}")
     public ResponseEntity<String> getPdfReport(@PathVariable String voucher, @PathVariable String username){
 //        List<TestFinalResultDto> testFinalResultDtoList = testResultService.findAllResultByVoucherAndUsername(voucher,username);
-        jasperReportService.generateReport();
+        reportService.generateReportByVoucher(username,voucher);
         return new ResponseEntity<>("yes", HttpStatus.OK);
     }
 

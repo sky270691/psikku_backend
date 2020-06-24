@@ -160,7 +160,7 @@ public class RiasecResultTestCalculator implements UniqueResultTestCalculator{
         }else if(riasec.equalsIgnoreCase("a")){
             return "artistic";
         }else if(riasec.equalsIgnoreCase("s")){
-            return "sosial";
+            return "social";
         }else if(riasec.equalsIgnoreCase("e")){
             return "enterprising";
         }else if(riasec.equalsIgnoreCase("c")){

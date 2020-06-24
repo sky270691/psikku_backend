@@ -70,6 +70,14 @@
             <version>6.12.2</version>
         </dependency>
 
+        <!-- jasper report function -->
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports-functions</artifactId>
+            <version>6.12.2</version>
+        </dependency>
+
+
         <!--disable on deployment-->
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.boot</groupId>-->
