@@ -88,4 +88,10 @@ public class TestResultServiceImpl implements TestResultService {
         List<TestResult> testResultList = testResultRepository.findAllByVoucher_VoucherCodeAndUser_Username(voucher,user.getUsername());
         return testResultList;
     }
+
+    @Override
+    public List<TestResult> findAllResultByVoucher(String voucher) {
+
+        return testResultRepository.findAllByVoucher_VoucherCode(voucher);
+    }
 }

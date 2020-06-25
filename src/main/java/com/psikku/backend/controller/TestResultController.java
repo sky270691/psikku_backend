@@ -73,7 +73,13 @@ public class TestResultController {
     @GetMapping("/{voucher}/{username}")
     public ResponseEntity<String> getPdfReport(@PathVariable String voucher, @PathVariable String username){
 //        List<TestFinalResultDto> testFinalResultDtoList = testResultService.findAllResultByVoucherAndUsername(voucher,username);
-        reportService.generateReportByVoucher(username,voucher);
+        reportService.generateReportByUsernameAndVoucher(username,voucher);
+        return new ResponseEntity<>("yes", HttpStatus.OK);
+    }
+
+    @GetMapping("/{voucher}")
+    public ResponseEntity<String> getAllPdfReportByVoucher(@PathVariable String voucher){
+       reportService.generateAllReportByVoucher(voucher);
         return new ResponseEntity<>("yes", HttpStatus.OK);
     }
 

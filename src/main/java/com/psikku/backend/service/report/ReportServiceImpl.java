@@ -2,15 +2,14 @@ package com.psikku.backend.service.report;
 
 import com.psikku.backend.entity.TestResult;
 import com.psikku.backend.entity.User;
+import com.psikku.backend.entity.Voucher;
 import com.psikku.backend.exception.TestResultException;
 import com.psikku.backend.service.testresult.TestResultService;
 import com.psikku.backend.service.user.UserService;
+import com.psikku.backend.service.voucher.VoucherService;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
-import net.sf.jasperreports.export.SimpleExporterInput;
-import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
-import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
-import net.sf.jasperreports.export.SimplePdfReportConfiguration;
+import net.sf.jasperreports.export.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +19,11 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,56 +36,96 @@ public class ReportServiceImpl implements ReportService {
     private final Logger logger;
     private final UserService userService;
     private final TestResultService testResultService;
+    private final String path;
+    private final VoucherService voucherService;
 
     @Autowired
     public ReportServiceImpl(ResourceLoader resourceLoader,
                              @Value("${riasec-pku.location}") String riasecPkuLocation,
                              UserService userService,
-                             TestResultService testResultService) {
+                             TestResultService testResultService,
+                             VoucherService voucherService) throws IOException{
         this.resourceLoader = resourceLoader;
         this.riasecPkuLocation = riasecPkuLocation;
         this.userService = userService;
         this.testResultService = testResultService;
+        this.voucherService = voucherService;
         this.logger = LoggerFactory.getLogger(this.getClass());
+        this.path = resourceLoader.getResource("classpath:static/report").getURI().getPath();
     }
 
     @Override
-    public void generateReportByVoucher(String username, String voucher) {
+    public void generateReportByUsernameAndVoucher(String username, String voucher) {
 
         User user = userService.findByUsername(username);
-        List<TestResult> testResultList = testResultService.findAllResultByVoucherAndUsername(user,voucher);
 
         try {
-            String path = resourceLoader.getResource("classpath:static/report/template").getURI().getPath();
-            JasperReport jasperReport = JasperCompileManager.compileReport(path+"/psyche.jrxml");
+            JasperReport jasperReport = JasperCompileManager.compileReport(path+"/template"+"/psyche.jrxml");
+            pdfSingleReportExporter(jasperReport,user,voucher);
+
+        } catch (JRException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void generateAllReportByVoucher(String voucher){
+
+        Voucher voucherFromDb = voucherService.getVoucherByCode(voucher);
+        JasperReport jasperReport = null;
+
+        List<User> userList = voucherFromDb.getUserList();
+
+        try {
+            jasperReport = JasperCompileManager.compileReport(path+"/template"+"/psyche.jrxml");
+            for (User user : userList) {
+                pdfSingleReportExporter(jasperReport,user,voucher);
+            }
+
+        } catch (JRException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private List<TestResult> getTestResultByUserAndVoucher(User user,String voucher){
+        return testResultService.findAllResultByVoucherAndUsername(user,voucher);
+    }
+
+    private void pdfSingleReportExporter(JasperReport jasperReport, User user, String voucher){
+
+        List<TestResult> testResultList = getTestResultByUserAndVoucher(user,voucher);
+        JasperPrint jasperPrint = null;
+        try {
+            jasperPrint = JasperFillManager.fillReport(jasperReport,parametersBuilder(user,testResultList), new JREmptyDataSource(1));
 
 
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,parametersBuilder(user,testResultList), new JREmptyDataSource(1));
+        JRPdfExporter exporter = new JRPdfExporter();
 
-            JRPdfExporter exporter = new JRPdfExporter();
+        exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
 
-            exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-            exporter.setExporterOutput(
-                    new SimpleOutputStreamExporterOutput("employeeReport.pdf"));
-            JasperExportManager.exportReportToPdfFile(jasperPrint,path+"/temp1.pdf");
+        String pdfFileName = user.getUsername();
+//        Resource resource = resourceLoader.getResource("classpath:static/report");
+        exporter.setExporterOutput(
+                new SimpleOutputStreamExporterOutput(path+"/generated/"+pdfFileName+".pdf"));
 
-            SimplePdfReportConfiguration reportConfig
-                    = new SimplePdfReportConfiguration();
-            reportConfig.setSizePageToContent(true);
-            reportConfig.setForceLineBreakPolicy(false);
+        SimplePdfReportConfiguration reportConfig
+                = new SimplePdfReportConfiguration();
+        reportConfig.setSizePageToContent(true);
+        reportConfig.setForceLineBreakPolicy(false);
 
-            SimplePdfExporterConfiguration exportConfig
-                    = new SimplePdfExporterConfiguration();
-            exportConfig.setMetadataAuthor("Psyche Indonesia");
-            exportConfig.setEncrypted(false);
-            exportConfig.setAllowedPermissionsHint("PRINTING");
 
-            exporter.setConfiguration(reportConfig);
-            exporter.setConfiguration(exportConfig);
+        SimplePdfExporterConfiguration exportConfig
+                = new SimplePdfExporterConfiguration();
+        exportConfig.setMetadataAuthor("Psyche Indonesia");
+        exportConfig.setEncrypted(false);
+        exportConfig.setAllowedPermissionsHint("PRINTING");
 
-            exporter.exportReport();
+        exporter.setConfiguration(reportConfig);
+        exporter.setConfiguration(exportConfig);
 
-        } catch (IOException | JRException e) {
+        exporter.exportReport();
+
+        } catch (JRException e) {
             e.printStackTrace();
         }
     }
