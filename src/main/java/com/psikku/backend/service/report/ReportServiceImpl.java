@@ -60,7 +60,7 @@ public class ReportServiceImpl implements ReportService {
         User user = userService.findByUsername(username);
 
         try {
-            JasperReport jasperReport = JasperCompileManager.compileReport(path+"/template"+"/psyche.jrxml");
+            JasperReport jasperReport = JasperCompileManager.compileReport(path+"/template"+"/psycheFix.jrxml");
             pdfSingleReportExporter(jasperReport,user,voucher);
 
         } catch (JRException e) {
@@ -72,13 +72,14 @@ public class ReportServiceImpl implements ReportService {
     public void generateAllReportByVoucher(String voucher){
 
         Voucher voucherFromDb = voucherService.getVoucherByCode(voucher);
-        JasperReport jasperReport = null;
+        JasperReport jasperReport;
 
         List<User> userList = voucherFromDb.getUserList();
 
         try {
-            jasperReport = JasperCompileManager.compileReport(path+"/template"+"/psyche.jrxml");
+            jasperReport = JasperCompileManager.compileReport(path+"/psycheFix.jrxml");
             for (User user : userList) {
+                System.out.println("username: "+user.getUsername());
                 pdfSingleReportExporter(jasperReport,user,voucher);
             }
 
@@ -94,39 +95,42 @@ public class ReportServiceImpl implements ReportService {
     private void pdfSingleReportExporter(JasperReport jasperReport, User user, String voucher){
 
         List<TestResult> testResultList = getTestResultByUserAndVoucher(user,voucher);
-        JasperPrint jasperPrint = null;
-        try {
-            jasperPrint = JasperFillManager.fillReport(jasperReport,parametersBuilder(user,testResultList), new JREmptyDataSource(1));
+        if(testResultList.size()>0){
+
+            JasperPrint jasperPrint;
+            try {
+
+                jasperPrint = JasperFillManager.fillReport(jasperReport,parametersBuilder(user,testResultList), new JREmptyDataSource(1));
+
+                JRPdfExporter exporter = new JRPdfExporter();
+
+                exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+
+                String pdfFileName = user.getUsername();
+                //        Resource resource = resourceLoader.getResource("classpath:static/report");
+                exporter.setExporterOutput(
+                        new SimpleOutputStreamExporterOutput(path+"/"+pdfFileName+".pdf"));
+
+                SimplePdfReportConfiguration reportConfig
+                        = new SimplePdfReportConfiguration();
+                reportConfig.setSizePageToContent(true);
+                reportConfig.setForceLineBreakPolicy(false);
 
 
-        JRPdfExporter exporter = new JRPdfExporter();
+                SimplePdfExporterConfiguration exportConfig
+                        = new SimplePdfExporterConfiguration();
+                exportConfig.setMetadataAuthor("Psyche Indonesia");
+                exportConfig.setEncrypted(false);
+                exportConfig.setAllowedPermissionsHint("PRINTING");
 
-        exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+                exporter.setConfiguration(reportConfig);
+                exporter.setConfiguration(exportConfig);
 
-        String pdfFileName = user.getUsername();
-//        Resource resource = resourceLoader.getResource("classpath:static/report");
-        exporter.setExporterOutput(
-                new SimpleOutputStreamExporterOutput(path+"/generated/"+pdfFileName+".pdf"));
+                exporter.exportReport();
 
-        SimplePdfReportConfiguration reportConfig
-                = new SimplePdfReportConfiguration();
-        reportConfig.setSizePageToContent(true);
-        reportConfig.setForceLineBreakPolicy(false);
-
-
-        SimplePdfExporterConfiguration exportConfig
-                = new SimplePdfExporterConfiguration();
-        exportConfig.setMetadataAuthor("Psyche Indonesia");
-        exportConfig.setEncrypted(false);
-        exportConfig.setAllowedPermissionsHint("PRINTING");
-
-        exporter.setConfiguration(reportConfig);
-        exporter.setConfiguration(exportConfig);
-
-        exporter.exportReport();
-
-        } catch (JRException e) {
-            e.printStackTrace();
+            } catch (JRException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -151,23 +155,27 @@ public class ReportServiceImpl implements ReportService {
                 .findAny()
                 .orElse(new String[0]);
 
-        Double eqTotalResult = Double.parseDouble(eqResult[eqResult.length-1].split(":")[1]);
-        parameters.put("eqTotalResult",eqTotalResult);
+        if(eqResult.length>0){
 
-        Double eqMengenalEmosiDiriResult = Double.parseDouble(eqResult[0].split(":")[1]);
-        parameters.put("eqMengenalEmosiDiriResult",eqMengenalEmosiDiriResult);
+            Double eqTotalResult = Double.parseDouble(eqResult[eqResult.length-1].split(":")[1]);
+            parameters.put("eqTotalResult",eqTotalResult);
 
-        Double eqMengelolaEmosiDiriResult = Double.parseDouble(eqResult[1].split(":")[1]);
-        parameters.put("eqMengelolaEmosiDiriResult",eqMengelolaEmosiDiriResult);
+            Double eqMengenalEmosiDiriResult = Double.parseDouble(eqResult[0].split(":")[1]);
+            parameters.put("eqMengenalEmosiDiriResult",eqMengenalEmosiDiriResult);
 
-        Double eqMemotivasiDiriResult = Double.parseDouble(eqResult[2].split(":")[1]);
-        parameters.put("eqMemotivasiDiriResult",eqMemotivasiDiriResult);
+            Double eqMengelolaEmosiDiriResult = Double.parseDouble(eqResult[1].split(":")[1]);
+            parameters.put("eqMengelolaEmosiDiriResult",eqMengelolaEmosiDiriResult);
 
-        Double eqMengenalEmosiOrangLainResult = Double.parseDouble(eqResult[3].split(":")[1]);
-        parameters.put("eqMengenalEmosiOrangLainResult",eqMengenalEmosiOrangLainResult);
+            Double eqMemotivasiDiriResult = Double.parseDouble(eqResult[2].split(":")[1]);
+            parameters.put("eqMemotivasiDiriResult",eqMemotivasiDiriResult);
 
-        Double eqMembinaHubunganResult = Double.parseDouble(eqResult[4].split(":")[1]);
-        parameters.put("eqMembinaHubunganResult",eqMembinaHubunganResult);
+            Double eqMengenalEmosiOrangLainResult = Double.parseDouble(eqResult[3].split(":")[1]);
+            parameters.put("eqMengenalEmosiOrangLainResult",eqMengenalEmosiOrangLainResult);
+
+            Double eqMembinaHubunganResult = Double.parseDouble(eqResult[4].split(":")[1]);
+            parameters.put("eqMembinaHubunganResult",eqMembinaHubunganResult);
+        }
+
 
         String gayaBelajar1FullResult = testResultList.stream()
                 .filter(result->result.getTest().getInternalName().contains("belajar1"))
@@ -187,8 +195,8 @@ public class ReportServiceImpl implements ReportService {
                 .orElse("");
 
         if(!gayaBelajar2FullResult.equals("")){
-            parameters.put("gayaBelajar2Result",gayaBelajar2ResultCalc(gayaBelajar2FullResult).get(0));
-            parameters.put("kombinasiGb2",gayaBelajar2ResultCalc(gayaBelajar2FullResult).get(1));
+            parameters.put("gayaBelajar2Result",gayaBelajar2ResultCalc(gayaBelajar2FullResult).get(0).split(":")[1]);
+            parameters.put("kombinasiGb2",gayaBelajar2ResultCalc(gayaBelajar2FullResult).get(1).split(":")[1]);
         }
 
         String bullyFullResult = testResultList.stream()
@@ -294,6 +302,7 @@ public class ReportServiceImpl implements ReportService {
                 .findAny()
                 .orElse("");
 
+        if(!bakatFullResult.equals("")){
         Map.Entry<String,Double> exact = bakatCalc(bakatFullResult).stream()
                 .filter(x -> x.getKey().equalsIgnoreCase("eksak"))
                 .findAny()
@@ -311,7 +320,6 @@ public class ReportServiceImpl implements ReportService {
                 .findAny()
                 .orElse(null);
 
-        if(!bakatFullResult.equals("")){
             parameters.put("kognitifExactResult",exact.getValue());
             parameters.put("kognitifNonExactResult",nonExact.getValue());
             parameters.put("kognitifLiterasiResult",literasi.getValue());
@@ -331,7 +339,7 @@ public class ReportServiceImpl implements ReportService {
                 .orElse("");
 
         if(!riasecFullResult.equals("")){
-            parameters.put("riasecResult",riasecCalc(riasecFullResult));
+            parameters.put("riasecResult",riasecCalc(riasecFullResult).toUpperCase());
             System.out.println(getCombinationRiasec(riasecFullCalculateResult));
             String jobList = getCombinationData(getCombinationRiasec(riasecFullCalculateResult)).toString();
             String cleanJobList = jobList.substring(1,jobList.length()-1);
@@ -398,7 +406,7 @@ public class ReportServiceImpl implements ReportService {
 
     private String covidCalc(String result){
 
-        return result.split(":")[1];
+        return result.split(":")[1].toUpperCase();
 
     }
 

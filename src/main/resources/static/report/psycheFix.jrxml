@@ -79,10 +79,10 @@
 	<title>
 		<band height="75">
 			<line>
-				<reportElement x="-20" y="60" width="595" height="1" uuid="145805bd-4ee4-4d3a-af4b-daaf20fab736"/>
+				<reportElement x="6" y="63" width="543" height="1" uuid="145805bd-4ee4-4d3a-af4b-daaf20fab736"/>
 			</line>
 			<image>
-				<reportElement x="-1" y="6" width="181" height="40" uuid="4c8c7050-5db5-415d-bc48-3d30fa043b10"/>
+				<reportElement x="2" y="6" width="181" height="40" uuid="4c8c7050-5db5-415d-bc48-3d30fa043b10"/>
 				<imageExpression><![CDATA["C:/Users/langi/Desktop/psyche.png"]]></imageExpression>
 			</image>
 			<rectangle>
@@ -166,7 +166,7 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="154">
+		<band height="153">
 			<staticText>
 				<reportElement mode="Transparent" x="32" y="10" width="120" height="24" uuid="cca337cf-e4fc-4dfe-9755-9e6bd7471cb7"/>
 				<box>
@@ -185,7 +185,9 @@
 				<text><![CDATA[*Untuk hasil iq di bawah angka 80, peserta tes biasanya tidak mengerjakan secara sungguh-sungguh]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="199" y="71" width="164" height="40" uuid="16dbfce7-80c2-4428-aed1-531dc8b81e41"/>
+				<reportElement x="199" y="71" width="164" height="40" uuid="16dbfce7-80c2-4428-aed1-531dc8b81e41">
+					<printWhenExpression><![CDATA[!$P{iqResult}.equals(null)]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center">
 					<font size="26" isBold="true"/>
 				</textElement>
@@ -201,8 +203,25 @@
 			<line>
 				<reportElement x="6" y="151" width="539" height="1" uuid="114b41b6-b5c7-4684-97e3-3c7d64cda022"/>
 			</line>
+			<rectangle>
+				<reportElement mode="Opaque" x="2" y="40" width="551" height="104" uuid="94f682d5-f58c-4043-8805-a4fa6faeea6a">
+					<printWhenExpression><![CDATA[$P{iqResult}==null]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineColor="#FFFFFF"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="189" y="78" width="193" height="27" forecolor="#FA1407" uuid="aeefd7f9-e88b-4eb0-86fd-d002b2d5fc76">
+					<printWhenExpression><![CDATA[$P{iqResult}==null]]></printWhenExpression>
+				</reportElement>
+				<textElement rotation="None">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[TIDAK DIKERJAKAN]]></text>
+			</staticText>
 		</band>
-		<band height="330">
+		<band height="329">
 			<staticText>
 				<reportElement mode="Transparent" x="32" y="10" width="160" height="30" uuid="bd124018-3732-41e0-9aeb-a4e811184703"/>
 				<box>
@@ -218,7 +237,9 @@
 			</line>
 			<pieChart>
 				<chart evaluationTime="Report">
-					<reportElement x="40" y="107" width="200" height="200" uuid="0911691a-fa18-4cff-8d4e-36edf35dd9cc"/>
+					<reportElement x="40" y="102" width="200" height="200" uuid="0911691a-fa18-4cff-8d4e-36edf35dd9cc">
+						<printWhenExpression><![CDATA[!($P{kognitifLiterasiResult}.equals(null) || $P{kognitifNumerasiResult}.equals(null))]]></printWhenExpression>
+					</reportElement>
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend position="Bottom"/>
@@ -242,22 +263,24 @@
 				</piePlot>
 			</pieChart>
 			<staticText>
-				<reportElement mode="Transparent" x="57" y="70" width="162" height="24" uuid="ba466779-c257-4314-85b8-dc1d7d9b7910"/>
+				<reportElement mode="Transparent" x="39" y="67" width="198" height="24" uuid="ba466779-c257-4314-85b8-dc1d7d9b7910"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="16"/>
 				</textElement>
-				<text><![CDATA[Literasi & Numerasi]]></text>
+				<text><![CDATA[LITERASI & NUMERASI]]></text>
 			</staticText>
 			<staticText>
 				<reportElement mode="Transparent" x="350" y="69" width="162" height="24" uuid="214f9a0f-4f7f-4eb5-9949-0f2bd4724686"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="16"/>
 				</textElement>
-				<text><![CDATA[Corak Berpikir]]></text>
+				<text><![CDATA[CORAK BERPIKIR]]></text>
 			</staticText>
 			<pieChart>
 				<chart evaluationTime="Report">
-					<reportElement x="334" y="107" width="200" height="200" uuid="bfd48512-d1de-405f-9d17-155e626ebb68"/>
+					<reportElement x="334" y="107" width="200" height="200" uuid="bfd48512-d1de-405f-9d17-155e626ebb68">
+						<printWhenExpression><![CDATA[!($P{kognitifExactResult}.equals(null) || $P{kognitifNonExactResult}.equals(null))]]></printWhenExpression>
+					</reportElement>
 					<chartTitle/>
 					<chartSubtitle/>
 					<chartLegend/>
@@ -280,8 +303,37 @@
 					<itemLabel/>
 				</piePlot>
 			</pieChart>
+			<staticText>
+				<reportElement x="336" y="306" width="201" height="19" uuid="63896ed2-0216-4bbb-a45a-fd351652bc33">
+					<printWhenExpression><![CDATA[$P{kognitifExactResult}==50.0 || ($P{kognitifExactResult} == 100 || $P{kognitifNonExactResult} == 100)]]></printWhenExpression>
+				</reportElement>
+				<text><![CDATA[Tes ini tidak dikerjakan sungguh-sungguh]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="12" y="305" width="201" height="19" uuid="68a66c19-b833-48e8-9023-a7d52791af3f">
+					<printWhenExpression><![CDATA[$P{kognitifLiterasiResult}==50.0 || ($P{kognitifLiterasiResult} == 100 || $P{kognitifNumerasiResult} == 100)]]></printWhenExpression>
+				</reportElement>
+				<text><![CDATA[Tes ini tidak dikerjakan sungguh-sungguh]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Opaque" x="10" y="52" width="551" height="267" uuid="311768ac-f98b-4ff2-9320-e212c87e495c">
+					<printWhenExpression><![CDATA[(($P{kognitifLiterasiResult}==null || $P{kognitifNumerasiResult}==null) ||($P{kognitifExactResult}==null || $P{kognitifNonExactResult}==null))]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineColor="#FFFFFF"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="190" y="150" width="193" height="27" forecolor="#FA1407" uuid="2cfda10e-95ef-49ae-be61-4cc2b03f2bb8">
+					<printWhenExpression><![CDATA[(($P{kognitifLiterasiResult}==null || $P{kognitifNumerasiResult}==null) ||($P{kognitifExactResult}==null || $P{kognitifNonExactResult}==null))]]></printWhenExpression>
+				</reportElement>
+				<textElement rotation="None">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[TIDAK DIKERJAKAN]]></text>
+			</staticText>
 		</band>
-		<band height="403">
+		<band height="440">
 			<staticText>
 				<reportElement mode="Transparent" x="32" y="2" width="37" height="30" uuid="fa37181e-82b0-4a97-b709-33b2f053cff7"/>
 				<box>
@@ -313,7 +365,9 @@
 				<textFieldExpression><![CDATA[$P{eqTotalResult}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="201" y="110" width="160" height="30" uuid="d1f936ff-477a-4b3f-a5df-f14747e7a261"/>
+				<reportElement x="201" y="110" width="160" height="30" uuid="d1f936ff-477a-4b3f-a5df-f14747e7a261">
+					<printWhenExpression><![CDATA[!$P{eqTotalResult}.equals(null)]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
 					<font size="16" isBold="true"/>
 				</textElement>
@@ -340,7 +394,9 @@
 				<reportElement x="10" y="398" width="539" height="1" uuid="33e2ae9f-1cbf-49e4-97de-9d5a35bcf7f3"/>
 			</line>
 			<textField>
-				<reportElement x="199" y="195" width="71" height="56" uuid="fb70343a-bb0c-4276-9ade-25c021232e60"/>
+				<reportElement x="199" y="195" width="71" height="56" uuid="fb70343a-bb0c-4276-9ade-25c021232e60">
+					<printWhenExpression><![CDATA[!$P{eqTotalResult}.equals(null)]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="20" isBold="true"/>
 				</textElement>
@@ -354,14 +410,18 @@
 				<text><![CDATA[Mengenali Emosi Diri]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="199" y="265" width="71" height="56" uuid="e4bd7956-130d-4af6-924b-e43f138f12ef"/>
+				<reportElement x="199" y="265" width="71" height="56" uuid="e4bd7956-130d-4af6-924b-e43f138f12ef">
+					<printWhenExpression><![CDATA[!$P{eqTotalResult}.equals(null)]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="20" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{eqMengelolaEmosiDiriResult}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="200" y="335" width="71" height="56" uuid="2c2d7bb0-bd87-425b-a87c-221180d9945c"/>
+				<reportElement x="200" y="335" width="71" height="56" uuid="2c2d7bb0-bd87-425b-a87c-221180d9945c">
+					<printWhenExpression><![CDATA[!$P{eqTotalResult}.equals(null)]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="20" isBold="true"/>
 				</textElement>
@@ -403,14 +463,18 @@
 				<textFieldExpression><![CDATA[IF($P{eqMemotivasiDiriResult}<25,"Sangat Kurang",(IF($P{eqMemotivasiDiriResult}<50,"Kurang",(IF($P{eqMemotivasiDiriResult}<75,"Cukup baik","Sangat baik")))))+" dalam mengenali emosi diri sendiri"]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="479" y="195" width="71" height="56" uuid="3669dd64-0475-4790-a580-71f1ac3a6d44"/>
+				<reportElement x="479" y="195" width="71" height="56" uuid="3669dd64-0475-4790-a580-71f1ac3a6d44">
+					<printWhenExpression><![CDATA[!$P{eqTotalResult}.equals(null)]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="20" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{eqMengenalEmosiOrangLainResult}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="479" y="264" width="71" height="56" uuid="a17e7111-40fd-4456-a91a-ed8d297c0ebf"/>
+				<reportElement x="479" y="264" width="71" height="56" uuid="a17e7111-40fd-4456-a91a-ed8d297c0ebf">
+					<printWhenExpression><![CDATA[!$P{eqTotalResult}.equals(null)]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="20" isBold="true"/>
 				</textElement>
@@ -444,6 +508,23 @@
 				</textElement>
 				<textFieldExpression><![CDATA[IF($P{eqMembinaHubunganResult}<25,"Sangat Kurang",(IF($P{eqMembinaHubunganResult}<50,"Kurang",(IF($P{eqMembinaHubunganResult}<75,"Cukup baik","Sangat baik")))))+" dalam mengenali emosi diri sendiri"]]></textFieldExpression>
 			</textField>
+			<rectangle>
+				<reportElement mode="Opaque" x="3" y="46" width="551" height="349" uuid="7b18d237-960f-40a0-8573-4dbc3987861a">
+					<printWhenExpression><![CDATA[$P{eqTotalResult}==null]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineColor="#FFFFFF"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="185" y="200" width="193" height="27" forecolor="#FA1407" uuid="f6c93baf-4243-4e94-a843-d7ed63fabad2">
+					<printWhenExpression><![CDATA[$P{eqTotalResult}==null]]></printWhenExpression>
+				</reportElement>
+				<textElement rotation="None">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[TIDAK DIKERJAKAN]]></text>
+			</staticText>
 		</band>
 		<band height="449">
 			<staticText>
@@ -467,59 +548,59 @@
 				<textFieldExpression><![CDATA[$P{gayaBelajar1Result}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="1" y="84" width="74" height="23" uuid="0681f561-a767-4758-8340-012902faff17"/>
+				<reportElement x="4" y="84" width="74" height="23" uuid="0681f561-a767-4758-8340-012902faff17"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Pengertian:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="107" width="270" height="63" uuid="6e3cda4e-a3f9-4537-bc77-3b8ab9385bc1"/>
-				<textFieldExpression><![CDATA[IF($P{gayaBelajar1Result}.equals("VISUAL"),"Gaya belajar yang lebih mudah mempelajari materi pelajarannya melalui melihat, memandangi, atau mengamati objek belajarnya dengan indera penglihatan",(IF($P{gayaBelajar1Result}.equals("AUDITORI"),"Gaya belajar auditori lebih mengutamakan pendengaran sebagai alat bantu utama dalam mencerna dan mengolah informasi atau pelajaran yang di dengarkan secara langsung atau lisan.","Karakteristik Gaya belajar kinestetik adalah aktivitas belajar melalui gerakan tubuh sebagai sarana menerima atau menangkap informasike dalam otak.")))]]></textFieldExpression>
+				<reportElement x="3" y="107" width="270" height="63" uuid="6e3cda4e-a3f9-4537-bc77-3b8ab9385bc1"/>
+				<textFieldExpression><![CDATA[IF($P{gayaBelajar1Result}.equals("VISUAL"),"Gaya belajar yang lebih mudah mempelajari materi pelajarannya melalui melihat, memandangi, atau mengamati objek belajarnya dengan indera penglihatan",(IF($P{gayaBelajar1Result}.equals("AUDITORI"),"Gaya belajar auditori lebih mengutamakan pendengaran sebagai alat bantu utama dalam mencerna dan mengolah informasi atau pelajaran yang di dengarkan secara langsung atau lisan.",(IF($P{gayaBelajar1Result}.equals("KINESTETIK"),"Karakteristik Gaya belajar kinestetik adalah aktivitas belajar melalui gerakan tubuh sebagai sarana menerima atau menangkap informasike dalam otak.","")))))]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="1" y="176" width="59" height="23" uuid="f865570b-02e9-45a0-bcc1-cc7e2e4d250a"/>
+				<reportElement x="4" y="176" width="59" height="23" uuid="f865570b-02e9-45a0-bcc1-cc7e2e4d250a"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Kelebihan:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="199" width="270" height="63" uuid="60b4c260-c178-454f-8084-403c94bea78f"/>
-				<textFieldExpression><![CDATA[IF($P{gayaBelajar1Result}.equals("VISUAL"),"- Mampu mengamati\n- Cenderung suka membaca\n- Memiliki sifat yang teliti dan mendetail\n- Dalam memahami informasi yang dihafal, biasaya individu dapat memvisualisasikan gambar/objek dalam pikirannya",(IF($P{gayaBelajar1Result}.equals("AUDITORI"),"- Lebih mudah menerima informasi dalam bentuk suara\n- Mampu menduplikasikan informasi yang diterima dalam bentuk suara\n- Memiliki perbendaharaan kata yang mumpuni\n- Memiliki kemampuan berbicara didepan umum (Public Speaking)","- Mampu belajar dengan praktik langsung\n- Terampil dalam mengkoordinasikan motorik halus dan motorik kasar\n- Dapat memahami informasi dalam bentuk nonverbal dengan baik\n- Unggul dalam bidang seni dan olahraga")))]]></textFieldExpression>
+				<reportElement x="3" y="199" width="270" height="63" uuid="60b4c260-c178-454f-8084-403c94bea78f"/>
+				<textFieldExpression><![CDATA[IF($P{gayaBelajar1Result}.equals("VISUAL"),"- Mampu mengamati\n- Cenderung suka membaca\n- Memiliki sifat yang teliti dan mendetail\n- Dalam memahami informasi yang dihafal, biasaya individu dapat memvisualisasikan gambar/objek dalam pikirannya",(IF($P{gayaBelajar1Result}.equals("AUDITORI"),"- Lebih mudah menerima informasi dalam bentuk suara\n- Mampu menduplikasikan informasi yang diterima dalam bentuk suara\n- Memiliki perbendaharaan kata yang mumpuni\n- Memiliki kemampuan berbicara didepan umum (Public Speaking)",(IF($P{gayaBelajar1Result}.equals("KINESTETIK"),"- Mampu belajar dengan praktik langsung\n- Terampil dalam mengkoordinasikan motorik halus dan motorik kasar\n- Dapat memahami informasi dalam bentuk nonverbal dengan baik\n- Unggul dalam bidang seni dan olahraga","")))))]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="1" y="271" width="74" height="23" uuid="fd6710ea-b668-4ab5-9eb2-fc83b2e75f2b"/>
+				<reportElement x="4" y="271" width="74" height="23" uuid="fd6710ea-b668-4ab5-9eb2-fc83b2e75f2b"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Kekurangan:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="294" width="270" height="63" uuid="26165fa1-f54e-4522-8be4-26491ba64ee5"/>
-				<textFieldExpression><![CDATA[IF($P{gayaBelajar1Result}.equals("VISUAL"),"- Sukar mengingat informasi dalam bentuk lisan atau auditori\n- Sukar belajar dalam suasana yang ramai dan bayak gangguan \n- Sering terganggu konsentrasi saat melihat tampilan atau objek yang kurang menarik\n- Kurang dapat memahami suatu penjelasan jika tidak disertai dengan alat peraga ",(IF($P{gayaBelajar1Result}.equals("AUDITORI"),"- Susah mengingat sesuatu jika hanya membaca tanpa menggunakan suara\n- Kurang cakap dalam mnyusun dan menulis sebuah karangan.\n- Kurang suka membaca petunjuk dan lebih suka langsung bertanya untuk mendapatkan informasi.\n- Sulit diam dalam jangka waktu lama","- Cenderung sulit memahami informasi jika tidak dipraktekan\n- Cenderung lemah memahami konsep teoritis\n- Cenderung mudah bosan dengan gaya pembelajaran konvensional \n- Kurang mampu mempertahankan konsentrasi dan mudah teralihkan perhatian")))]]></textFieldExpression>
+				<reportElement x="3" y="294" width="270" height="63" uuid="26165fa1-f54e-4522-8be4-26491ba64ee5"/>
+				<textFieldExpression><![CDATA[IF($P{gayaBelajar1Result}.equals("VISUAL"),"- Sukar mengingat informasi dalam bentuk lisan atau auditori\n- Sukar belajar dalam suasana yang ramai dan bayak gangguan \n- Sering terganggu konsentrasi saat melihat tampilan atau objek yang kurang menarik\n- Kurang dapat memahami suatu penjelasan jika tidak disertai dengan alat peraga ",(IF($P{gayaBelajar1Result}.equals("AUDITORI"),"- Susah mengingat sesuatu jika hanya membaca tanpa menggunakan suara\n- Kurang cakap dalam mnyusun dan menulis sebuah karangan.\n- Kurang suka membaca petunjuk dan lebih suka langsung bertanya untuk mendapatkan informasi.\n- Sulit diam dalam jangka waktu lama",(IF($P{gayaBelajar1Result}.equals("KINESTETIK"),"- Cenderung sulit memahami informasi jika tidak dipraktekan\n- Cenderung lemah memahami konsep teoritis\n- Cenderung mudah bosan dengan gaya pembelajaran konvensional \n- Kurang mampu mempertahankan konsentrasi dan mudah teralihkan perhatian","")))))]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="1" y="366" width="158" height="23" uuid="a2bd79b2-d4c6-4c92-be05-06a5dac9310e"/>
+				<reportElement x="4" y="366" width="158" height="23" uuid="a2bd79b2-d4c6-4c92-be05-06a5dac9310e"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Pola Pengembangan Belajar:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="390" width="270" height="50" uuid="f75635f5-9eeb-4a68-bd84-91b5c1c3e0ce"/>
-				<textFieldExpression><![CDATA[IF($P{gayaBelajar1Result}.equals("VISUAL"),"Metode pembelajaran yang tepat yaitu dengan mencatat setiap informasi yang didapat, video ilustrasi, alat tulis berwarna, pembelajaran menggunakan bentuk.",(IF($P{gayaBelajar1Result}.equals("AUDITORI"),"Menggunakan media auditori seperti musik, dan berdiskusi.","Menggunakan metode pembelajaran dengan bentuk role play")))]]></textFieldExpression>
+				<reportElement x="3" y="390" width="270" height="50" uuid="f75635f5-9eeb-4a68-bd84-91b5c1c3e0ce"/>
+				<textFieldExpression><![CDATA[IF($P{gayaBelajar1Result}.equals("VISUAL"),"Metode pembelajaran yang tepat yaitu dengan mencatat setiap informasi yang didapat, video ilustrasi, alat tulis berwarna, pembelajaran menggunakan bentuk.",(IF($P{gayaBelajar1Result}.equals("AUDITORI"),"Menggunakan media auditori seperti musik, dan berdiskusi.",(IF($P{gayaBelajar1Result}.equals("KINESTETIK"),"Menggunakan metode pembelajaran dengan bentuk role play","")))))]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="285" y="107" width="270" height="63" uuid="2e82150b-80f3-46e3-afb0-8383fd99af77"/>
-				<textFieldExpression><![CDATA[IF($P{gayaBelajar2Result}.equals("CE"),"Siswa belajar melalui perasaan (feeling), dengan menekankan segi – segi pengalaman kongkret, lebih mementingkan relasi dengan sesama dan sensivitas terhadap perasaan orang lain. Siswa melibatkan diri sepenuhnya melalui pengalaman baru, juga siswa cenderung lebih terbuka dan mampu beradaptasi terhadap perubahan yang dihadapinya",(IF($P{gayaBelajar2Result}.equals("AC"),"Siswa belajar melalui pemikiran (thinking), dan lebih terfokus pada analisis logis dari ide – ide, perencanaan sistematis, dan pemahaman intelektual dari situasi atau perkara yang dihadapi. Siswa menciptkana konsep – konsep yang mengintegrasikan observasinya menjadi teori yang sehat, dengan mengandalkan perencanaan yang sistematis",IF($P{gayaBelajar2Result}.equals("RO"),"Siswa belajar melalui pengamatan (watching), penekanannya mengamati sebelum menilai, menyimak suatu perkara dari berbagai perspektif, dan selalu menyimak makna dari hal – hal yang diamati. Siswa akan menggunakan pikiran dan perasaannya untuk membentuk opini/ pendapat, siswa mengobservasi dan merefleksi pengalamannya dari berbagai segi","Siswa belajar melalui tindakan (doing), cenderung kuat dalam segi kemampuan melakukan tugas, berani mengambil resiko, dan mempengaruhi orang lain lewat perbuatannya. Siswa akan menghargai keberhasilannya dalam menyelesaikan pekerjaan, pengaruhnya pada orang lain dan prestasinya. Siswa menggunakan teori untuk memecahkan masalah dan mengambil keputusan."))))]]></textFieldExpression>
+				<textFieldExpression><![CDATA[IF($P{gayaBelajar2Result}.equals("ce"),"Siswa belajar melalui perasaan (feeling), dengan menekankan segi – segi pengalaman kongkret, lebih mementingkan relasi dengan sesama dan sensivitas terhadap perasaan orang lain. Siswa melibatkan diri sepenuhnya melalui pengalaman baru, juga siswa cenderung lebih terbuka dan mampu beradaptasi terhadap perubahan yang dihadapinya",(IF($P{gayaBelajar2Result}.equals("ac"),"Siswa belajar melalui pemikiran (thinking), dan lebih terfokus pada analisis logis dari ide – ide, perencanaan sistematis, dan pemahaman intelektual dari situasi atau perkara yang dihadapi. Siswa menciptkana konsep – konsep yang mengintegrasikan observasinya menjadi teori yang sehat, dengan mengandalkan perencanaan yang sistematis",(IF($P{gayaBelajar2Result}.equals("ro"),"Siswa belajar melalui pengamatan (watching), penekanannya mengamati sebelum menilai, menyimak suatu perkara dari berbagai perspektif, dan selalu menyimak makna dari hal – hal yang diamati. Siswa akan menggunakan pikiran dan perasaannya untuk membentuk opini/ pendapat, siswa mengobservasi dan merefleksi pengalamannya dari berbagai segi",(IF($P{gayaBelajar2Result}.equals("ae"),"Siswa belajar melalui tindakan (doing), cenderung kuat dalam segi kemampuan melakukan tugas, berani mengambil resiko, dan mempengaruhi orang lain lewat perbuatannya. Siswa akan menghargai keberhasilannya dalam menyelesaikan pekerjaan, pengaruhnya pada orang lain dan prestasinya. Siswa menggunakan teori untuk memecahkan masalah dan mengambil keputusan.","")))))))]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="285" y="60" width="270" height="19" uuid="faee305c-9864-4f94-8560-bd3ba468486f"/>
 				<textElement textAlignment="Center" markup="html">
 					<font size="14" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[IF($P{gayaBelajar2Result}.equals("CE"),"EXPERIENCE",(IF($P{gayaBelajar2Result}.equals("AC"),"ABSTRACT CONCEPTUALIZATION",IF($P{gayaBelajar2Result}.equals("RO"),"REFLECTIVE OBSERVATION","ACTIVE EXPERIMENTATION"))))]]></textFieldExpression>
+				<textFieldExpression><![CDATA[IF($P{gayaBelajar2Result}.equals("ce"),"EXPERIENCE",(IF($P{gayaBelajar2Result}.equals("ac"),"ABSTRACT CONCEPTUALIZATION",IF($P{gayaBelajar2Result}.equals("ro"),"REFLECTIVE OBSERVATION","ACTIVE EXPERIMENTATION"))))]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="286" y="84" width="74" height="23" uuid="84beb230-042e-42ff-94c3-9c76a727c20b"/>
@@ -533,18 +614,52 @@
 				<textElement>
 					<font size="12" isUnderline="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[IF($P{kombinasiGb2}.equals("ce+ro"),"GAYA DIVERGER",IF($P{kombinasiGb2}.equals("ac+ro"),"GAYA ASSIMILATION",IF($P{kombinasiGb2}.equals("ac+ae"),"GAYA CONVERGER","GAYA ACCOMODATOR")))]]></textFieldExpression>
+				<textFieldExpression><![CDATA[IF($P{kombinasiGb2}.equals("ce+ro"),"GAYA DIVERGER",IF($P{kombinasiGb2}.equals("ac+ro"),"GAYA ASSIMILATION",IF($P{kombinasiGb2}.equals("ac+ae"),"GAYA CONVERGER",IF($P{kombinasiGb2}.equals("ce+ae"),"GAYA ACCOMODATOR",""))))]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="287" y="205" width="268" height="235" uuid="c16891b1-da69-404d-8eaa-4fea9ab49e6a"/>
 				<textElement>
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[IF($P{kombinasiGb2}.equals("ce+ro"),"Tipe ini perpaduan perasaan (feeling) dan pengamatan (watching). Siswa dengan tipe Diverger memiliki keunggulan dalam kemampuan imajinasi dan melihat situasi konkret (nyata) dari sudut pandang yang berbeda, kemudian menghubungkannya menjadi sesuatu yang bulat dan utuh. Pendekatannya pada setiap situasi adalah “mengamati” dan bukan “bertindak”. Siswa dengan tipe ini menyukai tugas belajar yang menuntutnya untuk menghasilkan ide – ide dan gemar mengumpulkan berbagai informasi, menyukai isu tentang kesusastraan, budaya, sejarah, dan ilmu – ilmu sosial lainnya. Mereka biasanya lebih banyak bertanya “Why?”. Peran dan fungsi guru yang cocok untuk menghadapi siswa tipe ini adalah sebagai Motivator.",IF($P{kombinasiGb2}.equals("ac+ro"),"Tipe ini perpaduan dari pemikiran (thinking) dan pengamatan (watching). Siswa dengan tipe Assimilator memiliki keunggulan dalam memahami dan merespon berbagai sajian serta mengorganisasikan merangkumnya dalam suatu format yang logis, singkat, dan jelas. Biasanya siswa tipe ini cenderung lebih teoritis, lebih menyukai bekerja dengan ide serta konsep yang abstrak daripada bekerja dengan orang. Mata pelajaran yang diminatinya adalah bidang sains dan matematika. Mereka biasanya lebih banyak bertanya “What ?”. peran dan fungsi guru yang cocok untuk menghadapi siswa tipe ini adalah sebagai seorang Expert.",IF($P{kombinasiGb2}.equals("ac+ae"),"Tipe ini perpaduan antara berfikir (thinking) dan tindakan (doing). Siswa mampu merespons terhadap berbagai peluang dan mampu bekerja secara aktif dalam setiap tugas yang terdefinisikan secara baik. Siswa gemar belajar bila menghadapi soal dengan jawaban yang pasti, dan segera berusaha mencari jawaban yang tepat. Dia mau belajar secara trial and error hanya dalam lingkungan yang dianggapnya relatif aman dari kegagalan. Siswa dengan tipe Converger unggul dalam menemukan fungsi praktis dari berbagai ide dan teori. Biasanya mereka punya kemampuan yang baik dalam pemecahan masalah dan pengambilan keputusan. Mereka juga cenderung lebih menyukai tugas – tugas teknis (aplikatif). Siswa cenderung tidak emosional dan lebih menyukai bekerja yang berhubungan dengan benda daripada manusia, masalah sosial atau hubungan antar pribadi. Mata pelajaran yang diminati adalah bidang IPA dan teknik. Siswa biasanya lebih banyak bertanya “How?”. Peran dan fungsi guru yang cocok untuk menghadapi siswa tipe ini adalah sebagai Coach, yang dapat menyediakan praktik terbimbing dan dapat memberikan umpan balik yang tepat.","Tipe ini perpaduan antara merasakan (feeling) dengan berbuat (doing). Siswa tipe ini senang mengaplikasikan materi pelajaran dalam berbagai situasi baru untuk memecahkan berbagai masalah nyata yang dihadapinya. Kelebihan siswa tipe ini memiliki kemampuan belajar yang baik dari hasil pengalaman nyata yang dilakukannya sendiri. Mereka suka membuat rencana dan melibatkan dirinya dalam berbagai pengalaman baru yang menantang. Dalam usaha memecahkan masalah, mereka biasanya mempertimbangkan faktor manusia (untuk mendapatkan masukan/informasi) dibanding analisa teknis. Mereka cenderung untuk bertindak berdasarkan intuisi/dorongan hati daripada berdasarkan analisa logis, sering menggunakan trial and error dalam memecahkan masalah, kurang sabar dan ingin segera bertindak.")))]]></textFieldExpression>
+				<textFieldExpression><![CDATA[IF($P{kombinasiGb2}.equals("ce+ro"),"Tipe ini perpaduan perasaan (feeling) dan pengamatan (watching). Siswa dengan tipe Diverger memiliki keunggulan dalam kemampuan imajinasi dan melihat situasi konkret (nyata) dari sudut pandang yang berbeda, kemudian menghubungkannya menjadi sesuatu yang bulat dan utuh. Pendekatannya pada setiap situasi adalah “mengamati” dan bukan “bertindak”. Siswa dengan tipe ini menyukai tugas belajar yang menuntutnya untuk menghasilkan ide – ide dan gemar mengumpulkan berbagai informasi, menyukai isu tentang kesusastraan, budaya, sejarah, dan ilmu – ilmu sosial lainnya. Mereka biasanya lebih banyak bertanya “Why?”. Peran dan fungsi guru yang cocok untuk menghadapi siswa tipe ini adalah sebagai Motivator.",IF($P{kombinasiGb2}.equals("ac+ro"),"Tipe ini perpaduan dari pemikiran (thinking) dan pengamatan (watching). Siswa dengan tipe Assimilator memiliki keunggulan dalam memahami dan merespon berbagai sajian serta mengorganisasikan merangkumnya dalam suatu format yang logis, singkat, dan jelas. Biasanya siswa tipe ini cenderung lebih teoritis, lebih menyukai bekerja dengan ide serta konsep yang abstrak daripada bekerja dengan orang. Mata pelajaran yang diminatinya adalah bidang sains dan matematika. Mereka biasanya lebih banyak bertanya “What ?”. peran dan fungsi guru yang cocok untuk menghadapi siswa tipe ini adalah sebagai seorang Expert.",IF($P{kombinasiGb2}.equals("ac+ae"),"Tipe ini perpaduan antara berfikir (thinking) dan tindakan (doing). Siswa mampu merespons terhadap berbagai peluang dan mampu bekerja secara aktif dalam setiap tugas yang terdefinisikan secara baik. Siswa gemar belajar bila menghadapi soal dengan jawaban yang pasti, dan segera berusaha mencari jawaban yang tepat. Dia mau belajar secara trial and error hanya dalam lingkungan yang dianggapnya relatif aman dari kegagalan. Siswa dengan tipe Converger unggul dalam menemukan fungsi praktis dari berbagai ide dan teori. Biasanya mereka punya kemampuan yang baik dalam pemecahan masalah dan pengambilan keputusan. Mereka juga cenderung lebih menyukai tugas – tugas teknis (aplikatif). Siswa cenderung tidak emosional dan lebih menyukai bekerja yang berhubungan dengan benda daripada manusia, masalah sosial atau hubungan antar pribadi. Mata pelajaran yang diminati adalah bidang IPA dan teknik. Siswa biasanya lebih banyak bertanya “How?”. Peran dan fungsi guru yang cocok untuk menghadapi siswa tipe ini adalah sebagai Coach, yang dapat menyediakan praktik terbimbing dan dapat memberikan umpan balik yang tepat.",IF($P{kombinasiGb2}.equals("ac+ro"),"Tipe ini perpaduan antara merasakan (feeling) dengan berbuat (doing). Siswa tipe ini senang mengaplikasikan materi pelajaran dalam berbagai situasi baru untuk memecahkan berbagai masalah nyata yang dihadapinya. Kelebihan siswa tipe ini memiliki kemampuan belajar yang baik dari hasil pengalaman nyata yang dilakukannya sendiri. Mereka suka membuat rencana dan melibatkan dirinya dalam berbagai pengalaman baru yang menantang. Dalam usaha memecahkan masalah, mereka biasanya mempertimbangkan faktor manusia (untuk mendapatkan masukan/informasi) dibanding analisa teknis. Mereka cenderung untuk bertindak berdasarkan intuisi/dorongan hati daripada berdasarkan analisa logis, sering menggunakan trial and error dalam memecahkan masalah, kurang sabar dan ingin segera bertindak.",""))))]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="8" y="448" width="539" height="1" uuid="9b2dd977-4a7f-4993-ac50-8e3f71837538"/>
 			</line>
+			<rectangle>
+				<reportElement mode="Opaque" x="286" y="60" width="270" height="380" uuid="59b35bdb-317b-46da-9e46-634572a5ba2d">
+					<printWhenExpression><![CDATA[$P{gayaBelajar2Result}==null]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineColor="#FFFFFF"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="320" y="249" width="193" height="27" forecolor="#FA1407" uuid="b71326f4-ad6c-4472-828c-b214230a5ada">
+					<printWhenExpression><![CDATA[$P{gayaBelajar2Result}==null]]></printWhenExpression>
+				</reportElement>
+				<textElement rotation="None">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[TIDAK DIKERJAKAN]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Opaque" x="3" y="60" width="270" height="380" uuid="37695283-9f67-4091-aaa1-2730ce8ec98e">
+					<printWhenExpression><![CDATA[$P{gayaBelajar1Result}==null]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineColor="#FFFFFF"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="50" y="250" width="193" height="27" forecolor="#FA1407" uuid="c5767dd3-8b89-4d92-9d93-f95a05c2d6a3">
+					<printWhenExpression><![CDATA[$P{gayaBelajar1Result}==null]]></printWhenExpression>
+				</reportElement>
+				<textElement rotation="None">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[TIDAK DIKERJAKAN]]></text>
+			</staticText>
 		</band>
 		<band height="154">
 			<staticText>
@@ -677,6 +792,23 @@
 			<line>
 				<reportElement x="7" y="149" width="539" height="1" uuid="478b815e-eedd-4be3-a2ef-b8f1ea79b130"/>
 			</line>
+			<rectangle>
+				<reportElement mode="Opaque" x="3" y="55" width="546" height="91" uuid="a99bd77b-d892-4f69-a440-de51a0b8f7df">
+					<printWhenExpression><![CDATA[$P{bullyFisikResult}==null && $P{bullyVerbalResult}==null && $P{bullyNonVerbalResult}==null && $P{bullyRelasionalResult}==null && $P{bullyCyberResult}==null]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineColor="#FFFFFF"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="185" y="90" width="193" height="27" forecolor="#FA1407" uuid="27f97cd1-f4ce-49a8-9fd9-4bf068462773">
+					<printWhenExpression><![CDATA[$P{bullyFisikResult}==null && $P{bullyVerbalResult}==null && $P{bullyNonVerbalResult}==null && $P{bullyRelasionalResult}==null && $P{bullyCyberResult}==null]]></printWhenExpression>
+				</reportElement>
+				<textElement rotation="None">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[TIDAK DIKERJAKAN]]></text>
+			</staticText>
 		</band>
 		<band height="367">
 			<staticText>
@@ -696,32 +828,32 @@
 				<reportElement x="281" y="208" width="1" height="143" uuid="dc6a51c7-c58b-41c8-950b-0cd05710ffe7"/>
 			</line>
 			<staticText>
-				<reportElement x="87" y="36" width="70" height="19" uuid="6deaabca-1b99-4b69-9080-39b84959ba19"/>
+				<reportElement x="74" y="36" width="96" height="19" uuid="6deaabca-1b99-4b69-9080-39b84959ba19"/>
 				<textElement textAlignment="Center">
 					<font size="14"/>
 				</textElement>
-				<text><![CDATA[Toleransi]]></text>
+				<text><![CDATA[TOLERANSI]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="365" y="35" width="110" height="19" uuid="e62674f2-aede-45b0-a25c-6c2ae85c181a"/>
+				<reportElement x="349" y="35" width="142" height="19" uuid="e62674f2-aede-45b0-a25c-6c2ae85c181a"/>
 				<textElement textAlignment="Center">
 					<font size="14"/>
 				</textElement>
-				<text><![CDATA[Gotong-royong]]></text>
+				<text><![CDATA[GOTONG-ROYONG]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="71" y="216" width="110" height="19" uuid="7cb64d4f-f1fc-4cda-b8c0-b464f7b37c91"/>
 				<textElement textAlignment="Center">
 					<font size="14"/>
 				</textElement>
-				<text><![CDATA[Nasionalisme]]></text>
+				<text><![CDATA[NASIONALISME]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="371" y="216" width="88" height="19" uuid="b9a54160-09ed-4400-baaf-ed62898b7744"/>
+				<reportElement x="357" y="216" width="116" height="19" uuid="b9a54160-09ed-4400-baaf-ed62898b7744"/>
 				<textElement textAlignment="Center">
 					<font size="14"/>
 				</textElement>
-				<text><![CDATA[Pluralisme]]></text>
+				<text><![CDATA[PLURALISME]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="43" y="97" width="158" height="80" uuid="f7b2c9c8-50fd-4520-a9ed-b8f720cf501d">
@@ -784,6 +916,23 @@
 			<line>
 				<reportElement x="12" y="364" width="539" height="1" uuid="a3829154-e6ad-4108-aac7-1403bdafd04e"/>
 			</line>
+			<rectangle>
+				<reportElement mode="Opaque" x="4" y="40" width="546" height="312" uuid="a0a62461-e03d-46f3-a303-81d545343e1a">
+					<printWhenExpression><![CDATA[$P{skToleransiResult}==null && $P{skGotongRoyongResult}==null && $P{skNasionalismeResult}==null && $P{skPluralismeResult}==null]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineColor="#FFFFFF"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="183" y="193" width="193" height="27" forecolor="#FA1407" uuid="728b628f-5052-48dd-8bdf-5b2f215ac980">
+					<printWhenExpression><![CDATA[$P{skToleransiResult}==null && $P{skGotongRoyongResult}==null && $P{skNasionalismeResult}==null && $P{skPluralismeResult}==null]]></printWhenExpression>
+				</reportElement>
+				<textElement rotation="None">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[TIDAK DIKERJAKAN]]></text>
+			</staticText>
 		</band>
 		<band height="96">
 			<staticText>
@@ -819,6 +968,23 @@
 			<line>
 				<reportElement x="13" y="90" width="539" height="1" uuid="653fdf5c-0a1d-4a87-b150-971c87a1350c"/>
 			</line>
+			<rectangle>
+				<reportElement mode="Opaque" x="27" y="43" width="517" height="38" uuid="52cb691f-f408-461d-b062-c230f5b3f376">
+					<printWhenExpression><![CDATA[$P{covidTestResult}==null]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineColor="#FFFFFF"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="190" y="43" width="193" height="27" forecolor="#FA1407" uuid="108503a5-a836-4963-951f-646e623e8eb1">
+					<printWhenExpression><![CDATA[$P{covidTestResult}==null]]></printWhenExpression>
+				</reportElement>
+				<textElement rotation="None">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[TIDAK DIKERJAKAN]]></text>
+			</staticText>
 		</band>
 		<band height="184">
 			<staticText>
@@ -885,17 +1051,34 @@
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
-				<text><![CDATA[Kecemasan]]></text>
+				<text><![CDATA[KECEMASAN]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="340" y="110" width="87" height="19" uuid="cc01576f-061d-470b-a9e9-acbe54c8e885"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
-				<text><![CDATA[Well-being]]></text>
+				<text><![CDATA[WELL-BEING]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Opaque" x="21" y="42" width="517" height="121" uuid="d1e54881-ae02-4c27-bdbc-7791252db66e">
+					<printWhenExpression><![CDATA[$P{kecemasanResultPercentage}==null]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineColor="#FFFFFF"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="187" y="78" width="193" height="27" forecolor="#FA1407" uuid="4c6d1164-f8e5-48fa-83d9-40f432da3863">
+					<printWhenExpression><![CDATA[$P{kecemasanResultPercentage}==null]]></printWhenExpression>
+				</reportElement>
+				<textElement rotation="None">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[TIDAK DIKERJAKAN]]></text>
 			</staticText>
 		</band>
-		<band height="353">
+		<band height="336">
 			<staticText>
 				<reportElement mode="Transparent" x="32" y="6" width="120" height="30" uuid="9b8f75bb-4b61-48af-b183-7be304b2b854"/>
 				<box>
@@ -907,7 +1090,7 @@
 				<text><![CDATA[MINAT KARIR]]></text>
 			</staticText>
 			<line>
-				<reportElement x="13" y="340" width="539" height="1" uuid="4f56d39c-3698-4bd1-bacc-5131af59c172"/>
+				<reportElement x="13" y="331" width="539" height="1" uuid="4f56d39c-3698-4bd1-bacc-5131af59c172"/>
 			</line>
 			<staticText>
 				<reportElement x="225" y="40" width="110" height="19" uuid="95234c27-b8cf-46fc-84ce-eef97cae8df3"/>
@@ -960,9 +1143,43 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{jobRecommendation}]]></textFieldExpression>
 			</textField>
+			<rectangle>
+				<reportElement mode="Opaque" x="21" y="42" width="517" height="282" forecolor="#FFFFFF" backcolor="#FFFFFF" uuid="6c933669-5973-4fee-b1a3-fdddf9a034cf">
+					<printWhenExpression><![CDATA[$P{riasecResult}==null]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineColor="#FFFFFF"/>
+				</graphicElement>
+			</rectangle>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" mode="Opaque" x="189" y="160" width="193" height="27" forecolor="#FA1407" uuid="9da33edb-9008-4bfb-a49d-fe57d3f98df2">
+					<printWhenExpression><![CDATA[$P{riasecResult}==null]]></printWhenExpression>
+				</reportElement>
+				<textElement rotation="None">
+					<font size="18"/>
+				</textElement>
+				<text><![CDATA[TIDAK DIKERJAKAN]]></text>
+			</staticText>
 		</band>
 	</detail>
 	<summary>
-		<band height="21" splitType="Stretch"/>
+		<band height="115" splitType="Stretch">
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="411" y="5" width="80" height="70" uuid="05180b79-de93-4ad9-8b89-5ecd0f76ce39"/>
+				<imageExpression><![CDATA["C:/Users/langi/Desktop/ttd.jpeg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="360" y="80" width="189" height="20" uuid="9f4a5e69-c014-4bee-ab61-5851bbc4af30"/>
+				<textElement textAlignment="Center">
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Felicia Nathania Semet, M.Psi, Psikolog]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="362" y="95" width="187" height="17" uuid="3b924087-dcfd-4a88-8408-881ce31b117b"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Surat Izin Praktik Psikologi: 0004-17-2-2]]></text>
+			</staticText>
+		</band>
 	</summary>
 </jasperReport>
