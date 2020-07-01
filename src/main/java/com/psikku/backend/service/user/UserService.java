@@ -8,11 +8,14 @@ import com.psikku.backend.dto.user.UserRegisterDto;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
     User findById(long id);
     User findByUsername(String username);
+    Optional<User> findByEmail(String email);
+    void sendResetPasswordCodeToEmail(String email);
     ResponseEntity<UserRegisterResponse> registerNewUserToAuthServer(UserRegisterDto userRegisterDto);
     TokenFactory loginExistingUser(String username, String password);
     ResponseEntity<UserRegisterResponse> updateUser(UserRegisterDto userRegisterDto);
@@ -21,6 +24,7 @@ public interface UserService {
     String getUserNameFromToken(String token);
     UserDto getCurrentUserInfo();
     List<UserDto> getAllUserDto();
+    UserRegisterDto validateResetPasswordCode(String code);
 //    public User convertToUserEntity(UserRegisterAuthServerResponse userRegisterAuthServerResponse);
 //    public UserRegisterResponse registerResponse(UserRegisterDto userRegisterDto, boolean status);
 

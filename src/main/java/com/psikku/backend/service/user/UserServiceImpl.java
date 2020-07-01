@@ -6,6 +6,7 @@ import com.psikku.backend.entity.User;
 import com.psikku.backend.exception.UserExistException;
 import com.psikku.backend.mapper.user.UserMapper;
 import com.psikku.backend.repository.UserRepository;
+import com.psikku.backend.service.email.EmailService;
 import com.psikku.backend.service.jwttoken.TokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,22 +21,27 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
+import java.security.SecureRandom;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    TokenService clientTokenService;
+    private static final Map<String, User> userTempCodePair = new HashMap<>();
 
     @Autowired
-    UserRepository userRepository;
+    private TokenService clientTokenService;
 
     @Autowired
-    UserMapper userMapper;
+    private UserRepository userRepository;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Value(value = "${auth-server.endpoint.users}")
     private String usersEndpoint;
@@ -61,9 +67,35 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserRegisterDto validateResetPasswordCode(String code) {
+
+        for (Map.Entry<String, User> stringUserEntry : userTempCodePair.entrySet()) {
+            if(code.equalsIgnoreCase(stringUserEntry.getKey())){
+                userTempCodePair.remove(code);
+                User user = userTempCodePair.get(code);
+                return userMapper.convertToUserRegisterDto(user);
+            }
+        }
+        return null;
+    }
+
+    @Override
     @Transactional
     public User findByUsername(String username) {
         return userRepository.findUserByUsername(username);
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public void sendResetPasswordCodeToEmail(String email) {
+        User user = findByEmail(email).orElseThrow(()->new UserExistException("User not exist"));
+        String uniqueCode = generateAlphaNumeric(6);
+        userTempCodePair.put(uniqueCode,user);
+        emailService.sendEmail(email,"Reset Password Psikku User",uniqueCode);
     }
 
     @Override
@@ -86,11 +118,6 @@ public class UserServiceImpl implements UserService {
         
         User user =  userMapper.convertRegisteredAuthServerUserToUserEntity(responseJson.getBody());
         if(user.getId()==0){ // if user.getId() from auth server equals to 0 then return error response
-//            UserRegisterResponse urr = new UserRegisterResponse();
-//            urr.setUsername(userRegisterDto.getUsername());
-//            urr.setMessage("Email or username already registered");
-//            urr.setStatus("Failed");
-//            return new ResponseEntity<>(urr, HttpStatus.BAD_REQUEST);
             throw new UserExistException("Username / email already exist");
         }
         userRepository.save(user);
@@ -161,6 +188,20 @@ public class UserServiceImpl implements UserService {
         String[] textSplit = textToCapitalize.split("");
         String result = textSplit[0].toUpperCase()+textToCapitalize.substring(1);
         return result;
+    }
+
+    private String generateAlphaNumeric(int stringLength){
+        String alphaLower = "abcdefghijklmnopqrstuvwxyz";
+//        String alphaUpper = alphaLower.toUpperCase();
+        String number = "0123456789";
+
+        String combination = alphaLower + number;
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < stringLength; i++) {
+            Random random = new SecureRandom();
+            sb.append(combination.charAt(random.nextInt(combination.length())));
+        }
+        return sb.toString();
     }
 
 }

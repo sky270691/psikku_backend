@@ -2,6 +2,7 @@ package com.psikku.backend.mapper.user;
 
 import com.psikku.backend.dto.user.UserDto;
 import com.psikku.backend.dto.user.UserRegisterAuthServerResponse;
+import com.psikku.backend.dto.user.UserRegisterDto;
 import com.psikku.backend.dto.user.UserRegisterResponse;
 import com.psikku.backend.entity.User;
 import org.springframework.stereotype.Component;
@@ -55,6 +56,20 @@ public class UserMapper {
         userDto.setCity(user.getCity());
         userDto.setAddress(user.getAddress());
         return userDto;
+    }
+
+    public UserRegisterDto convertToUserRegisterDto(User user){
+        UserRegisterDto userRegisterDto = new UserRegisterDto();
+        userRegisterDto.setUsername(user.getUsername());
+        userRegisterDto.setSex(user.getSex());
+        userRegisterDto.setProvince(user.getProvince());
+        userRegisterDto.setFirstname(user.getFirstname());
+        userRegisterDto.setLastname(user.getLastname());
+        userRegisterDto.setEmail(user.getEmail());
+        userRegisterDto.setDateOfBirth(user.getDateOfBirth());
+        userRegisterDto.setCity(user.getCity());
+        userRegisterDto.setAddress(user.getAddress());
+        return userRegisterDto;
     }
 
 }

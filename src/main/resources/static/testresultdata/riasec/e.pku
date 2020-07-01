@@ -22,7 +22,17 @@ CODE-EAR
 Location Manager
 Preparation Plant Supervisor
 ---
+CODE-ERA
+Location Manager
+Preparation Plant Supervisor
+---
 CODE-EAI
+Patent Agent
+Director of Vital Statistics
+Records Analys Manager
+Insect and Disease Inspection Supervisor
+---
+CODE-EIA
 Patent Agent
 Director of Vital Statistics
 Records Analys Manager
@@ -37,6 +47,82 @@ Music Supervisor
 Salesperson Apparel and Accessories
 Auctioneer
 Fashion Model
+---
+CODE-ERS
+Museum-or-Zoo Director
+Airport Manager
+Alcohol-and-Drug-Abuse-Assistance
+Program Administrator
+Athlete Manager
+Bakery Manager
+Brokerage Office Manager
+Business Manager College or University
+Claim Adjuster
+Court Administrator
+Craft Center Director
+Customer Technical Services Manager
+Deputy Insurance Commissioner
+Education Director
+Environmental Analyst (Governmental Services)
+Financial Institution Manager
+Fire Warden
+General Manager Farm
+Harbor Master
+Head Coach
+Hotel or Motel Manager
+Human Resource Advisor
+Labor Relations Manager
+Legislative Assistant
+Media Marketing Director
+President (Any Industry)
+President Educational Institution
+Real-Estate Agent
+Roads Supervisor
+Sales Representative Computers and Electronic Data Processing Systems
+Service Director (Nonprofit Organizations)
+Sports Director
+Station Manager (Radio and TV Broadcasting)
+Traffic Manager
+Transportation Director
+Vocational Rahabilitation Consultant
+Werehouse Manager
+Announcer (Amusement and Recreation)
+Assembly Supervisor (Agricultural Equipment)
+Crew Scheduler Chief
+Electrician Chief (Motion Pictures)
+Electronics Processing Supervisor
+Energy-Control Officer
+Fire Marshal (Governmental Services)
+Food Checkers and Cashiers Supervisor
+Food Service Manager
+Funeral Director
+Landscape Contractor
+Mailroom Supervisor
+Office Manager
+Personal Shopper
+Pesticide-Control Inspector
+Postmaster
+Production Coordinator
+Purchasing Agent
+Sales Representative Advertising
+Seles Representative Farm and Garden Equipment and Supplies
+Sales Representative Hobbies and Crafts
+Sales Representative Office Machines
+Sales person Pianos and Organs
+Service Manager (Automobile Services)
+Theater Manager
+Ticket Sales Supervisor
+Travel Agency Manager
+Umpire
+Volunteer Services Supervisor
+Werehouse Supervisor
+Barber
+Deputy Court
+Driver Sales Route
+Headwaiter/Headwaiterss
+Housekeeper
+Sales Clerk
+Storage Garage Manager
 ---
 CODE-ESR
 Museum-or-Zoo Director
@@ -185,12 +271,108 @@ Relay Dispatcher
 Sampler (Minerals and Earths)
 Office Helper
 ---
+CODE-ERC
+Executive Housekeeper
+Incinerator Plant Supervisor
+Maintenance Chief
+Mapping Supervisor
+Supervisor (Protective Devices)
+Test-Desk Supervisor
+Circulation Clerk
+Furniture Assembly Supervisor
+Job Tracer
+Relay Dispatcher
+Sampler (Minerals and Earths)
+Office Helper
+---
 CODE-ECI
 Auditor County or City
 Distribution Superintendent
 Electric Power Superintendent
 Engineer Procurement
 Town Clerk
+---
+CODE-ERI
+Geologist Petroleum
+Biomedical Equipment Technician
+Engineer Automotive
+Engineer Computer Systems Hardware
+Engineer Petroleum
+Engineer Plant
+Pilot Commercial Airplane
+Pilot Executive
+Aircraft Mechanic Electrical and Radio
+Airframe-and-Power-Plant Mechanic
+Automobile-Body Repairer
+Blaster
+Calibrator Barometers
+Die Maker (Jewelry)
+Drafter Detail
+Electric-Motor Repairer
+Electrical Technician
+Electrician
+Final Inspector Motorcycles
+Gunsmith Ballistics Laboratory
+Inspector Missile
+Laboratory Technician
+Machinist
+Miner (Construction)
+Motion-Picture Projectionist
+Optician (Optical Goods)
+Prosthetics Technician
+Shipfitter
+Shop Tailor
+Sound Technician
+Weather Observer
+Welding-Machine Operator Arc
+Appliance Repairer
+Coater Operator
+Farm-Machine Operator
+Line-Service Attendant
+(Air Transportation)
+Motorcycle Repairer
+Tractor-Trailer-Truck Driver
+---
+CODE-EIR
+Geologist Petroleum
+Biomedical Equipment Technician
+Engineer Automotive
+Engineer Computer Systems Hardware
+Engineer Petroleum
+Engineer Plant
+Pilot Commercial Airplane
+Pilot Executive
+Aircraft Mechanic Electrical and Radio
+Airframe-and-Power-Plant Mechanic
+Automobile-Body Repairer
+Blaster
+Calibrator Barometers
+Die Maker (Jewelry)
+Drafter Detail
+Electric-Motor Repairer
+Electrical Technician
+Electrician
+Final Inspector Motorcycles
+Gunsmith Ballistics Laboratory
+Inspector Missile
+Laboratory Technician
+Machinist
+Miner (Construction)
+Motion-Picture Projectionist
+Optician (Optical Goods)
+Prosthetics Technician
+Shipfitter
+Shop Tailor
+Sound Technician
+Weather Observer
+Welding-Machine Operator Arc
+Appliance Repairer
+Coater Operator
+Farm-Machine Operator
+Line-Service Attendant
+(Air Transportation)
+Motorcycle Repairer
+Tractor-Trailer-Truck Driver
 ---
 CODE-ECS
 Accountant Tax

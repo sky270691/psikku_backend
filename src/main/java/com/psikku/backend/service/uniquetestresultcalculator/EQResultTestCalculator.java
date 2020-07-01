@@ -104,9 +104,9 @@ public class EQResultTestCalculator implements UniqueResultTestCalculator{
         }else if(eqTotal<60){
             eqTotalCategoryString = "sedang";
         }else if(eqTotal<80){
-            eqTotalCategoryString = "tinggi";
+            eqTotalCategoryString = "cukup baik";
         }else{
-            eqTotalCategoryString = "tinggi sekali";
+            eqTotalCategoryString = "sangat baik";
         }
 
         StringBuilder sb = new StringBuilder();

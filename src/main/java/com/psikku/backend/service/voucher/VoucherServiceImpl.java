@@ -103,8 +103,6 @@ public class VoucherServiceImpl implements VoucherService {
         voucher.setTestPackage(testPackage);
         voucher.setCompany(companyService.findById(companyId));
 
-//        LocalDateTime localDateTime = LocalDateTime.now();
-//        voucher.setValidUntil(localDateTime.plusDays(365));
         saveVoucher(voucher);
     }
 

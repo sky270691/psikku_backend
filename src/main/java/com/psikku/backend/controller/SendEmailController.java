@@ -22,7 +22,7 @@ public class SendEmailController {
     @Autowired
     private ResourceLoader resourceLoader;
 
-    @GetMapping("/with-attachment")
+    @GetMapping
     public String sendTestEmailWithoutAttachment() {
         String to= "langi.risky@gmail.com";
         String subject="test email";
@@ -36,7 +36,7 @@ public class SendEmailController {
         return "success";
     }
 
-    @GetMapping
+    @GetMapping("/with-attachment")
     public String sendTestEmailWithAttachment() throws MessagingException{
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage,true);
@@ -44,9 +44,6 @@ public class SendEmailController {
         mimeMessageHelper.setTo("langi.risky@gmail.com");
         mimeMessageHelper.setSubject("test email with attachment");
         mimeMessageHelper.setText("sending this message from spring boot with attachment");
-
-
-//        FileSystemResource resource = new FileSystemResource(new File("backend.log"));
 
         Resource resource1 = resourceLoader.getResource("classpath:backend.log");
         mimeMessageHelper.addAttachment("log",resource1);

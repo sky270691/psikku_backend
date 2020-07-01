@@ -60,7 +60,7 @@ public class ReportServiceImpl implements ReportService {
         User user = userService.findByUsername(username);
 
         try {
-            JasperReport jasperReport = JasperCompileManager.compileReport(path+"/template"+"/psycheFix.jrxml");
+            JasperReport jasperReport = JasperCompileManager.compileReport(path+"/psycheFix.jrxml");
             pdfSingleReportExporter(jasperReport,user,voucher);
 
         } catch (JRException e) {

@@ -35,7 +35,4 @@ public class CompanyController {
         return new ResponseEntity<>(company.getName()+" saved successfully", HttpStatus.CREATED);
     }
 
-    private String getUsername(){
-        return SecurityContextHolder.getContext().getAuthentication().getName();
-    }
 }

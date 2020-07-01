@@ -216,7 +216,15 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(CustomEmailException.class)
+    public ResponseEntity<CustomEmailExceptionResponse> handleAlreadyExistDataException(CustomEmailException e){
 
+        CustomEmailExceptionResponse response = new CustomEmailExceptionResponse();
+        response.setMessage(e.getMessage());
+        response.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
+        response.setTimestamp(LocalDateTime.now());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 
 
 }

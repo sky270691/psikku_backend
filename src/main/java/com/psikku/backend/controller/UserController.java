@@ -1,25 +1,33 @@
 package com.psikku.backend.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.psikku.backend.dto.user.UserDto;
 import com.psikku.backend.dto.user.UserRegisterDto;
 import com.psikku.backend.dto.user.UserRegisterResponse;
 import com.psikku.backend.entity.TokenFactory;
 import com.psikku.backend.service.user.UserService;
+import net.bytebuddy.utility.JavaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.Email;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
+@Valid
 public class UserController {
 
     private final Logger logger;
@@ -42,7 +50,6 @@ public class UserController {
         logger.info("new username: '"+userRegisterDto.getUsername()+"' try to register");
 
         return userService.registerNewUserToAuthServer(userRegisterDto);
-//        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     @PutMapping("/register")
@@ -51,11 +58,6 @@ public class UserController {
 
         return userService.updateUser(userRegisterDto);
     }
-
-//    @PostMapping(value = "/testuser2", consumes = "multipart/form-data")
-//    public ResponseEntity<UserRegisterResponse> testUser2(UserRegisterResponse userRegisterResponse){
-//        return new ResponseEntity<>(userRegisterResponse,HttpStatus.OK);
-//    }
 
     @PostMapping(value = "/login")
     public TokenFactory login (@RequestPart String username, @RequestPart String password){
@@ -70,7 +72,6 @@ public class UserController {
         }
     }
 
-
     @PostMapping("/loginV2")
     public TokenFactory loginV2(@RequestHeader("Authorization") String header) {
         String[] credentialWithBasic = header.split(" ");
@@ -81,13 +82,6 @@ public class UserController {
         String password = extractedFullCredential[1];
         try {
             TokenFactory tokenFactory = userService.loginExistingUser(username,password);
-//            String userNameFromAuth =  SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-//            long userIdFromAuth = (long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//            System.out.println("UserController -> username: " + userNameFromAuth);
-//            System.out.println("UserController -> userId: " + userIdFromAuth);
-//            long userIdFromAuthentication = (long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//            System.out.println("login controller --> username : "+userNameFromAuthentication);
-//            System.out.println("login controller --> userid : "+userIdFromAuthentication);
             return tokenFactory;
         } catch (RuntimeException e) {
             e.printStackTrace();
@@ -100,5 +94,25 @@ public class UserController {
         return userService.getCurrentUserInfo();
     }
 
+
+    @PostMapping(value = "/reset-password/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String,String>> requestResetPasswordCode(@PathVariable @Email(regexp =
+            "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{1,}$",
+            message = "email format should be valid") String email){
+        Map<String,String> returnValue = new HashMap<>();
+        userService.sendResetPasswordCodeToEmail(email);
+        returnValue.put("status","success");
+        return new ResponseEntity<>(returnValue,HttpStatus.OK);
+    }
+
+    @GetMapping("/reset-password/{code}")
+    public ResponseEntity<?> validateResetCode(@PathVariable String code){
+        UserRegisterDto user = userService.validateResetPasswordCode(code);
+        if(!(user.getUsername().equalsIgnoreCase("")||user.getUsername() == null)){
+            return new ResponseEntity<>(user,HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>("failed",HttpStatus.BAD_REQUEST);
+        }
+    }
 
 }

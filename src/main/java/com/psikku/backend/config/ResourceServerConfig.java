@@ -2,7 +2,9 @@ package com.psikku.backend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
@@ -10,6 +12,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -47,6 +50,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .mvcMatchers("/api/tests*/*").fullyAuthenticated()
                 .mvcMatchers("/api/users/login").permitAll()
                 .mvcMatchers("/api/users/register").permitAll()
+                .mvcMatchers("/api/users/reset-password*/*").permitAll()
                 .mvcMatchers("/api/packages/*").fullyAuthenticated()
                 .mvcMatchers("/api/packages/internal*/*").permitAll()
                 .mvcMatchers("/api/content*/*").fullyAuthenticated()
@@ -67,5 +71,6 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
             };
             corsConfigurer.configurationSource(corsConfigurationSource);
         });
+
     }
 }
