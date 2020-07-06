@@ -13,8 +13,8 @@ public class SubtestDto {
     private List<String> guides;
 
     @JsonProperty(value = "test_type")
-    @Pattern(regexp = "(right_or_wrong)|(two_answers)|(three_answers)|(survey)|(user_input_string)|(user_input_number)",
-                    message = "test type should be one of these ('right_or_wrong', 'two_answers', 'three_answers', 'survey', " +
+    @Pattern(regexp = "(objective)|(right_or_wrong)|(two_answers)|(three_answers)|(survey)|(user_input_string)|(user_input_number)",
+                    message = "test type should be one of these ('objective', 'right_or_wrong', 'two_answers', 'three_answers', 'survey', " +
                                 "'user_input_string', 'user_input_number'")
     private String testType;
 

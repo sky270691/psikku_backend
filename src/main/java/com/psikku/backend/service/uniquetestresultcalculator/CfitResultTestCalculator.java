@@ -123,10 +123,33 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
 
         Map<Integer,Integer> resultMapping;
 
-        if(ageInMonth < 161){
-            resultMapping = getAgeResultKeyValue("13.0-13.4");
+
+        if(ageInMonth < 95){
+            resultMapping = getAgeResultKeyValue("7.4-7.10");
+        }else if(ageInMonth < 100){
+            resultMapping = getAgeResultKeyValue("7.11-8.3");
+        }else if(ageInMonth < 107){
+            resultMapping = getAgeResultKeyValue("8.4-8.10");
+        }else if(ageInMonth < 112){
+            resultMapping = getAgeResultKeyValue("8.11-9.3");
+        }else if(ageInMonth < 119){
+            resultMapping = getAgeResultKeyValue("9.4-9.10");
+        }else if(ageInMonth < 124){
+            resultMapping = getAgeResultKeyValue("9.11-10.3");
+        }else if(ageInMonth < 131){
+            resultMapping = getAgeResultKeyValue("10.4-10.10");
+        }else if(ageInMonth < 136){
+            resultMapping = getAgeResultKeyValue("10.11-11.3");
+        }else if(ageInMonth < 143){
+            resultMapping = getAgeResultKeyValue("11.4-11.10");
+        }else if(ageInMonth < 148){
+            resultMapping = getAgeResultKeyValue("11.11-12.3");
+        }else if(ageInMonth < 155){
+            resultMapping = getAgeResultKeyValue("12.4-12.10");
+        }else if(ageInMonth < 161){
+            resultMapping = getAgeResultKeyValue("12.11-13.3");
         }else if(ageInMonth < 168){
-            resultMapping = getAgeResultKeyValue("13.5-13.11");
+            resultMapping = getAgeResultKeyValue("13.4-13.11");
         }else if(ageInMonth < 180){
             resultMapping = getAgeResultKeyValue("14.0-14.11");
         }else if(ageInMonth < 192){
@@ -158,7 +181,7 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
         }else if(iq>79){
             predicate = "below average";
         }else if(iq>67){
-            predicate = "boderlinemental retardation";
+            predicate = "boderline mental retardation";
         }else if(iq>51){
             predicate = "mild mental retardation";
         }else if(iq>19){
@@ -187,7 +210,6 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
         Resource resource = resourceLoader.getResource(cfitPkuLocation);
 
         try(Scanner scanner = new Scanner(new BufferedReader(new InputStreamReader(resource.getInputStream())))){
-
             Map<Integer,Integer> map = new LinkedHashMap<>();
             String testParameterKeyValue;
             while(scanner.hasNextLine()){

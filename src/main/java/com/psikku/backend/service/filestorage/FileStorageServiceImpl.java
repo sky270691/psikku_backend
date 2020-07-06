@@ -6,6 +6,7 @@ import com.psikku.backend.exception.DataAlreadyExistException;
 import com.psikku.backend.exception.FileStorageException;
 import com.psikku.backend.repository.FileDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -86,6 +87,8 @@ public class FileStorageServiceImpl implements FileStorageService {
         }
     }
 
+
+
     @Override
     public Resource loadFileAsResource(String category, String filename) {
         FileData fileData = fileDataRepository.findByFilePathAndFileName(category,filename).orElseThrow(()->new FileStorageException("File Not Found"));
@@ -121,6 +124,18 @@ public class FileStorageServiceImpl implements FileStorageService {
             reset();
         } catch (IOException e) {
             throw new FileStorageException("Error deleting file");
+        }
+    }
+
+    @Override
+    public Resource downloadSingleFile(String filePath) {
+        try {
+//            Paths.get(filePath).toAbsolutePath();
+            Resource resource = new FileUrlResource(filePath);
+            return resource;
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            throw new FileStorageException("File Not Found");
         }
     }
 

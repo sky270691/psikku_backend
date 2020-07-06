@@ -1,14 +1,9 @@
 package com.psikku.backend.service.uniquetestresultcalculator;
 
 import com.psikku.backend.exception.AnswerException;
-import com.psikku.backend.exception.TestException;
-import com.psikku.backend.service.answer.AnswerService;
-import com.psikku.backend.service.question.QuestionService;
-import com.psikku.backend.service.test.TestService;
-import com.psikku.backend.service.user.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,6 +12,7 @@ import java.util.List;
 public class TestResultCalculatorFactory {
 
     private final List<UniqueResultTestCalculator> uniqueResultTestCalculator;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     public TestResultCalculatorFactory(List<UniqueResultTestCalculator> uniqueResultTestCalculator) {
@@ -54,7 +50,7 @@ public class TestResultCalculatorFactory {
 //    }
 
     public UniqueResultTestCalculator getTestCalculator(String testName){
-        if(testName.equalsIgnoreCase("cfit3")||testName.equalsIgnoreCase("cfit3b")){
+        if(testName.contains("cfit")||testName.equalsIgnoreCase("cfit")){
             return getCalculator("cfit");
         }else if(testName.equalsIgnoreCase("gayabelajar1")){
             return getCalculator("gayabelajar1");
@@ -81,6 +77,7 @@ public class TestResultCalculatorFactory {
         }else if(testName.equalsIgnoreCase("riasec")){
             return getCalculator("riasec");
         }else{
+            logger.error("can't find result calculator for the testname: "+testName);
             throw new AnswerException("answer is not valid, please re-check your answer");
         }
     }

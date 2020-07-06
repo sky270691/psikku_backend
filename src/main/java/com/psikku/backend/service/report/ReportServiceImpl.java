@@ -3,7 +3,9 @@ package com.psikku.backend.service.report;
 import com.psikku.backend.entity.TestResult;
 import com.psikku.backend.entity.User;
 import com.psikku.backend.entity.Voucher;
+import com.psikku.backend.exception.FileStorageException;
 import com.psikku.backend.exception.TestResultException;
+import com.psikku.backend.service.filestorage.FileStorageService;
 import com.psikku.backend.service.testresult.TestResultService;
 import com.psikku.backend.service.user.UserService;
 import com.psikku.backend.service.voucher.VoucherService;
@@ -18,14 +20,12 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.*;
+import java.nio.file.*;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Service
 public class ReportServiceImpl implements ReportService {
@@ -36,40 +36,50 @@ public class ReportServiceImpl implements ReportService {
     private final Logger logger;
     private final UserService userService;
     private final TestResultService testResultService;
-    private final String path;
+    private final Path path;
     private final VoucherService voucherService;
+    private final FileStorageService fileStorageService;
 
     @Autowired
     public ReportServiceImpl(ResourceLoader resourceLoader,
                              @Value("${riasec-pku.location}") String riasecPkuLocation,
                              UserService userService,
                              TestResultService testResultService,
-                             VoucherService voucherService) throws IOException{
+                             VoucherService voucherService,
+                             FileStorageService fileStorageService) throws IOException{
         this.resourceLoader = resourceLoader;
         this.riasecPkuLocation = riasecPkuLocation;
         this.userService = userService;
         this.testResultService = testResultService;
         this.voucherService = voucherService;
         this.logger = LoggerFactory.getLogger(this.getClass());
-        this.path = resourceLoader.getResource("classpath:static/report").getURI().getPath();
+        this.path = Paths.get(resourceLoader.getResource("classpath:static/report").getURI());
+        this.fileStorageService = fileStorageService;
     }
 
+
     @Override
-    public void generateReportByUsernameAndVoucher(String username, String voucher) {
-
+    public Resource generateReportByUsernameAndVoucher(String username, String voucher) {
         User user = userService.findByUsername(username);
-
-        try {
-            JasperReport jasperReport = JasperCompileManager.compileReport(path+"/psycheFix.jrxml");
+        try{
+//            System.out.println(Paths.get(path).toString());
+            Path jrxmlFile = path.resolve("psycheFix.jrxml");
+            JasperReport jasperReport = JasperCompileManager.compileReport(jrxmlFile.toString());
             pdfSingleReportExporter(jasperReport,user,voucher);
 
+            String pdfFile = path.resolve(username.concat(".pdf")).toString();
+            System.out.println(pdfFile);
+            Resource resource = fileStorageService.downloadSingleFile(pdfFile);
+            return resource;
         } catch (JRException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
+
     @Override
-    public void generateAllReportByVoucher(String voucher){
+    public Resource generateAllReportByVoucher(String voucher){
 
         Voucher voucherFromDb = voucherService.getVoucherByCode(voucher);
         JasperReport jasperReport;
@@ -82,10 +92,35 @@ public class ReportServiceImpl implements ReportService {
                 System.out.println("username: "+user.getUsername());
                 pdfSingleReportExporter(jasperReport,user,voucher);
             }
+            List<Path> reportFiles = Files.walk(path.toAbsolutePath())
+                    .filter(file->file.getFileName().toString().endsWith(".pdf") && !Files.isDirectory(file))
+                    .map(Path::toAbsolutePath)
+                    .collect(Collectors.toList());
 
-        } catch (JRException e) {
+            zippingReportFiles(reportFiles);
+
+            for (Path reportFile : reportFiles) {
+                Files.deleteIfExists(reportFile.toAbsolutePath());
+            }
+
+            Path zipFile = path.resolve("report.zip");
+            return fileStorageService.downloadSingleFile(zipFile.toAbsolutePath().toString());
+
+        } catch (JRException | IOException e) {
             e.printStackTrace();
+            logger.error("error getting report file from server");
+            throw new FileStorageException("error getting report file from server");
         }
+    }
+
+    private void zippingReportFiles(List<Path> reportFiles) throws IOException{
+        ZipOutputStream zipOutput = new ZipOutputStream(Files.newOutputStream(path.resolve("report.zip")));
+        for (Path reportFile : reportFiles) {
+            zipOutput.putNextEntry(new ZipEntry(reportFile.getFileName().toString()));
+            zipOutput.write(Files.readAllBytes(reportFile));
+            zipOutput.closeEntry();
+        }
+        zipOutput.close();
     }
 
     private List<TestResult> getTestResultByUserAndVoucher(User user,String voucher){

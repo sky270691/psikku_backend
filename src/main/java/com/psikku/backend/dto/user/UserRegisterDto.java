@@ -42,7 +42,7 @@ public class UserRegisterDto {
 //    private LocalDateTime createTime;
 
     @Past(message = "The date of birth should be a past date value")
-//    @AgeValidation(message = "blum 17 taong bro")
+    @AgeValidation(message = "Please check your birth Year")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 

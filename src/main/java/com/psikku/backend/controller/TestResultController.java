@@ -8,11 +8,20 @@ import com.psikku.backend.service.testresult.TestResultService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,17 +79,67 @@ public class TestResultController {
         }
     }
 
+//    @GetMapping("/{voucher}/{username}")
+//    public ResponseEntity<Resource> getPdfReport(@PathVariable String voucher, @PathVariable String username, HttpServletRequest request){
+////        List<TestFinalResultDto> testFinalResultDtoList = testResultService.findAllResultByVoucherAndUsername(voucher,username);
+//        Resource resource = reportService.generateReportByUsernameAndVoucher(username,voucher);
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\"");
+//        try {
+//            headers.add(HttpHeaders.CONTENT_TYPE,request.getServletContext().getMimeType(resource.getFile().getAbsolutePath()));
+//            return new ResponseEntity<>(resource, headers,HttpStatus.OK);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//    }
+
     @GetMapping("/{voucher}/{username}")
-    public ResponseEntity<String> getPdfReport(@PathVariable String voucher, @PathVariable String username){
-//        List<TestFinalResultDto> testFinalResultDtoList = testResultService.findAllResultByVoucherAndUsername(voucher,username);
-        reportService.generateReportByUsernameAndVoucher(username,voucher);
-        return new ResponseEntity<>("yes", HttpStatus.OK);
+    public ResponseEntity<?> getPdfReport(@PathVariable String voucher, @PathVariable String username, HttpServletRequest request){
+        Resource resource = reportService.generateReportByUsernameAndVoucher(username,voucher);
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION,"inline; filename="+resource.getFile().getName());
+            headers.add(HttpHeaders.CONTENT_TYPE,request.getServletContext().getMimeType(resource.getFile().getAbsolutePath()));
+            byte[] data = Files.readAllBytes(resource.getFile().toPath());
+            Files.deleteIfExists(resource.getFile().toPath());
+            return new ResponseEntity<>(data,headers,HttpStatus.OK);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
-    @GetMapping("/{voucher}")
-    public ResponseEntity<String> getAllPdfReportByVoucher(@PathVariable String voucher){
-       reportService.generateAllReportByVoucher(voucher);
-        return new ResponseEntity<>("yes", HttpStatus.OK);
+//    @GetMapping("/{voucher}")
+//    public void getAllPdfReportByVoucher(@PathVariable String voucher, HttpServletResponse response, HttpServletRequest request){
+//        Resource resource = reportService.generateAllReportByVoucher(voucher);
+//        try {
+//            response.addHeader(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename="+resource.getFile().getName());
+//            response.addHeader(HttpHeaders.CONTENT_TYPE,request.getServletContext().getMimeType(resource.getFile().getAbsolutePath()));
+//            OutputStream out = response.getOutputStream();
+//            out.write(Files.readAllBytes(resource.getFile().toPath()));
+//            out.close();
+//            Files.deleteIfExists(resource.getFile().toPath());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    @GetMapping(value = "/{voucher}", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<?> getAllPdfReportByVoucher(@PathVariable String voucher, HttpServletRequest request){
+        Resource resource = reportService.generateAllReportByVoucher(voucher);
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION,"inline; filename="+resource.getFile().getName());
+            headers.add(HttpHeaders.CONTENT_TYPE,request.getServletContext().getMimeType(resource.getFile().getAbsolutePath()));
+            byte[] data = Files.readAllBytes(resource.getFile().toPath());
+            Files.deleteIfExists(resource.getFile().toPath());
+            return new ResponseEntity<>(data,headers,HttpStatus.OK);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("reach here");
+            return null;
+        }
     }
 
     private String getUsername(){
