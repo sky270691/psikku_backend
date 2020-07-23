@@ -31,6 +31,7 @@ public class TestPackageMapper {
         testPackage.setName(testPackageCreationDto.getName());
         testPackage.setPrice(testPackageCreationDto.getPrice());
         testPackage.setDescription(testPackageCreationDto.getDescription());
+        testPackage.setViewType(testPackageCreationDto.getViewType());
         testPackage.setTestList(new ArrayList<>());
         testPackageCreationDto.getTestIdList().forEach((testId)-> {
             Test tempTest = testService.findTestById(testId);
@@ -46,6 +47,7 @@ public class TestPackageMapper {
         testPackageDto.setName(testPackage.getName());
         testPackageDto.setDescription(testPackage.getDescription());
         testPackageDto.setPrice(testPackage.getPrice());
+        testPackageDto.setViewType(testPackage.getViewType());
         testPackageDto.setMinimalTestDtoList(new ArrayList<>());
         testPackage.getTestList().forEach(test-> testPackageDto.getMinimalTestDtoList().add(testMapper.convertToMinTestDto(test)));
         return testPackageDto;

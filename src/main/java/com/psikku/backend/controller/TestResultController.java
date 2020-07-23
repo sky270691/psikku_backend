@@ -99,13 +99,14 @@ public class TestResultController {
         Resource resource = reportService.generateReportByUsernameAndVoucher(username,voucher);
         try {
             HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION,"inline; filename="+resource.getFile().getName());
-            headers.add(HttpHeaders.CONTENT_TYPE,request.getServletContext().getMimeType(resource.getFile().getAbsolutePath()));
             byte[] data = Files.readAllBytes(resource.getFile().toPath());
             Files.deleteIfExists(resource.getFile().toPath());
+            headers.add(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\""+resource.getFile().getName());
+            headers.add(HttpHeaders.CONTENT_TYPE,"application/pdf");
             return new ResponseEntity<>(data,headers,HttpStatus.OK);
         } catch (IOException e) {
             e.printStackTrace();
+            
             return null;
         }
     }

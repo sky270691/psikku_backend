@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.jwt.JwtHelper;
@@ -67,16 +68,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserRegisterDto validateResetPasswordCode(String code) {
+    public Optional<UserRegisterDto> validateResetPasswordCode(String code) {
 
         for (Map.Entry<String, User> stringUserEntry : userTempCodePair.entrySet()) {
             if(code.equalsIgnoreCase(stringUserEntry.getKey())){
-                userTempCodePair.remove(code);
                 User user = userTempCodePair.get(code);
-                return userMapper.convertToUserRegisterDto(user);
+                return Optional.of(userMapper.convertToUserRegisterDto(user));
             }
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -93,9 +93,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public void sendResetPasswordCodeToEmail(String email) {
         User user = findByEmail(email).orElseThrow(()->new UserExistException("User not exist"));
+        if (userTempCodePair.containsValue(user)) {
+            for (Map.Entry<String, User> stringUserEntry : userTempCodePair.entrySet()) {
+                if(stringUserEntry.getValue().equals(user)){
+                    userTempCodePair.remove(stringUserEntry.getKey());
+                }
+            }
+        }
         String uniqueCode = generateAlphaNumeric(6);
+        StringBuilder emailMessage = new StringBuilder();
+        emailMessage.append("Halo "+user.getFirstname()+" "+user.getLastname()+", silahkan input kode ini di aplikasi Psikku Online Assessment:\n");
         userTempCodePair.put(uniqueCode,user);
-        emailService.sendEmail(email,"Reset Password Psikku User",uniqueCode);
+        emailMessage.append(uniqueCode);
+        emailMessage.append("\n\n\n");
+        emailMessage.append("--- Psikku Indonesia ---");
+        emailService.sendEmail(email,"Reset Password Psikku User",emailMessage.toString());
     }
 
     @Override
@@ -118,7 +130,7 @@ public class UserServiceImpl implements UserService {
         
         User user =  userMapper.convertRegisteredAuthServerUserToUserEntity(responseJson.getBody());
         if(user.getId()==0){ // if user.getId() from auth server equals to 0 then return error response
-            throw new UserExistException("Username / email already exist");
+            throw new UserExistException("username dan/atau email sudah pernah didaftarkan");
         }
         userRepository.save(user);
         UserRegisterResponse userRegisterResponse = userMapper.convertUserEntityToUserRegisterResponse(user);
@@ -126,8 +138,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<UserRegisterResponse> updateUser(UserRegisterDto userRegisterDto){
+    public ResponseEntity<UserRegisterResponse> updateUser(UserRegisterDto userRegisterDto,String password){
         User user = userRepository.findUserByUsername(userRegisterDto.getUsername());
+        System.out.println(password);
+        if(password!=null){
+            userRegisterDto.setPassword(password);
+        }
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<UserRegisterResponse> searchResponse = restTemplate.getForEntity(userSearchEndpoint,UserRegisterResponse.class,userRegisterDto.getUsername());
 
@@ -140,6 +156,7 @@ public class UserServiceImpl implements UserService {
             user.setAddress(userRegisterDto.getAddress());
             user.setCity(userRegisterDto.getCity());
             user.setProvince(userRegisterDto.getProvince());
+            user.setEmail(userRegisterDto.getEmail());
 
 
             UserRegisterResponse response = new UserRegisterResponse();
@@ -152,6 +169,22 @@ public class UserServiceImpl implements UserService {
         }
         System.out.println("Error update user");
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    public ResponseEntity<UserRegisterResponse> updatePassword(UserResetPasswordDto userResetPasswordDto, String codeHeader) {
+        if(codeHeader!=null && userTempCodePair.containsKey(codeHeader)){
+            User user;
+            try {
+                user = findByUsername(userResetPasswordDto.getUsername());
+            } catch (NullPointerException e) {
+                throw new UserExistException("User is not exist");
+            }
+            UserRegisterDto userRegisterDto = userMapper.convertToUserRegisterDto(user);
+            return updateUser(userRegisterDto,userResetPasswordDto.getPassword());
+        }else{
+            throw new UserExistException("Error Occured");
+        }
     }
 
     @Override
@@ -202,6 +235,15 @@ public class UserServiceImpl implements UserService {
             sb.append(combination.charAt(random.nextInt(combination.length())));
         }
         return sb.toString();
+    }
+
+
+    //delete the temp code on 23:59 everyday
+    @Scheduled(cron = "0 59 23 * * ?")
+    protected void deleteTempCode(){
+        if(!userTempCodePair.entrySet().isEmpty()){
+            userTempCodePair.clear();
+        }
     }
 
 }

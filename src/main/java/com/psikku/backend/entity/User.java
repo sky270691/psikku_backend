@@ -153,7 +153,7 @@ public class User {
         return "Username: " +getUsername()+ "email: " +getEmail()+ "fullname: "+ getFirstname();
     }
 
-    public int getAge(LocalDate dateOftest){
+    public int getAge(){
         long age = ChronoUnit.MONTHS.between(this.dateOfBirth,LocalDate.now());
         return (int) age;
     }

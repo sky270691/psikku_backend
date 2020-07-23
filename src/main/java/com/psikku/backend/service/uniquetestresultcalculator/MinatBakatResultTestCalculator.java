@@ -53,7 +53,7 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
 
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         User user = userService.findByUsername(username);
-        int userAgeInMonth = user.getAge(LocalDate.now());
+        int userAgeInMonth = user.getAge();
 
 
         List<SubmittedAnswerDto> an =
@@ -169,6 +169,19 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
         }
 
         //final output per subtest
+        if(anCorrectAnswers > anMaxCorrectByAge){
+            anCorrectAnswers = anMaxCorrectByAge;
+        }
+        if(raCorrectAnswers > raMaxCorrectByAge){
+            raCorrectAnswers = raMaxCorrectByAge;
+        }
+        if(geCorrectAnswers > geMaxCorrectByAge){
+            geCorrectAnswers = geMaxCorrectByAge;
+        }
+        if(zrCorrectAnswers > zrMaxCorrectByAge){
+            zrCorrectAnswers = zrMaxCorrectByAge;
+        }
+
         double anPercentage = (double) anCorrectAnswers / (double) anMaxCorrectByAge * 100;
         double gePercentage = (double) geCorrectAnswers / (double) geMaxCorrectByAge * 100 ;
         double raPercentage = (double) raCorrectAnswers / (double) raMaxCorrectByAge * 100 ;

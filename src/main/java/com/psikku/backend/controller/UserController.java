@@ -4,8 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.psikku.backend.dto.user.UserDto;
 import com.psikku.backend.dto.user.UserRegisterDto;
 import com.psikku.backend.dto.user.UserRegisterResponse;
+import com.psikku.backend.dto.user.UserResetPasswordDto;
 import com.psikku.backend.entity.TokenFactory;
+import com.psikku.backend.exception.UserExistException;
 import com.psikku.backend.service.user.UserService;
+import com.psikku.backend.service.user.UserServiceImpl;
 import net.bytebuddy.utility.JavaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,17 +16,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -56,7 +58,7 @@ public class UserController {
     public ResponseEntity<UserRegisterResponse> updateUser(@Valid @RequestBody UserRegisterDto userRegisterDto) {
         logger.info("username: '"+userRegisterDto.getUsername()+"' try to update data");
 
-        return userService.updateUser(userRegisterDto);
+        return userService.updateUser(userRegisterDto,null);
     }
 
     @PostMapping(value = "/login")
@@ -68,7 +70,7 @@ public class UserController {
         }catch (RuntimeException e){
 //            e.printStackTrace();
             logger.info("username: '"+username+"' login error\nstacktrace: "+e.getMessage());
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "incorrect username or password",e);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "username dan/atau password salah",e);
         }
     }
 
@@ -85,7 +87,7 @@ public class UserController {
             return tokenFactory;
         } catch (RuntimeException e) {
             e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "incorrect username or password",e);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "username dan/atau password salah",e);
         }
     }
 
@@ -98,7 +100,7 @@ public class UserController {
     @PostMapping(value = "/reset-password/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String,String>> requestResetPasswordCode(@PathVariable @Email(regexp =
             "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{1,}$",
-            message = "email format should be valid") String email){
+            message = "email harus menggunakan format yang benar") String email){
         Map<String,String> returnValue = new HashMap<>();
         userService.sendResetPasswordCodeToEmail(email);
         returnValue.put("status","success");
@@ -107,12 +109,24 @@ public class UserController {
 
     @GetMapping("/reset-password/{code}")
     public ResponseEntity<?> validateResetCode(@PathVariable String code){
-        UserRegisterDto user = userService.validateResetPasswordCode(code);
-        if(!(user.getUsername().equalsIgnoreCase("")||user.getUsername() == null)){
+        Optional<UserRegisterDto> user = userService.validateResetPasswordCode(code);
+        if(user.isPresent()){
             return new ResponseEntity<>(user,HttpStatus.OK);
         }else{
-            return new ResponseEntity<>("failed",HttpStatus.BAD_REQUEST);
+            Map<String,String> returnFailedBody = new HashMap<>();
+            returnFailedBody.put("status","failed");
+            return new ResponseEntity<>(returnFailedBody,HttpStatus.BAD_REQUEST);
         }
+    }
+
+
+    @PutMapping("/update-password")
+    public ResponseEntity<?> updatePassword(@RequestBody UserResetPasswordDto usernamePassword, @RequestHeader("X-Code") String code){
+        logger.info("username: '"+usernamePassword.getUsername()+"' tried to update password");
+        ResponseEntity<UserRegisterResponse> response = userService.updatePassword(usernamePassword,code);
+        System.out.println(usernamePassword);
+        logger.info("success reset password for user:'"+usernamePassword.getUsername()+"'");
+        return response;
     }
 
 }

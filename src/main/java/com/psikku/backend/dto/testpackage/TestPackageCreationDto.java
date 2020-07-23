@@ -2,10 +2,7 @@ package com.psikku.backend.dto.testpackage;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.List;
 
 public class TestPackageCreationDto {
@@ -26,6 +23,10 @@ public class TestPackageCreationDto {
 
     @PositiveOrZero(message = "'price' can't be a negative value")
     private int price;
+
+    @NotBlank
+    @Pattern(regexp = "(BANNER) | (LIST) | (COMBINE)")
+    private String viewType;
 
     public String getName() {
         return name;
@@ -73,5 +74,13 @@ public class TestPackageCreationDto {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public String getViewType() {
+        return viewType;
+    }
+
+    public void setViewType(String viewType) {
+        this.viewType = viewType;
     }
 }

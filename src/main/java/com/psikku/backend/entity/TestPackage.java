@@ -18,6 +18,9 @@ public class TestPackage {
     private String description;
     private int price;
 
+    @Column(name = "view_type")
+    private String viewType;
+
     @CreationTimestamp
     @Column(name = "creation_date")
     private LocalDate createDate;
@@ -53,6 +56,15 @@ public class TestPackage {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+
+    public String getViewType() {
+        return viewType;
+    }
+
+    public void setViewType(String viewType) {
+        this.viewType = viewType;
     }
 
     public LocalDate getCreateDate() {

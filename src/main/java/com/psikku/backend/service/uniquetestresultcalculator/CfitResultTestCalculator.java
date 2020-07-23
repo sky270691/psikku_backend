@@ -77,7 +77,7 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
     public TestResult calculateNewResult(List<SubmittedAnswerDto> cfitAnswer) {
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         User user = userService.findByUsername(username);
-        int ageInMonth = user.getAge(LocalDate.now());
+        int ageInMonth = user.getAge();
 
         // answers data from DB contains correct answer based on user's input
         List<Answer[]> correctAnswer = new ArrayList<>();
@@ -103,21 +103,41 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
         });
 
         // subtest 2 calculation (2 right answers)
-        subtest2.forEach(answerSub2Dto -> {
-            String answer1String = Optional.of(answerSub2Dto.getAnswers().get(0).toLowerCase()).orElse("");
-            String answer2String = Optional.of(answerSub2Dto.getAnswers().get(1).toLowerCase()).orElse("");
 
-            if(!answer1String.equals("") && !answer2String.equals("")){
-                Answer answer1 = answerService.findById(answer1String);
-                Answer answer2 = answerService.findById(answer2String);
+        if(!subtest2.isEmpty() && subtest2.get(0).getQuestionId().contains("cfit3")){
+            subtest2.forEach(answerSub2Dto -> {
+                String answer1String = Optional.of(answerSub2Dto.getAnswers().get(0).toLowerCase()).orElse("");
+                String answer2String = Optional.of(answerSub2Dto.getAnswers().get(1).toLowerCase()).orElse("");
 
-                // check if all the answers are correct then add the list of the correctAnswer
-                if(answer1.getIsCorrect() == 1 && answer2.getIsCorrect() ==1){
-                    Answer[] answers = {answer1,answer2};
+                if(!answer1String.equals("") && !answer2String.equals("")){
+                    Answer answer1 = answerService.findById(answer1String);
+                    Answer answer2 = answerService.findById(answer2String);
+
+                    // check if all the answers are correct then add the list of the correctAnswer
+                    if(answer1.getIsCorrect() == 1 && answer2.getIsCorrect() ==1){
+                        Answer[] answers = {answer1,answer2};
+                        correctAnswer.add(answers);
+                    }
+                }
+            });
+        }else if(!subtest2.isEmpty() && subtest2.get(0).getQuestionId().contains("cfit2")){
+
+           List<String> answerDtoId =
+                   subtest2.stream()
+                    .filter(answer -> !answer.getAnswers().isEmpty())
+                    .map(answerDto->answerDto.getAnswers().get(0))
+                    .collect(Collectors.toList());
+
+            for (String answerDto : answerDtoId) {
+
+                Answer answer = answerService.findById(answerDto);
+                if(answer.getIsCorrect()==1){
+                    Answer[] answers = {answer};
                     correctAnswer.add(answers);
                 }
             }
-        });
+
+        }
 
         int points = correctAnswer.size();
 

@@ -15,6 +15,9 @@ public class TestPackageDto {
 
     private String description;
 
+    @JsonProperty(value = "view_type")
+    private String viewType;
+
     @JsonProperty("tests")
     private List<MinimalTestDto> minimalTestDtoList;
 
@@ -48,6 +51,14 @@ public class TestPackageDto {
 
     public void setMinimalTestDtoList(List<MinimalTestDto> minimalTestDtoList) {
         this.minimalTestDtoList = minimalTestDtoList;
+    }
+
+    public String getViewType() {
+        return viewType;
+    }
+
+    public void setViewType(String viewType) {
+        this.viewType = viewType;
     }
 
     public String getDescription() {

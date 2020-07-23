@@ -10,26 +10,26 @@ import java.util.List;
 
 public class UserRegisterDto {
 
-    @NotBlank(message = "username shouldn't be blank")
-    @Pattern(regexp ="\\S+", message = "username shouldn't contain any whitespace character")
+    @NotBlank(message = "id pengguna tidak boleh kosong")
+    @Pattern(regexp ="\\S+", message = "id pengguna tidak boleh mengandung karakter spasi")
     private String username;
 
-    @NotBlank(message = "password shouldn't be blank")
-    @Size(min = 6, message = "password should be at least 6 character")
-    @Pattern(regexp = "^(?=.*[a-zA-Z\\d].*)[a-zA-Z\\d!@#$%&*]{6,}$",message = "password should contain number and alphabet")
+    @NotBlank(message = "kata sandi tidak boleh kosong")
+    @Size(min = 6, message = "kata sandi harus mengandung minimal 6 karakter ")
+    @Pattern(regexp = "(^(?=\\S*([a-z]|[A-Z])+\\S*[0-9]+\\S*)|^(?=\\S*[0-9]+\\S*([a-z]|[A-Z])+\\S*)).{6,}",message = "kata sandi harus mengandung gabungan angka dan huruf")
     private String password;
 
-    @NotBlank(message = "firstname shouldn't be blank")
+    @NotBlank(message = "nama depan tidak boleh kosong")
     private String firstname;
 
-    @NotBlank(message = "lastname shouldn't be blank")
+    @NotBlank(message = "nama belakang/marga tidak boleh kosong")
     private String lastname;
 
-    @NotBlank(message = "sex shouldn't be blank")
+    @NotBlank(message = "jenis kelamin tidak boleh kosong")
     @Pattern(regexp = "(male)|(female)", message = "should be either `male` or `female`")
     private String sex;
 
-    @NotBlank(message = "email shouldn't be blank")
+    @NotBlank(message = "email tidak boleh kosong")
     @Pattern(regexp = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{1,}$", message = "email format should be valid")
     private String email;
 
@@ -41,8 +41,8 @@ public class UserRegisterDto {
 
 //    private LocalDateTime createTime;
 
-    @Past(message = "The date of birth should be a past date value")
-    @AgeValidation(message = "Please check your birth Year")
+    @Past(message = "mohon periksa kembali untuk tahun kelahirannya")
+    @AgeValidation(message = "mohon periksa kembali untuk tahun kelahiran")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 

@@ -12,9 +12,11 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -51,10 +53,11 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .mvcMatchers("/api/users/login").permitAll()
                 .mvcMatchers("/api/users/register").permitAll()
                 .mvcMatchers("/api/users/reset-password*/*").permitAll()
+                .mvcMatchers("/api/users/update-password*/*").permitAll()
                 .mvcMatchers("/api/packages/*").fullyAuthenticated()
                 .mvcMatchers("/api/packages/internal*/*").permitAll()
                 .mvcMatchers("/api/content*/*").fullyAuthenticated()
-                .mvcMatchers("/api/mail-sender*/*").fullyAuthenticated()
+                .mvcMatchers("/api/mail-sender*/*").permitAll()
                 .mvcMatchers("/api/result*/*").permitAll()
             .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
@@ -65,7 +68,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 CorsConfiguration corsConfiguration = new CorsConfiguration();
                 corsConfiguration.setAllowedOrigins(Arrays.asList("*"));
                 corsConfiguration.setAllowedMethods(Arrays.asList("POST","GET","PUT","DELETE"));
-                corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization","Content-Type","Voucher","Content-Disposition"));
+                corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization","Content-Type","Voucher","Content-Disposition","X-Code"));
 
                 return corsConfiguration;
             };

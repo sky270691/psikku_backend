@@ -80,17 +80,20 @@ public class VoucherServiceImpl implements VoucherService {
         //set the used count of the voucher based on the total user in voucher
         voucherLookup.setUsed(voucherLookup.getUserList().size());
 
-        if(voucherLookup.getUserList().contains(user)){
+        if(voucherLookup.getUserList().contains(user) && voucherLookup.getTestPackage().getId() == testPackage.getId()){
             throw new VoucherException("voucher already redeemed");
         }
+
         if(voucherLookup.getTestPackage().getId() == testPackage.getId()
-            && voucherLookup.getUsed() < voucherLookup.getUserCount()){
+                && voucherLookup.getUsed() < voucherLookup.getUserCount()){
             voucherLookup.getUserList().add(user);
             voucherLookup.setUsed(voucherLookup.getUsed()+1);
             voucherRepository.save(voucherLookup);
-            return true;
+        }else{
+            throw new VoucherException(" voucher did not valid for the test package or Total limit already reached");
         }
-        throw new VoucherException("Total users of this voucher already reached it's limit");
+
+        return true;
     }
 
     @Override

@@ -77,19 +77,13 @@
 	</variable>
 	<title>
 		<band height="68">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<line>
 				<reportElement x="6" y="63" width="543" height="1" uuid="145805bd-4ee4-4d3a-af4b-daaf20fab736"/>
 			</line>
 			<image>
 				<reportElement x="2" y="6" width="181" height="40" uuid="4c8c7050-5db5-415d-bc48-3d30fa043b10"/>
 				<imageExpression><![CDATA["C:/Users/langi/Desktop/psyche.png"]]></imageExpression>
-			</image>
-			<rectangle>
-				<reportElement x="336" y="9" width="216" height="32" forecolor="#FFFFFF" backcolor="#C75DBC" uuid="866218ec-9639-498f-bbee-42b0eea0a2e7"/>
-			</rectangle>
-			<image>
-				<reportElement x="335" y="9" width="217" height="32" uuid="e30c8bbd-d88b-439f-bcf9-790c9a5d40e3"/>
-				<imageExpression><![CDATA["C:/Users/langi/Desktop/smaker 2 binsus tomohon.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>

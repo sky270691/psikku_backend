@@ -26,7 +26,7 @@ public class SendEmailController {
     public String sendTestEmailWithoutAttachment() {
         String to= "langi.risky@gmail.com";
         String subject="test email";
-        String text = "hello, sending this message from spring boot psikku";
+        String text = "hello, sending this message <b>from spring boot psikku</b>";
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(to);
         mailMessage.setSubject(subject);
