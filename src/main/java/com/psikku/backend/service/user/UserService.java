@@ -28,6 +28,6 @@ public interface UserService {
     Optional<UserRegisterDto> validateResetPasswordCode(String code);
     ResponseEntity<UserRegisterResponse>updatePassword(UserResetPasswordDto userResetPasswordDto, String code);
 //    public User convertToUserEntity(UserRegisterAuthServerResponse userRegisterAuthServerResponse);
-//    public UserRegisterResponse registerResponse(UserRegisterDto userRegisterDto, boolean status);
+//    public UserRegisterResponse register  Response(UserRegisterDto userRegisterDto, boolean status);
 
 }

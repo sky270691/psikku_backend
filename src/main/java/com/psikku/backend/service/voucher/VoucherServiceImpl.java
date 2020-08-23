@@ -1,12 +1,14 @@
 package com.psikku.backend.service.voucher;
 
 import com.psikku.backend.dto.payment.GeneratedPaymentDetailDto;
+import com.psikku.backend.dto.testpackage.TestPackageDto;
 import com.psikku.backend.dto.voucher.ValidateVoucherDto;
 import com.psikku.backend.entity.Payment;
 import com.psikku.backend.entity.TestPackage;
 import com.psikku.backend.entity.User;
 import com.psikku.backend.entity.Voucher;
 import com.psikku.backend.exception.VoucherException;
+import com.psikku.backend.mapper.testpackage.TestPackageMapper;
 import com.psikku.backend.repository.VoucherRepository;
 import com.psikku.backend.service.company.CompanyService;
 import com.psikku.backend.service.payment.PaymentService;
@@ -31,17 +33,20 @@ public class VoucherServiceImpl implements VoucherService {
     private final Logger logger;
     private final UserService userService;
     private final PaymentService paymentService;
+    private final TestPackageMapper testPackageMapper;
 
     @Autowired
     public VoucherServiceImpl(VoucherRepository voucherRepository,
                               CompanyService companyService,
                               @Lazy TestPackageService testPackageService,
                               UserService userService,
-                              @Lazy PaymentService paymentService){
+                              @Lazy PaymentService paymentService,
+                              @Lazy TestPackageMapper testPackageMapper){
         this.voucherRepository = voucherRepository;
         this.companyService = companyService;
         this.testPackageService = testPackageService;
         this.paymentService = paymentService;
+        this.testPackageMapper = testPackageMapper;
         this.logger = LoggerFactory.getLogger(this.getClass());
         this.userService = userService;
     }
@@ -77,6 +82,13 @@ public class VoucherServiceImpl implements VoucherService {
         User user = userService.findByUsername(username);
         TestPackage testPackage = testPackageService.getPackageById(validateVoucherDto.getTestPackageId());
 
+
+        //todo
+        // detect voucher by company
+        if(voucherLookup.getCompany()!= null){
+//            user.getCompany().getId() == voucherLookup.getCompany().getId()
+        }
+
         //set the used count of the voucher based on the total user in voucher
         voucherLookup.setUsed(voucherLookup.getUserList().size());
 
@@ -94,6 +106,29 @@ public class VoucherServiceImpl implements VoucherService {
         }
 
         return true;
+    }
+
+    @Override
+    public TestPackageDto validateStatusV2(String voucherCode) {
+        String username  = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByUsername(username);
+
+        Voucher voucher = getVoucherByCode(voucherCode);
+        if(voucher.getUserList().contains(user)){
+            throw new VoucherException("voucher already redeemed");
+        }
+
+        if(voucher.getCompany() != null){
+            if(user.getCompany().getId() == voucher.getCompany().getId()){
+                voucher.getUserList().add(user);
+                voucher.setUsed(voucher.getUsed()+1);
+                voucherRepository.save(voucher);
+                TestPackage testPackage = voucher.getTestPackage();
+                TestPackageDto dto = testPackageMapper.convertToTestPackageDto(testPackage);
+                return dto;
+            }
+        }
+        throw new VoucherException("invalid voucher");
     }
 
     @Override

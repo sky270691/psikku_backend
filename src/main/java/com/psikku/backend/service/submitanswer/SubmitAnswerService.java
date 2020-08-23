@@ -2,10 +2,10 @@ package com.psikku.backend.service.submitanswer;
 
 
 import com.psikku.backend.dto.testresult.TestFinalResultDto;
+import com.psikku.backend.dto.useranswer.KraepelinResultDto;
 import com.psikku.backend.dto.useranswer.SubmittedAnswerDto;
 import com.psikku.backend.dto.useranswer.UserAnswerDto;
 import com.psikku.backend.entity.SubmittedAnswer;
-import com.psikku.backend.entity.TestResult;
 import com.psikku.backend.entity.User;
 
 import java.util.List;
@@ -16,5 +16,6 @@ public interface SubmitAnswerService {
     List<SubmittedAnswerDto> convertToSubmittedAnswerDtoList(List<SubmittedAnswer> submittedAnswerList);
     TestFinalResultDto calculateGenericTest(UserAnswerDto submittedAnswerList, String voucherCode);
     TestFinalResultDto calculateResultTestV2(UserAnswerDto userAnswerDto, String voucherCode);
+    void saveKraepelinResult(KraepelinResultDto dto);
 //    void getListTest(List<SubmittedAnswer> submittedAnswerList);
 }

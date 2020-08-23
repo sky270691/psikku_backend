@@ -1,6 +1,7 @@
 package com.psikku.backend.service.submitanswer;
 
 import com.psikku.backend.dto.testresult.TestFinalResultDto;
+import com.psikku.backend.dto.useranswer.KraepelinResultDto;
 import com.psikku.backend.dto.useranswer.SubmittedAnswerDto;
 import com.psikku.backend.dto.useranswer.UserAnswerDto;
 import com.psikku.backend.entity.*;
@@ -167,6 +168,22 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
         System.out.println("reach here");
         return testResultService.convertToTestResultDto(testResult);
 
+    }
+
+    @Override
+    public void saveKraepelinResult(KraepelinResultDto dto) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Voucher voucher = voucherService.getVoucherById(dto.getVoucherId());
+        Test test = testService.findTestByInternalName("kraepelin");
+        User user = userService.findByUsername(username);
+        TestResult testResult = new TestResult();
+        testResult.setUser(user);
+        testResult.setVoucher(voucher);
+        testResult.setResult(dto.getResult());
+        testResult.setDateOfTest(dto.getCreationDateTime());
+        testResult.setTest(test);
+
+        testResultService.saveTestResult(testResult);
     }
 
 

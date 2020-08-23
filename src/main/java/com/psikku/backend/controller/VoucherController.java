@@ -1,6 +1,7 @@
 package com.psikku.backend.controller;
 
 import com.psikku.backend.dto.payment.GeneratedPaymentDetailDto;
+import com.psikku.backend.dto.testpackage.TestPackageDto;
 import com.psikku.backend.dto.voucher.ValidateVoucherDto;
 import com.psikku.backend.service.voucher.VoucherService;
 import org.slf4j.Logger;
@@ -11,6 +12,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/voucher")
@@ -35,6 +39,18 @@ public class VoucherController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/redeem/company")
+    public ResponseEntity<?> validateVoucherV2(@RequestParam String voucher){
+        TestPackageDto dto = voucherService.validateStatusV2(voucher);
+
+        Map<String,Object> returnBody = new LinkedHashMap<>();
+        returnBody.put("status","success");
+        returnBody.put("test_package",dto);
+
+        return ResponseEntity.ok(returnBody);
+    }
+
 
     @PostMapping(value = "/generate")
     public ResponseEntity<GeneratedPaymentDetailDto> generateVoucherWithExistingPackage(@RequestPart("package_id") int packageId,

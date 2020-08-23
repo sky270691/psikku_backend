@@ -1,8 +1,8 @@
 package com.psikku.backend.controller;
 
 import com.psikku.backend.dto.testresult.TestFinalResultDto;
+import com.psikku.backend.dto.useranswer.KraepelinResultDto;
 import com.psikku.backend.dto.useranswer.UserAnswerDto;
-import com.psikku.backend.service.testresult.TestResultService;
 import com.psikku.backend.service.submitanswer.SubmitAnswerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user-answers")
@@ -47,6 +48,15 @@ public class SubmitAnswerController {
 
         logger.info("username: '"+getUsername()+"' answer's for test:'"+testFinalResultDto.getInternalName()+"' calculated successfully");
         return new ResponseEntity<>(testFinalResultDto,HttpStatus.OK);
+    }
+
+    @PostMapping("/kraepelin")
+    public ResponseEntity<?> submitKraepelinAnswer(@RequestBody KraepelinResultDto dto){
+
+        submitAnswerService.saveKraepelinResult(dto);
+        Map<String,String> returnBody = new LinkedHashMap<>();
+        returnBody.put("status","success");
+        return ResponseEntity.ok(returnBody);
     }
 
     private String getUsername(){

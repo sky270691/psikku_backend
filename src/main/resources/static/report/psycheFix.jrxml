@@ -76,14 +76,18 @@
 		<variableExpression><![CDATA[IF($P{eqTotalResult} <20,"Kurang Sekali",(IF($P{eqTotalResult} < 40 ,"Kurang",(IF($P{eqTotalResult} < 60 ,"Sedang",(IF($P{eqTotalResult} < 80 ,"Cukup Baik","Sangat Baik")))))))]]></variableExpression>
 	</variable>
 	<title>
-		<band height="68">
+		<band height="79">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<line>
 				<reportElement x="6" y="63" width="543" height="1" uuid="145805bd-4ee4-4d3a-af4b-daaf20fab736"/>
 			</line>
 			<image>
-				<reportElement x="2" y="6" width="181" height="40" uuid="4c8c7050-5db5-415d-bc48-3d30fa043b10"/>
+				<reportElement x="2" y="7" width="181" height="40" uuid="4c8c7050-5db5-415d-bc48-3d30fa043b10"/>
 				<imageExpression><![CDATA["C:/Users/langi/Desktop/psyche.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="493" y="7" width="50" height="50" uuid="754f973d-8575-4c75-aa99-6e3f6d2b8bb3"/>
+				<imageExpression><![CDATA["C:/Users/langi/Documents/Project/Psyche/Psyche online test/Hasil/SMAN 1 Amurang/480-SMAN_1_AMURANG.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>

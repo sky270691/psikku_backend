@@ -130,7 +130,6 @@ public class ReportServiceImpl implements ReportService {
     private void pdfSingleReportExporter(JasperReport jasperReport, User user, String voucher){
 
         List<TestResult> testResultList = getTestResultByUserAndVoucher(user,voucher);
-        if(testResultList.size()>0){
 
             JasperPrint jasperPrint;
             try {
@@ -166,7 +165,7 @@ public class ReportServiceImpl implements ReportService {
             } catch (JRException e) {
                 e.printStackTrace();
             }
-        }
+
     }
 
     private Map<String,Object> parametersBuilder(User user, List<TestResult> testResultList){

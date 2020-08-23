@@ -26,6 +26,7 @@ public class TestPackageCreationDto {
 
     @NotBlank
     @Pattern(regexp = "(BANNER) | (LIST) | (COMBINE)")
+    @JsonProperty("view_type")
     private String viewType;
 
     public String getName() {

@@ -65,7 +65,7 @@ public class CovidResultTestCalculator implements UniqueResultTestCalculator{
 
         String category = perCategoryPredicate(yesAnswerCategory);
         StringBuilder sb = new StringBuilder();
-        sb.append("resiko:").append(category);
+        sb.append("Resiko Terpapar Covid: ").append(category);
 
         setResult(sb.toString());
 

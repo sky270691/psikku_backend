@@ -101,7 +101,7 @@ public class TestResultController {
             HttpHeaders headers = new HttpHeaders();
             byte[] data = Files.readAllBytes(resource.getFile().toPath());
             Files.deleteIfExists(resource.getFile().toPath());
-            headers.add(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\""+resource.getFile().getName());
+            headers.add(HttpHeaders.CONTENT_DISPOSITION,"inline; filename=\""+resource.getFile().getName());
             headers.add(HttpHeaders.CONTENT_TYPE,"application/pdf");
             return new ResponseEntity<>(data,headers,HttpStatus.OK);
         } catch (IOException e) {
