@@ -1,14 +1,23 @@
 package com.psikku.backend.mapper.user;
 
-import com.psikku.backend.dto.user.UserDto;
-import com.psikku.backend.dto.user.UserRegisterAuthServerResponse;
-import com.psikku.backend.dto.user.UserRegisterDto;
-import com.psikku.backend.dto.user.UserRegisterResponse;
+import com.psikku.backend.dto.user.*;
+import com.psikku.backend.entity.Education;
 import com.psikku.backend.entity.User;
+import com.psikku.backend.mapper.user.education.EducationMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
 
 @Component
 public class UserMapper {
+
+    private final EducationMapper educationMapper;
+
+    @Autowired
+    public UserMapper(EducationMapper educationMapper) {
+        this.educationMapper = educationMapper;
+    }
 
     public User convertRegisteredAuthServerUserToUserEntity(UserRegisterAuthServerResponse userRegisterAuthServerResponse) {
 
@@ -55,6 +64,18 @@ public class UserMapper {
         userDto.setProvince(user.getProvince());
         userDto.setCity(user.getCity());
         userDto.setAddress(user.getAddress());
+        if(user.getMaritalStatus() != null && !user.getMaritalStatus().equalsIgnoreCase("")) {
+            userDto.setMaritalStatus(user.getMaritalStatus());
+        }
+        if(user.getSim() != null && !user.getSim().equalsIgnoreCase("")) {
+            userDto.setSim(user.getSim());
+        }
+        if(user.getEducationList() != null && !user.getEducationList().isEmpty()){
+            userDto.setEducationList(new ArrayList<>());
+            for (Education education : user.getEducationList()) {
+                userDto.getEducationList().add(educationMapper.convertEntityToEducationDto(education));
+            }
+        }
         return userDto;
     }
 
@@ -70,6 +91,44 @@ public class UserMapper {
         userRegisterDto.setCity(user.getCity());
         userRegisterDto.setAddress(user.getAddress());
         return userRegisterDto;
+    }
+
+
+//    public User convertUserUpdateDtoToUserEntity(UserUpdateDto dto){
+//
+//        User user = new User();
+//        user.setUsername(dto.getUsername());
+//        user.setFirstname(dto.getFirstname());
+//        user.setLastname(dto.getLastname());
+//        user.setSex(dto.getSex());
+//        user.setEmail(dto.getEmail());
+//        user.setDateOfBirth(dto.getDateOfBirth());
+//
+//
+//    }
+
+    public UserRegisterDto convertUserUpdateToUserRegisterDto(UserUpdateDto userUpdateDto){
+        UserRegisterDto userRegisterDto = new UserRegisterDto();
+
+        userRegisterDto.setUsername(userUpdateDto.getUsername());
+        userRegisterDto.setPassword(userUpdateDto.getPassword());
+        userRegisterDto.setFirstname(userUpdateDto.getFirstname());
+        if(userUpdateDto.getLastname() != null && !userUpdateDto.getLastname().equalsIgnoreCase("")) {
+            userRegisterDto.setLastname(userUpdateDto.getLastname());
+        }
+        userRegisterDto.setSex(userUpdateDto.getSex());
+        userRegisterDto.setDateOfBirth(userUpdateDto.getDateOfBirth());
+        if(userUpdateDto.getAddress() != null && !userUpdateDto.getAddress().equalsIgnoreCase("")) {
+            userRegisterDto.setAddress(userUpdateDto.getAddress());
+        }
+        if(userUpdateDto.getCity() != null && !userUpdateDto.getCity().equalsIgnoreCase("")) {
+            userRegisterDto.setCity(userUpdateDto.getCity());
+        }
+        if(userUpdateDto.getProvince() != null && !userUpdateDto.getProvince().equalsIgnoreCase("")) {
+            userRegisterDto.setProvince(userUpdateDto.getProvince());
+        }
+        userRegisterDto.setEmail(userUpdateDto.getEmail());
+        return  userRegisterDto;
     }
 
 }

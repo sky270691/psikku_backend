@@ -49,6 +49,9 @@ public class TestPackageMapper {
         testPackageDto.setPrice(testPackage.getPrice());
         testPackageDto.setViewType(testPackage.getViewType());
         testPackageDto.setMinimalTestDtoList(new ArrayList<>());
+        if(testPackage.getVoucher() != null && !testPackage.getVoucher().isEmpty()) {
+            testPackageDto.setVoucherValidUntil(testPackage.getVoucher().get(0).getValidUntil());
+        }
         testPackage.getTestList().forEach(test-> testPackageDto.getMinimalTestDtoList().add(testMapper.convertToMinTestDto(test)));
         return testPackageDto;
     }

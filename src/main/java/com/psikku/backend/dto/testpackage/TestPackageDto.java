@@ -3,6 +3,7 @@ package com.psikku.backend.dto.testpackage;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.psikku.backend.dto.test.MinimalTestDto;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class TestPackageDto {
@@ -14,6 +15,11 @@ public class TestPackageDto {
     private int price;
 
     private String description;
+
+    private String message;
+
+    @JsonProperty(value = "voucher_valid_until")
+    private LocalDateTime voucherValidUntil;
 
     @JsonProperty(value = "view_type")
     private String viewType;
@@ -67,5 +73,21 @@ public class TestPackageDto {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public LocalDateTime getVoucherValidUntil() {
+        return voucherValidUntil;
+    }
+
+    public void setVoucherValidUntil(LocalDateTime voucherValidUntil) {
+        this.voucherValidUntil = voucherValidUntil;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

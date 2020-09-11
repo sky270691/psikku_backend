@@ -24,6 +24,9 @@ public class Company {
 
     private String email;
 
+    @Column(name = "display_result")
+    private boolean displayResult;
+
     @OneToMany(mappedBy = "company")
     private List<User> userList;
 
@@ -100,5 +103,13 @@ public class Company {
 
     public void setVoucherList(List<Voucher> voucherList) {
         this.voucherList = voucherList;
+    }
+
+    public boolean isDisplayResult() {
+        return displayResult;
+    }
+
+    public void setDisplayResult(boolean displayResult) {
+        this.displayResult = displayResult;
     }
 }

@@ -1,21 +1,27 @@
 package com.psikku.backend.dto.user;
 
+import com.psikku.backend.dto.user.education.EducationDto;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class UserDto {
 
     long id;
-    String username;
-    String email;
-    String firstname;
-    String lastname;
-    String sex;
-    String province;
-    String city;
-    String address;
-    LocalDateTime createTime;
-    LocalDate dateOfBirth;
+    private String username;
+    private String email;
+    private String firstname;
+    private String lastname;
+    private String sex;
+    private String province;
+    private String city;
+    private String address;
+    private String sim;
+    private String maritalStatus;
+    private LocalDateTime createTime;
+    private LocalDate dateOfBirth;
+    private List<EducationDto> educationList;
 
     public long getId() {
         return id;
@@ -103,5 +109,29 @@ public class UserDto {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getSim() {
+        return sim;
+    }
+
+    public void setSim(String sim) {
+        this.sim = sim;
+    }
+
+    public String getMaritalStatus() {
+        return maritalStatus;
+    }
+
+    public void setMaritalStatus(String maritalStatus) {
+        this.maritalStatus = maritalStatus;
+    }
+
+    public List<EducationDto> getEducationList() {
+        return educationList;
+    }
+
+    public void setEducationList(List<EducationDto> educationList) {
+        this.educationList = educationList;
     }
 }

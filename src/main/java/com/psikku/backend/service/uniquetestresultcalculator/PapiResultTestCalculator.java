@@ -11,11 +11,13 @@ import com.psikku.backend.service.test.TestService;
 import com.psikku.backend.service.user.UserService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class PapiResultTestCalculator implements UniqueResultTestCalculator{
 
     private final String name;
@@ -24,21 +26,22 @@ public class PapiResultTestCalculator implements UniqueResultTestCalculator{
     private final TestService testService;
     private final UserService userService;
 
-    public PapiResultTestCalculator(String name,
+    public PapiResultTestCalculator(
                                     @Lazy AnswerService answerService,
                                     @Lazy QuestionService questionService,
                                     @Lazy TestService testService,
                                     @Lazy UserService userService) {
-        this.name = name;
+
         this.answerService = answerService;
         this.questionService = questionService;
         this.testService = testService;
         this.userService = userService;
+        this.name = "papi";
     }
 
     @Override
     public String getName() {
-        return null;
+        return name;
     }
 
     @Override
@@ -50,6 +53,7 @@ public class PapiResultTestCalculator implements UniqueResultTestCalculator{
 
 
         Map<String,Integer> categoryValue = new HashMap<>();
+        categoryValue.put("g",0);
         categoryValue.put("l",0);
         categoryValue.put("i",0);
         categoryValue.put("t",0);

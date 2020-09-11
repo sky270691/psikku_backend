@@ -17,7 +17,7 @@ public class CompanyMapper {
         company.setProvince(companyDto.getProvince());
         company.setPhoneNumber(companyDto.getPhoneNumber());
         company.setEmail(companyDto.getEmail());
-
+        company.setDisplayResult(companyDto.isDisplayResult());
         return company;
     }
 

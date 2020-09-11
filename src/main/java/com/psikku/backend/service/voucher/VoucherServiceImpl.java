@@ -1,12 +1,10 @@
 package com.psikku.backend.service.voucher;
 
 import com.psikku.backend.dto.payment.GeneratedPaymentDetailDto;
+import com.psikku.backend.dto.test.MinimalTestDto;
 import com.psikku.backend.dto.testpackage.TestPackageDto;
 import com.psikku.backend.dto.voucher.ValidateVoucherDto;
-import com.psikku.backend.entity.Payment;
-import com.psikku.backend.entity.TestPackage;
-import com.psikku.backend.entity.User;
-import com.psikku.backend.entity.Voucher;
+import com.psikku.backend.entity.*;
 import com.psikku.backend.exception.VoucherException;
 import com.psikku.backend.mapper.testpackage.TestPackageMapper;
 import com.psikku.backend.repository.VoucherRepository;
@@ -22,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -114,19 +113,35 @@ public class VoucherServiceImpl implements VoucherService {
         User user = userService.findByUsername(username);
 
         Voucher voucher = getVoucherByCode(voucherCode);
-        if(voucher.getUserList().contains(user)){
-            throw new VoucherException("voucher already redeemed");
+        TestPackage testPackage = voucher.getTestPackage();
+
+        TestPackageDto dto = testPackageMapper.convertToTestPackageDto(testPackage);
+
+
+        if(voucher.getUserList().contains(user)) {
+            dto.setMessage("voucher already redeemed");
+            List<TestResult> allTestResultForCurrentUser = user.getTestResult();
+            if (allTestResultForCurrentUser != null && !allTestResultForCurrentUser.isEmpty()) {
+                for (TestResult testResult : allTestResultForCurrentUser) {
+                    if (testResult.getVoucher().getId() == voucher.getId()) {
+
+                        for (MinimalTestDto minimalTestDto : dto.getMinimalTestDtoList()) {
+                            if (minimalTestDto.getId() == testResult.getTest().getId()) {
+                                minimalTestDto.setFinish(true);
+                            }
+                        }
+
+                    }
+                }
+            }
+            return dto;
         }
 
-        if(voucher.getCompany() != null){
-            if(user.getCompany().getId() == voucher.getCompany().getId()){
-                voucher.getUserList().add(user);
-                voucher.setUsed(voucher.getUsed()+1);
-                voucherRepository.save(voucher);
-                TestPackage testPackage = voucher.getTestPackage();
-                TestPackageDto dto = testPackageMapper.convertToTestPackageDto(testPackage);
-                return dto;
-            }
+        if(user.getCompany().getId() != 0 && user.getCompany().getId() ==  voucher.getCompany().getId()) {
+            voucher.getUserList().add(user);
+            voucher.setUsed(voucher.getUsed()+1);
+            voucherRepository.save(voucher);
+            return dto;
         }
         throw new VoucherException("invalid voucher");
     }

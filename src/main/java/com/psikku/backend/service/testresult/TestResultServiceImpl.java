@@ -7,6 +7,7 @@ import com.psikku.backend.exception.TestResultException;
 import com.psikku.backend.mapper.testresult.TestResultMapper;
 import com.psikku.backend.repository.TestResultRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,8 +44,11 @@ public class TestResultServiceImpl implements TestResultService {
 
     @Override
     public List<TestResult> findAllByUserName(String username) {
-        return testResultRepository.findAllByUser_username(username);
+        List<TestResult> testResult = testResultRepository.findAllByUser_username(username);
+        return testResult;
     }
+
+
 
     @Override
     public TestFinalResultDto convertToTestResultDto(TestResult testResult) {

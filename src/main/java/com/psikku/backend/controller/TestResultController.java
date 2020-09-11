@@ -70,7 +70,11 @@ public class TestResultController {
         List<TestResult> testResultList = testResultService.findAllByUserName(getUsername());
         List<TestFinalResultDto> testFinalResultDtoList = new ArrayList<>();
         if(!testResultList.isEmpty()){
-            testResultList.forEach(testResult -> testFinalResultDtoList.add(testResultService.convertToTestResultDto(testResult)));
+            testResultList.forEach(testResult -> {
+                TestFinalResultDto dto = testResultService.convertToTestResultDto(testResult);
+                dto.setHide(!testResult.getVoucher().getCompany().isDisplayResult());
+                testFinalResultDtoList.add(dto);
+            });
             logger.info("username: '"+getUsername()+"' getting test result success");
             return testFinalResultDtoList;
         }else{

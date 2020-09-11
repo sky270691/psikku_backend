@@ -40,9 +40,10 @@ public class SubmitAnswerController {
         logger.info("username: '"+getUsername()+"' answer's for test:'"+testFinalResultDto.getInternalName()+"' calculated successfully");
         return new ResponseEntity<>(testFinalResultDto,HttpStatus.OK);
     }
+
     @PostMapping("/generic")
     public ResponseEntity<TestFinalResultDto> submitAnswersGeneric(@RequestBody UserAnswerDto userAnswerDto,
-                                                            @RequestHeader("Voucher") String voucher){
+                                                                   @RequestHeader("Voucher") String voucher){
         logger.info("username: '"+getUsername()+"' try to submit answer");
         TestFinalResultDto testFinalResultDto= submitAnswerService.calculateGenericTest(userAnswerDto,voucher.trim());
 
@@ -52,10 +53,11 @@ public class SubmitAnswerController {
 
     @PostMapping("/kraepelin")
     public ResponseEntity<?> submitKraepelinAnswer(@RequestBody KraepelinResultDto dto){
-
+        logger.info("username: '"+getUsername()+"' try to submit kraepelin answer");
         submitAnswerService.saveKraepelinResult(dto);
         Map<String,String> returnBody = new LinkedHashMap<>();
         returnBody.put("status","success");
+        logger.info("username: '"+getUsername()+"' result submitted successfully");
         return ResponseEntity.ok(returnBody);
     }
 

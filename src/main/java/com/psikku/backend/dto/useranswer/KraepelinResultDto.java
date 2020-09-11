@@ -6,21 +6,20 @@ import java.time.LocalDateTime;
 
 public class KraepelinResultDto {
 
-    @JsonProperty("voucher_id")
-    private Long voucherId;
+    @JsonProperty("voucher")
+    private String voucher;
 
     private String result;
 
     @JsonProperty("creation_date_time")
-    private LocalDateTime creationDateTime;
+    private String creationDateTime;
 
-
-    public Long getVoucherId() {
-        return voucherId;
+    public String getVoucher() {
+        return voucher;
     }
 
-    public void setVoucherId(Long voucherId) {
-        this.voucherId = voucherId;
+    public void setVoucher(String voucher) {
+        this.voucher = voucher;
     }
 
     public String getResult() {
@@ -31,11 +30,11 @@ public class KraepelinResultDto {
         this.result = result;
     }
 
-    public LocalDateTime getCreationDateTime() {
+    public String getCreationDateTime() {
         return creationDateTime;
     }
 
-    public void setCreationDateTime(LocalDateTime creationDateTime) {
+    public void setCreationDateTime(String creationDateTime) {
         this.creationDateTime = creationDateTime;
     }
 }

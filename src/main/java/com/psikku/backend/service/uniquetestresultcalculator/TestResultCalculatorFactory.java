@@ -76,6 +76,8 @@ public class TestResultCalculatorFactory {
             return getCalculator("evaluasievent");
         }else if(testName.equalsIgnoreCase("riasec")){
             return getCalculator("riasec");
+        }else if(testName.equalsIgnoreCase("papi")){
+            return getCalculator("papi");
         }else{
             logger.error("can't find result calculator for the testname: "+testName);
             throw new AnswerException("answer is not valid, please re-check your answer");

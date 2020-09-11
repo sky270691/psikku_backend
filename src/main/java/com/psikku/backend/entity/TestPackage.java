@@ -31,8 +31,8 @@ public class TestPackage {
                 inverseJoinColumns = @JoinColumn(name = "test_id"))
     private List<Test> testList;
 
-//    @ManyToOne
-//    private Voucher voucher;
+    @OneToMany(mappedBy = "testPackage")
+    private List<Voucher> voucher;
 
     public int getId() {
         return id;
@@ -89,5 +89,14 @@ public class TestPackage {
 
     public void setTestList(List<Test> testList) {
         this.testList = testList;
+    }
+
+
+    public List<Voucher> getVoucher() {
+        return voucher;
+    }
+
+    public void setVoucher(List<Voucher> voucher) {
+        this.voucher = voucher;
     }
 }

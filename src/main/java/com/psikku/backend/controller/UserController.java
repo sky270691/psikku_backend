@@ -1,10 +1,7 @@
 package com.psikku.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.psikku.backend.dto.user.UserDto;
-import com.psikku.backend.dto.user.UserRegisterDto;
-import com.psikku.backend.dto.user.UserRegisterResponse;
-import com.psikku.backend.dto.user.UserResetPasswordDto;
+import com.psikku.backend.dto.user.*;
 import com.psikku.backend.entity.TokenFactory;
 import com.psikku.backend.exception.UserExistException;
 import com.psikku.backend.service.user.UserService;
@@ -61,6 +58,15 @@ public class UserController {
         return userService.updateUser(userRegisterDto,null);
     }
 
+    @PutMapping("/update-user-data")
+    public ResponseEntity<?> updateCompleteUser(@Valid @RequestBody UserUpdateDto userUpdateDto) {
+        logger.info("username: '"+userUpdateDto.getUsername()+"' try to update data");
+        userService.updateCompleteUser(userUpdateDto);
+        Map<String,String> returnBody = new LinkedHashMap<>();
+        returnBody.put("status","success");
+        return ResponseEntity.ok(returnBody);
+    }
+
     @PostMapping(value = "/login")
     public TokenFactory login (@RequestPart String username, @RequestPart String password){
         try{
@@ -69,7 +75,7 @@ public class UserController {
             return tokenFactory;
         }catch (RuntimeException e){
 //            e.printStackTrace();
-            logger.info("username: '"+username+"' login error\nstacktrace: "+e.getMessage());
+            logger.error("username: '"+username+"' login error\nstacktrace: "+e.getMessage());
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "username dan/atau password salah",e);
         }
     }

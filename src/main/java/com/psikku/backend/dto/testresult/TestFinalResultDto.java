@@ -13,6 +13,7 @@ public class TestFinalResultDto {
     private LocalDateTime testDateTime;
     private String resultCalculation;
     private String result;
+    private boolean hide;
 
     public String getTestName() {
         return testName;
@@ -52,5 +53,13 @@ public class TestFinalResultDto {
 
     public void setResult(String result) {
         this.result = result;
+    }
+
+    public boolean isHide() {
+        return hide;
+    }
+
+    public void setHide(boolean hide) {
+        this.hide = hide;
     }
 }

@@ -19,6 +19,9 @@ public class CompanyDto {
 
     private String email;
 
+    @JsonProperty(value = "display_result")
+    private boolean displayResult;
+
     public int getId() {
         return id;
     }
@@ -73,5 +76,13 @@ public class CompanyDto {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isDisplayResult() {
+        return displayResult;
+    }
+
+    public void setDisplayResult(boolean displayResult) {
+        this.displayResult = displayResult;
     }
 }

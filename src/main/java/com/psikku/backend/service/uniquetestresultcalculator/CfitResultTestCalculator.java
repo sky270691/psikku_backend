@@ -83,10 +83,10 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
         List<Answer[]> correctAnswer = new ArrayList<>();
 
         List<SubmittedAnswerDto> subtest2 = cfitAnswer.stream()
-                                                      .filter(answer -> {
-                                                          String[] questionIdSplit = answer.getQuestionId().split("_");
-                                                          return Integer.parseInt(questionIdSplit[1]) == 2;
-                                                      }).collect(Collectors.toList());
+                .filter(answer -> {
+                    String[] questionIdSplit = answer.getQuestionId().split("_");
+                    return Integer.parseInt(questionIdSplit[1]) == 2;
+                }).collect(Collectors.toList());
         // cfitAnswer contains only subtest 1, 3, 4
         cfitAnswer.removeAll(subtest2);
         for (SubmittedAnswerDto answerDto : cfitAnswer) {
@@ -106,8 +106,15 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
 
         if(!subtest2.isEmpty() && subtest2.get(0).getQuestionId().contains("cfit3")){
             subtest2.forEach(answerSub2Dto -> {
-                String answer1String = Optional.of(answerSub2Dto.getAnswers().get(0).toLowerCase()).orElse("");
-                String answer2String = Optional.of(answerSub2Dto.getAnswers().get(1).toLowerCase()).orElse("");
+                String answer1String = "";
+                String answer2String = "";
+                if(answerSub2Dto.getAnswers()!= null && answerSub2Dto.getAnswers().get(0) != null){
+                    answer1String = Optional.of(answerSub2Dto.getAnswers().get(0).toLowerCase()).orElse("");
+                }
+
+                if(answerSub2Dto.getAnswers()!=null && answerSub2Dto.getAnswers().size() >1){
+                    answer2String = Optional.of(answerSub2Dto.getAnswers().get(1).toLowerCase()).orElse("");
+                }
 
                 if(!answer1String.equals("") && !answer2String.equals("")){
                     Answer answer1 = answerService.findById(answer1String);
@@ -122,11 +129,11 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
             });
         }else if(!subtest2.isEmpty() && subtest2.get(0).getQuestionId().contains("cfit2")){
 
-           List<String> answerDtoId =
-                   subtest2.stream()
-                    .filter(answer -> !answer.getAnswers().isEmpty())
-                    .map(answerDto->answerDto.getAnswers().get(0))
-                    .collect(Collectors.toList());
+            List<String> answerDtoId =
+                    subtest2.stream()
+                            .filter(answer -> !answer.getAnswers().isEmpty())
+                            .map(answerDto->answerDto.getAnswers().get(0))
+                            .collect(Collectors.toList());
 
             for (String answerDto : answerDtoId) {
 

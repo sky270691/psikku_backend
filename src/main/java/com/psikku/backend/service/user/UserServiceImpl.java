@@ -1,17 +1,24 @@
 package com.psikku.backend.service.user;
 
 import com.psikku.backend.dto.user.*;
+import com.psikku.backend.dto.user.education.EducationDto;
+import com.psikku.backend.entity.Company;
 import com.psikku.backend.entity.TokenFactory;
 import com.psikku.backend.entity.User;
 import com.psikku.backend.exception.UserExistException;
 import com.psikku.backend.mapper.user.UserMapper;
+import com.psikku.backend.mapper.user.education.EducationMapper;
 import com.psikku.backend.repository.UserRepository;
+import com.psikku.backend.service.company.CompanyService;
 import com.psikku.backend.service.email.EmailService;
 import com.psikku.backend.service.jwttoken.TokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,10 +29,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.util.*;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -39,10 +50,19 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private EducationMapper educationMapper;
+
+    @Autowired
     private EmailService emailService;
 
     @Autowired
+    private CompanyService companyService;
+
+    @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private ResourceLoader resourceLoader;
 
     @Value(value = "${auth-server.endpoint.users}")
     private String usersEndpoint;
@@ -127,10 +147,14 @@ public class UserServiceImpl implements UserService {
 
         userRegisterDto.setRoles(roleRegisterDtoList);
         ResponseEntity<UserRegisterAuthServerResponse> responseJson = restTemplate.postForEntity(usersEndpoint,userRegisterDto, UserRegisterAuthServerResponse.class);
-        
+
         User user =  userMapper.convertRegisteredAuthServerUserToUserEntity(responseJson.getBody());
         if(user.getId()==0){ // if user.getId() from auth server equals to 0 then return error response
             throw new UserExistException("username dan/atau email sudah pernah didaftarkan");
+        }
+        Company company = companyService.findById(15);
+        if(checkCompany(userRegisterDto.getEmail())){
+            user.setCompany(company);
         }
         userRepository.save(user);
         UserRegisterResponse userRegisterResponse = userMapper.convertUserEntityToUserRegisterResponse(user);
@@ -158,7 +182,6 @@ public class UserServiceImpl implements UserService {
             user.setProvince(userRegisterDto.getProvince());
             user.setEmail(userRegisterDto.getEmail());
 
-
             UserRegisterResponse response = new UserRegisterResponse();
             response.setStatus("success");
             response.setMessage("userdata for username " +userRegisterDto.getUsername()+" updated successfully");
@@ -169,6 +192,38 @@ public class UserServiceImpl implements UserService {
         }
         System.out.println("Error update user");
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    public void updateCompleteUser(UserUpdateDto userUpdateDto){
+        User user = userRepository.findUserByUsername(userUpdateDto.getUsername());
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<UserRegisterResponse> searchResponse = restTemplate.getForEntity(userSearchEndpoint,UserRegisterResponse.class,userUpdateDto.getUsername());
+
+        if(searchResponse.getBody() != null && searchResponse.getBody().getUsername().equalsIgnoreCase(userUpdateDto.getUsername())){
+            UserRegisterDto dto = userMapper.convertUserUpdateToUserRegisterDto(userUpdateDto);
+            restTemplate.put(usersEndpoint,dto);
+            user.setFirstname(userUpdateDto.getFirstname());
+            user.setLastname(userUpdateDto.getLastname());
+            user.setSex(userUpdateDto.getSex());
+            user.setDateOfBirth(userUpdateDto.getDateOfBirth());
+            user.setAddress(userUpdateDto.getAddress());
+            user.setCity(userUpdateDto.getCity());
+            user.setProvince(userUpdateDto.getProvince());
+            user.setEmail(userUpdateDto.getEmail());
+            user.setSim(userUpdateDto.getSim());
+            user.setMaritalStatus(userUpdateDto.getMaritalStatus());
+
+            if(userUpdateDto.getEducationList() != null && !userUpdateDto.getEducationList().isEmpty()){
+                user.setEducationList(new ArrayList<>());
+                for (EducationDto educationDto : userUpdateDto.getEducationList()) {
+                    user.getEducationList().add(educationMapper.convertDtoToEducationEntity(educationDto));
+                }
+            }
+
+        }
+        user.setId(user.getId());
+        userRepository.save(user);
     }
 
     @Override
@@ -235,6 +290,22 @@ public class UserServiceImpl implements UserService {
             sb.append(combination.charAt(random.nextInt(combination.length())));
         }
         return sb.toString();
+    }
+
+    private boolean checkCompany(String email){
+
+        Resource resource = resourceLoader.getResource("classpath:static/company/email-bsg.txt");
+        try {
+            List<String> emailList = Files.readAllLines(Paths.get(resource.getURI()));
+            for (String emailListData : emailList) {
+                if(email.equalsIgnoreCase(emailListData)){
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 

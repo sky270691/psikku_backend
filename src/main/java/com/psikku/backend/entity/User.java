@@ -32,6 +32,11 @@ public class User {
 
     private String province;
 
+    private String sim;
+
+    @Column(name = "marital_status")
+    private String maritalStatus;
+
     @Column(name = "create_time")
     private LocalDateTime createTime;
 
@@ -46,7 +51,6 @@ public class User {
     @JoinColumn(name = "company_id")
     private Company company;
 
-
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<SubmittedAnswer> submittedAnswerList;
 
@@ -59,6 +63,10 @@ public class User {
                 joinColumns = @JoinColumn(name = "user_id"),
                 inverseJoinColumns = @JoinColumn(name = "voucher_id"))
     private List<Voucher> voucherList;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private List<Education> educationList;
 
     public long getId() {
         return id;
@@ -196,5 +204,37 @@ public class User {
 
     public void setVoucherList(List<Voucher> voucherList) {
         this.voucherList = voucherList;
+    }
+
+    public List<TestResult> getTestResultList() {
+        return testResultList;
+    }
+
+    public void setTestResultList(List<TestResult> testResultList) {
+        this.testResultList = testResultList;
+    }
+
+    public String getSim() {
+        return sim;
+    }
+
+    public void setSim(String sim) {
+        this.sim = sim;
+    }
+
+    public String getMaritalStatus() {
+        return maritalStatus;
+    }
+
+    public void setMaritalStatus(String maritalStatus) {
+        this.maritalStatus = maritalStatus;
+    }
+
+    public List<Education> getEducationList() {
+        return educationList;
+    }
+
+    public void setEducationList(List<Education> educationList) {
+        this.educationList = educationList;
     }
 }

@@ -155,7 +155,7 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
         
         User user = userService.findByUsername(username);
         String testInternalName = userAnswerDto.getSubmittedAnswerDtoList().get(0).getQuestionId().split("_")[0];
-
+        System.out.println(testInternalName);
         TestResult testResult;
 
         UniqueResultTestCalculator testCalculator = testResultCalculatorFactory.getTestCalculator(testInternalName);
@@ -173,14 +173,14 @@ public class SubmitAnswerServiceImpl implements SubmitAnswerService {
     @Override
     public void saveKraepelinResult(KraepelinResultDto dto) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Voucher voucher = voucherService.getVoucherById(dto.getVoucherId());
+        Voucher voucher = voucherService.getVoucherByCode(dto.getVoucher());
         Test test = testService.findTestByInternalName("kraepelin");
         User user = userService.findByUsername(username);
         TestResult testResult = new TestResult();
         testResult.setUser(user);
         testResult.setVoucher(voucher);
         testResult.setResult(dto.getResult());
-        testResult.setDateOfTest(dto.getCreationDateTime());
+        testResult.setDateOfTest(formatLdt(dto.getCreationDateTime()));
         testResult.setTest(test);
 
         testResultService.saveTestResult(testResult);
