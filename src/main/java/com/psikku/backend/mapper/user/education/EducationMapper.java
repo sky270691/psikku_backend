@@ -1,6 +1,6 @@
 package com.psikku.backend.mapper.user.education;
 
-import com.psikku.backend.dto.user.education.EducationDto;
+import com.psikku.backend.dto.user.detail.EducationDto;
 import com.psikku.backend.entity.Education;
 import org.springframework.stereotype.Component;
 

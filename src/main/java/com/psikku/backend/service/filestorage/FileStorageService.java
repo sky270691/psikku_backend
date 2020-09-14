@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface FileStorageService {
 
     boolean storeFile(MultipartFile file,String subFolder);
+    boolean storeUserPicture(MultipartFile file);
     Resource loadFileAsResource(String filename,String category);
     void deleteByFilePathAndFileName(String filePath, String fileName);
     Resource downloadSingleFile(String filePath);

@@ -3,7 +3,9 @@ package com.psikku.backend.mapper.user;
 import com.psikku.backend.dto.user.*;
 import com.psikku.backend.entity.Education;
 import com.psikku.backend.entity.User;
+import com.psikku.backend.entity.WorkExperience;
 import com.psikku.backend.mapper.user.education.EducationMapper;
+import com.psikku.backend.mapper.user.workexperience.WorkExperienceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,10 +15,13 @@ import java.util.ArrayList;
 public class UserMapper {
 
     private final EducationMapper educationMapper;
+    private final WorkExperienceMapper workExperienceMapper;
 
     @Autowired
-    public UserMapper(EducationMapper educationMapper) {
+    public UserMapper(EducationMapper educationMapper,
+                      WorkExperienceMapper workExperienceMapper) {
         this.educationMapper = educationMapper;
+        this.workExperienceMapper = workExperienceMapper;
     }
 
     public User convertRegisteredAuthServerUserToUserEntity(UserRegisterAuthServerResponse userRegisterAuthServerResponse) {
@@ -76,6 +81,12 @@ public class UserMapper {
                 userDto.getEducationList().add(educationMapper.convertEntityToEducationDto(education));
             }
         }
+        if(user.getWorkExperienceList() != null && !user.getWorkExperienceList().isEmpty()){
+            userDto.setWorkExperienceList(new ArrayList<>());
+            for (WorkExperience workExperience : user.getWorkExperienceList()) {
+                userDto.getWorkExperienceList().add(workExperienceMapper.convertWorkExperienceEntityToDto(workExperience));
+            }
+        }
         return userDto;
     }
 
@@ -111,7 +122,12 @@ public class UserMapper {
         UserRegisterDto userRegisterDto = new UserRegisterDto();
 
         userRegisterDto.setUsername(userUpdateDto.getUsername());
-        userRegisterDto.setPassword(userUpdateDto.getPassword());
+        if(userUpdateDto.getPassword() != null && !userUpdateDto.getPassword().equalsIgnoreCase("")) {
+            userRegisterDto.setPassword(userUpdateDto.getPassword());
+        }
+        if(userUpdateDto.getNewPassword() != null && !userUpdateDto.getNewPassword().equalsIgnoreCase("")){
+            userRegisterDto.setPassword(userUpdateDto.getNewPassword());
+        }
         userRegisterDto.setFirstname(userUpdateDto.getFirstname());
         if(userUpdateDto.getLastname() != null && !userUpdateDto.getLastname().equalsIgnoreCase("")) {
             userRegisterDto.setLastname(userUpdateDto.getLastname());

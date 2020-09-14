@@ -1,4 +1,4 @@
-package com.psikku.backend.dto.user.education;
+package com.psikku.backend.dto.user.detail;
 
 
 public class EducationDto {

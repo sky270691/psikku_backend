@@ -1,14 +1,18 @@
 package com.psikku.backend.service.user;
 
 import com.psikku.backend.dto.user.*;
-import com.psikku.backend.dto.user.education.EducationDto;
-import com.psikku.backend.entity.Company;
-import com.psikku.backend.entity.TokenFactory;
-import com.psikku.backend.entity.User;
+import com.psikku.backend.dto.user.detail.EducationDto;
+import com.psikku.backend.dto.user.detail.WorkExperienceDto;
+import com.psikku.backend.entity.*;
+import com.psikku.backend.exception.EducationException;
 import com.psikku.backend.exception.UserExistException;
+import com.psikku.backend.exception.WorkExperienceException;
 import com.psikku.backend.mapper.user.UserMapper;
 import com.psikku.backend.mapper.user.education.EducationMapper;
+import com.psikku.backend.mapper.user.workexperience.WorkExperienceMapper;
+import com.psikku.backend.repository.EducationRepository;
 import com.psikku.backend.repository.UserRepository;
+import com.psikku.backend.repository.WorkExperienceRepository;
 import com.psikku.backend.service.company.CompanyService;
 import com.psikku.backend.service.email.EmailService;
 import com.psikku.backend.service.jwttoken.TokenService;
@@ -18,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -26,6 +29,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.jwt.Jwt;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
@@ -53,6 +57,15 @@ public class UserServiceImpl implements UserService {
     private EducationMapper educationMapper;
 
     @Autowired
+    private EducationRepository educationRepository;
+
+    @Autowired
+    private WorkExperienceMapper workExperienceMapper;
+
+    @Autowired
+    private WorkExperienceRepository workExperienceRepository;
+
+    @Autowired
     private EmailService emailService;
 
     @Autowired
@@ -69,6 +82,9 @@ public class UserServiceImpl implements UserService {
 
     @Value("${auth-server.endpoint.searchuser}")
     private String userSearchEndpoint;
+
+    @Value("${auth-server.endpoint.verifypassword}")
+    private String verifyPassEndpoint;
 
     @Override
     public List<User> findAll() {
@@ -128,6 +144,11 @@ public class UserServiceImpl implements UserService {
         emailMessage.append("\n\n\n");
         emailMessage.append("--- Psikku Indonesia ---");
         emailService.sendEmail(email,"Reset Password Psikku User",emailMessage.toString());
+    }
+
+    @Override
+    public void saveOrUpdateUserEntity(User user) {
+        userRepository.save(user);
     }
 
     @Override
@@ -200,6 +221,18 @@ public class UserServiceImpl implements UserService {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<UserRegisterResponse> searchResponse = restTemplate.getForEntity(userSearchEndpoint,UserRegisterResponse.class,userUpdateDto.getUsername());
 
+        VerifyPasswordDto verifyPasswordDto = new VerifyPasswordDto();
+        verifyPasswordDto.setUsername(userUpdateDto.getUsername());
+        verifyPasswordDto.setPassword(userUpdateDto.getPassword());
+
+        try {
+            restTemplate.postForEntity(verifyPassEndpoint,verifyPasswordDto,String.class);
+        } catch (RestClientException e) {
+            logger.error("password did not match");
+            throw new UserExistException("password did not match");
+        }
+
+
         if(searchResponse.getBody() != null && searchResponse.getBody().getUsername().equalsIgnoreCase(userUpdateDto.getUsername())){
             UserRegisterDto dto = userMapper.convertUserUpdateToUserRegisterDto(userUpdateDto);
             restTemplate.put(usersEndpoint,dto);
@@ -214,12 +247,6 @@ public class UserServiceImpl implements UserService {
             user.setSim(userUpdateDto.getSim());
             user.setMaritalStatus(userUpdateDto.getMaritalStatus());
 
-            if(userUpdateDto.getEducationList() != null && !userUpdateDto.getEducationList().isEmpty()){
-                user.setEducationList(new ArrayList<>());
-                for (EducationDto educationDto : userUpdateDto.getEducationList()) {
-                    user.getEducationList().add(educationMapper.convertDtoToEducationEntity(educationDto));
-                }
-            }
 
         }
         user.setId(user.getId());
@@ -240,6 +267,83 @@ public class UserServiceImpl implements UserService {
         }else{
             throw new UserExistException("Error Occured");
         }
+    }
+
+    @Override
+    public void addEducation(EducationDto dto) {
+        String username =  SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = findByUsername(username);
+
+        Education education;
+        if(dto.getId() != null && dto.getId()!=0){
+            education = educationRepository.findById(dto.getId()).orElseThrow(()-> new EducationException("education with id: '"+dto.getId()+"' not found"));
+        }else{
+            education = new Education();
+        }
+
+        if(dto.getEducationLevel()!=null && !dto.getEducationLevel().equalsIgnoreCase("")) {
+            education.setEducationLevel(dto.getEducationLevel());
+        }
+        if(dto.getGraduatedYear() != null && dto.getGraduatedYear() != 0){
+            education.setGraduatedYear(dto.getGraduatedYear());
+        }
+        if(dto.getInstitutionName() != null && !dto.getInstitutionName().equalsIgnoreCase("")){
+            education.setInstitutionName(dto.getInstitutionName());
+        }
+        if(dto.getMajor() != null && !dto.getMajor().equalsIgnoreCase("")){
+            education.setMajor(dto.getMajor());
+        }
+
+        if(user.getEducationList() == null){
+            user.setEducationList(new ArrayList<>());
+        }
+
+
+        Education addedEducation = educationRepository.save(education);
+        if(!user.getEducationList().contains(addedEducation)){
+            user.getEducationList().add(addedEducation);
+        }
+        userRepository.save(user);
+    }
+
+    @Override
+    public void addWorkExp(WorkExperienceDto dto) {
+        String username =  SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = findByUsername(username);
+
+        WorkExperience workExp;
+
+        if(dto.getId()!=null && dto.getId()!=0){
+            workExp = workExperienceRepository.findById(dto.getId()).orElseThrow(()-> new WorkExperienceException("work experience with id '"+dto.getId()+"' not found"));
+        }else{
+            workExp = new WorkExperience();
+        }
+
+        if(dto.getCompanyName() != null && !dto.getCompanyName().equalsIgnoreCase("")){
+            workExp.setCompanyName(dto.getCompanyName());
+        }
+        if(dto.getJobDesc() != null && !dto.getJobDesc().equalsIgnoreCase("")){
+            workExp.setJobDesc(dto.getJobDesc());
+        }
+        if(dto.getStart() != null){
+            workExp.setStart(dto.getStart());
+        }
+        if(dto.getEnd() != null){
+            workExp.setEnd(dto.getEnd());
+        }
+
+        WorkExperience savedWorkExp = workExperienceRepository.save(workExp);
+
+        if(user.getWorkExperienceList() == null){
+            user.setWorkExperienceList(new ArrayList<>());
+        }
+
+        if(!user.getWorkExperienceList().contains(savedWorkExp)){
+            user.getWorkExperienceList().add(savedWorkExp);
+        }
+
+        userRepository.save(user);
+
     }
 
     @Override

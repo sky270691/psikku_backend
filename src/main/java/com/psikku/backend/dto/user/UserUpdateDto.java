@@ -1,15 +1,14 @@
 package com.psikku.backend.dto.user;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.psikku.backend.dto.user.education.EducationDto;
+import com.psikku.backend.dto.user.detail.EducationDto;
+import com.psikku.backend.dto.user.detail.WorkExperienceDto;
 import com.psikku.backend.validation.AgeValidation;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -22,7 +21,10 @@ public class UserUpdateDto {
 //    @NotBlank(message = "kata sandi tidak boleh kosong")
 //    @Size(min = 6, message = "kata sandi harus mengandung minimal 6 karakter ")
 //    @Pattern(regexp = "(^(?=\\S*([a-z]|[A-Z])+\\S*[0-9]+\\S*)|^(?=\\S*[0-9]+\\S*([a-z]|[A-Z])+\\S*)).{6,}",message = "kata sandi harus mengandung gabungan angka dan huruf")
+
     private String password;
+
+    private String newPassword;
 
     @NotBlank(message = "nama depan tidak boleh kosong")
     private String firstname;
@@ -59,6 +61,8 @@ public class UserUpdateDto {
     private List<RoleRegisterDto> roles;
 
     private List<EducationDto> educationList;
+
+    private List<WorkExperienceDto> workExperienceList;
 
     public String getFirstname() {
         return firstname;
@@ -170,5 +174,21 @@ public class UserUpdateDto {
 
     public void setEducationList(List<EducationDto> educationList) {
         this.educationList = educationList;
+    }
+
+    public List<WorkExperienceDto> getWorkExperienceList() {
+        return workExperienceList;
+    }
+
+    public void setWorkExperienceList(List<WorkExperienceDto> workExperienceList) {
+        this.workExperienceList = workExperienceList;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 }

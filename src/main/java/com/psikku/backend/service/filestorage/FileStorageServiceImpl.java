@@ -2,36 +2,46 @@ package com.psikku.backend.service.filestorage;
 
 import com.psikku.backend.config.properties.StorageProperties;
 import com.psikku.backend.entity.FileData;
+import com.psikku.backend.entity.User;
 import com.psikku.backend.exception.DataAlreadyExistException;
 import com.psikku.backend.exception.FileStorageException;
 import com.psikku.backend.repository.FileDataRepository;
+import com.psikku.backend.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.FileUrlResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.UUID;
 
 @Service
+@Transactional
 public class FileStorageServiceImpl implements FileStorageService {
 
 
     private Path fileStorageLocation;
     private final StorageProperties storageProperties;
     private final FileDataRepository fileDataRepository;
+    private final UserService userService;
 
     @Autowired
-    public FileStorageServiceImpl(StorageProperties storageProperties,FileDataRepository fileDataRepository) {
+    public FileStorageServiceImpl(StorageProperties storageProperties, FileDataRepository fileDataRepository,
+                                  @Lazy UserService userService) {
         this.storageProperties = storageProperties;
         this.fileStorageLocation = Paths.get(storageProperties.getUploadDir()).toAbsolutePath().normalize();
         this.fileDataRepository = fileDataRepository;
+        this.userService = userService;
     }
 
 
@@ -87,6 +97,27 @@ public class FileStorageServiceImpl implements FileStorageService {
         }
     }
 
+    @Override
+    public boolean storeUserPicture(MultipartFile file) {
+        String credential = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userService.findByUsername(credential);
+        FileData fileData = new FileData();
+        fileData.setType("PICTURE");
+        fileData.setFileName(UUID.randomUUID().toString());
+        setFileStorageLocation(Paths.get(storageProperties.getUploadDir()+"/picture").toAbsolutePath());
+        Path targetLocation = fileStorageLocation.resolve(fileData.getFileName());
+        try {
+            Files.createDirectories(this.fileStorageLocation);
+            Files.copy(file.getInputStream(),targetLocation, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        FileData fileData1 = fileDataRepository.save(fileData);
+        user.setFileData(fileData1);
+        userService.saveOrUpdateUserEntity(user);
+        return true;
+    }
 
 
     @Override

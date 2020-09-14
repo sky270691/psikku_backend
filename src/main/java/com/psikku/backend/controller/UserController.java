@@ -2,6 +2,8 @@ package com.psikku.backend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.psikku.backend.dto.user.*;
+import com.psikku.backend.dto.user.detail.EducationDto;
+import com.psikku.backend.dto.user.detail.WorkExperienceDto;
 import com.psikku.backend.entity.TokenFactory;
 import com.psikku.backend.exception.UserExistException;
 import com.psikku.backend.service.user.UserService;
@@ -134,5 +136,22 @@ public class UserController {
         logger.info("success reset password for user:'"+usernamePassword.getUsername()+"'");
         return response;
     }
+
+    @PutMapping("/education")
+    public ResponseEntity<?> addOrUpdateEducation(@RequestBody EducationDto dto){
+        userService.addEducation(dto);
+        Map<String,String> returnBody = new LinkedHashMap<>();
+        returnBody.put("status","success");
+        return ResponseEntity.ok(returnBody);
+    }
+
+    @PutMapping("/work_experience")
+    public ResponseEntity<?> addOrUpdateEducation(@RequestBody WorkExperienceDto dto){
+        userService.addWorkExp(dto);
+        Map<String,String> returnBody = new LinkedHashMap<>();
+        returnBody.put("status","success");
+        return ResponseEntity.ok(returnBody);
+    }
+
 
 }

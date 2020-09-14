@@ -1,6 +1,7 @@
 package com.psikku.backend.dto.user;
 
-import com.psikku.backend.dto.user.education.EducationDto;
+import com.psikku.backend.dto.user.detail.EducationDto;
+import com.psikku.backend.dto.user.detail.WorkExperienceDto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ public class UserDto {
     private LocalDateTime createTime;
     private LocalDate dateOfBirth;
     private List<EducationDto> educationList;
+    private List<WorkExperienceDto> workExperienceList;
 
     public long getId() {
         return id;
@@ -133,5 +135,13 @@ public class UserDto {
 
     public void setEducationList(List<EducationDto> educationList) {
         this.educationList = educationList;
+    }
+
+    public List<WorkExperienceDto> getWorkExperienceList() {
+        return workExperienceList;
+    }
+
+    public void setWorkExperienceList(List<WorkExperienceDto> workExperienceList) {
+        this.workExperienceList = workExperienceList;
     }
 }

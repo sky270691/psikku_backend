@@ -222,5 +222,25 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(EducationException.class)
+    public ResponseEntity<EducationExceptionResponse> handleEducationException(EducationException e){
+
+        EducationExceptionResponse response = new EducationExceptionResponse();
+        response.setMessage(e.getMessage());
+        response.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
+        response.setTimestamp(LocalDateTime.now());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(WorkExperienceException.class)
+    public ResponseEntity<WorkExperienceExceptionResponse> handleEducationException(WorkExperienceException e){
+
+        WorkExperienceExceptionResponse response = new WorkExperienceExceptionResponse();
+        response.setMessage(e.getMessage());
+        response.setStatus(HttpStatus.BAD_REQUEST.getReasonPhrase());
+        response.setTimestamp(LocalDateTime.now());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
 
 }

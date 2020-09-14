@@ -68,6 +68,14 @@ public class User {
     @JoinColumn(name = "user_id")
     private List<Education> educationList;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private List<WorkExperience> workExperienceList;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "file_storage_id")
+    private FileData fileData;
+
     public long getId() {
         return id;
     }
@@ -236,5 +244,21 @@ public class User {
 
     public void setEducationList(List<Education> educationList) {
         this.educationList = educationList;
+    }
+
+    public List<WorkExperience> getWorkExperienceList() {
+        return workExperienceList;
+    }
+
+    public void setWorkExperienceList(List<WorkExperience> workExperienceList) {
+        this.workExperienceList = workExperienceList;
+    }
+
+    public FileData getFileData() {
+        return fileData;
+    }
+
+    public void setFileData(FileData fileData) {
+        this.fileData = fileData;
     }
 }
