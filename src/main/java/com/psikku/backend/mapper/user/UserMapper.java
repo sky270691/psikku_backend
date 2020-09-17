@@ -87,6 +87,11 @@ public class UserMapper {
                 userDto.getWorkExperienceList().add(workExperienceMapper.convertWorkExperienceEntityToDto(workExperience));
             }
         }
+
+        if(user.getProfilPicture() != null){
+            userDto.setPictureUrl("/api/content/picture/"+user.getProfilPicture().getFileName());
+        }
+
         return userDto;
     }
 

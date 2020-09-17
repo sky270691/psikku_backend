@@ -102,9 +102,11 @@ public class FileStorageServiceImpl implements FileStorageService {
         String credential = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findByUsername(credential);
         FileData fileData = new FileData();
-        fileData.setType("PICTURE");
-        fileData.setFileName(UUID.randomUUID().toString());
+        fileData.setType("picture");
+        String[] fileNameArray = file.getOriginalFilename().split("\\.");
+        fileData.setFileName(UUID.randomUUID().toString()+"."+fileNameArray[fileNameArray.length-1]);
         setFileStorageLocation(Paths.get(storageProperties.getUploadDir()+"/picture").toAbsolutePath());
+        fileData.setFilePath(getFileStorageLocation().toString());
         Path targetLocation = fileStorageLocation.resolve(fileData.getFileName());
         try {
             Files.createDirectories(this.fileStorageLocation);
@@ -114,7 +116,7 @@ public class FileStorageServiceImpl implements FileStorageService {
             return false;
         }
         FileData fileData1 = fileDataRepository.save(fileData);
-        user.setFileData(fileData1);
+        user.setProfilPicture(fileData1);
         userService.saveOrUpdateUserEntity(user);
         return true;
     }
@@ -122,7 +124,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 
     @Override
     public Resource loadFileAsResource(String category, String filename) {
-        FileData fileData = fileDataRepository.findByFilePathAndFileName(category,filename).orElseThrow(()->new FileStorageException("File Not Found"));
+        FileData fileData = fileDataRepository.findByFileNameAndType(filename,category).orElseThrow(()->new FileStorageException("File Not Found"));
         System.out.println(fileData.getFileName());
         try {
             Path filePath;

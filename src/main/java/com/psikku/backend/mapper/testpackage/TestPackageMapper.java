@@ -32,6 +32,7 @@ public class TestPackageMapper {
         testPackage.setPrice(testPackageCreationDto.getPrice());
         testPackage.setDescription(testPackageCreationDto.getDescription());
         testPackage.setViewType(testPackageCreationDto.getViewType());
+        testPackage.setCategory(testPackageCreationDto.getCategory());
         testPackage.setTestList(new ArrayList<>());
         testPackageCreationDto.getTestIdList().forEach((testId)-> {
             Test tempTest = testService.findTestById(testId);
@@ -48,6 +49,7 @@ public class TestPackageMapper {
         testPackageDto.setDescription(testPackage.getDescription());
         testPackageDto.setPrice(testPackage.getPrice());
         testPackageDto.setViewType(testPackage.getViewType());
+        testPackageDto.setCategory(testPackage.getCategory());
         testPackageDto.setMinimalTestDtoList(new ArrayList<>());
         if(testPackage.getVoucher() != null && !testPackage.getVoucher().isEmpty()) {
             testPackageDto.setVoucherValidUntil(testPackage.getVoucher().get(0).getValidUntil());

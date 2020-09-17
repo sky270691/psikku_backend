@@ -41,8 +41,8 @@ public class VoucherController {
     }
 
     @PostMapping("/redeem/company")
-    public ResponseEntity<?> validateVoucherV2(@RequestParam String voucher){
-        TestPackageDto dto = voucherService.validateStatusV2(voucher);
+    public ResponseEntity<?> validateVoucherV2(@RequestParam String voucher, @RequestParam String category){
+        TestPackageDto dto = voucherService.validateStatusV2(voucher,category);
 
         Map<String,Object> returnBody = new LinkedHashMap<>();
         returnBody.put("status","success");

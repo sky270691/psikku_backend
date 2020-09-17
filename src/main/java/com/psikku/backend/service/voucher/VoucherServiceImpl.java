@@ -81,6 +81,9 @@ public class VoucherServiceImpl implements VoucherService {
         User user = userService.findByUsername(username);
         TestPackage testPackage = testPackageService.getPackageById(validateVoucherDto.getTestPackageId());
 
+        if(!testPackage.getCategory().equalsIgnoreCase(validateVoucherDto.getCategory())){
+            throw new VoucherException("Voucher category did not valid for the test package");
+        }
 
         //todo
         // detect voucher by company
@@ -108,13 +111,15 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    public TestPackageDto validateStatusV2(String voucherCode) {
+    public TestPackageDto validateStatusV2(String voucherCode, String category) {
         String username  = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findByUsername(username);
 
         Voucher voucher = getVoucherByCode(voucherCode);
         TestPackage testPackage = voucher.getTestPackage();
-
+        if(!testPackage.getCategory().equalsIgnoreCase(category)){
+            throw new VoucherException("Voucher category did not valid for the test package");
+        }
         TestPackageDto dto = testPackageMapper.convertToTestPackageDto(testPackage);
 
 

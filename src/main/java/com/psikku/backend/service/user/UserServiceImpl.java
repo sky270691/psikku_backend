@@ -173,10 +173,13 @@ public class UserServiceImpl implements UserService {
         if(user.getId()==0){ // if user.getId() from auth server equals to 0 then return error response
             throw new UserExistException("username dan/atau email sudah pernah didaftarkan");
         }
-        Company company = companyService.findById(15);
-        if(checkCompany(userRegisterDto.getEmail())){
-            user.setCompany(company);
-        }
+
+        //Todo
+        // update later for dynamically assign to company
+//        Company company = companyService.findById(15);
+//        if(checkCompany(userRegisterDto.getEmail())){
+//            user.setCompany(company);
+//        }
         userRepository.save(user);
         UserRegisterResponse userRegisterResponse = userMapper.convertUserEntityToUserRegisterResponse(user);
         return new ResponseEntity<>(userRegisterResponse, HttpStatus.OK);

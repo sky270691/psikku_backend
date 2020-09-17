@@ -2,7 +2,6 @@ package com.psikku.backend.entity;
 
 
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.domain.Auditable;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -74,7 +73,7 @@ public class User {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "file_storage_id")
-    private FileData fileData;
+    private FileData profilPicture;
 
     public long getId() {
         return id;
@@ -254,11 +253,11 @@ public class User {
         this.workExperienceList = workExperienceList;
     }
 
-    public FileData getFileData() {
-        return fileData;
+    public FileData getProfilPicture() {
+        return profilPicture;
     }
 
-    public void setFileData(FileData fileData) {
-        this.fileData = fileData;
+    public void setProfilPicture(FileData fileData) {
+        this.profilPicture = fileData;
     }
 }

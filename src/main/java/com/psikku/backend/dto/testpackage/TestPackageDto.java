@@ -24,6 +24,8 @@ public class TestPackageDto {
     @JsonProperty(value = "view_type")
     private String viewType;
 
+    private String category;
+
     @JsonProperty("tests")
     private List<MinimalTestDto> minimalTestDtoList;
 
@@ -89,5 +91,13 @@ public class TestPackageDto {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

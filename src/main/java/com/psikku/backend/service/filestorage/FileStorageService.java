@@ -7,7 +7,7 @@ public interface FileStorageService {
 
     boolean storeFile(MultipartFile file,String subFolder);
     boolean storeUserPicture(MultipartFile file);
-    Resource loadFileAsResource(String filename,String category);
+    Resource loadFileAsResource(String category,String filename);
     void deleteByFilePathAndFileName(String filePath, String fileName);
     Resource downloadSingleFile(String filePath);
 

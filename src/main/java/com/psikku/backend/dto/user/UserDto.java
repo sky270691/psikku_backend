@@ -24,6 +24,7 @@ public class UserDto {
     private LocalDate dateOfBirth;
     private List<EducationDto> educationList;
     private List<WorkExperienceDto> workExperienceList;
+    private String pictureUrl;
 
     public long getId() {
         return id;
@@ -143,5 +144,13 @@ public class UserDto {
 
     public void setWorkExperienceList(List<WorkExperienceDto> workExperienceList) {
         this.workExperienceList = workExperienceList;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 }

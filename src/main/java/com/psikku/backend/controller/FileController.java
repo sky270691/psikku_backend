@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/content")
@@ -32,6 +35,14 @@ public class FileController {
     public String uploadFile(@RequestPart("file") MultipartFile file,@PathVariable("category") @Nullable String category){
         storageService.storeFile(file,category);
         return "success";
+    }
+
+    @PostMapping(value = "/profile-picture", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> uploadProfilPicture(MultipartFile file){
+        storageService.storeUserPicture(file);
+        Map<String,String> returnBody = new LinkedHashMap<>();
+        returnBody.put("status","success");
+        return ResponseEntity.ok(returnBody);
     }
 
     @GetMapping("/{category}/{filename:.+}")

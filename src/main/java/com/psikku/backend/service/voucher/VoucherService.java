@@ -16,7 +16,7 @@ public interface VoucherService {
     Voucher getVoucherById(long voucherId);
     Voucher getVoucherByCode(String code);
     boolean validateStatus(ValidateVoucherDto voucherValidStatus);
-    TestPackageDto validateStatusV2(String voucherCode);
+    TestPackageDto validateStatusV2(String voucherCode, String category);
     void generateVoucher(int userCount, Payment payment, TestPackage testPackage, long companyId);
     GeneratedPaymentDetailDto generateVoucherCurrentPackage(int packageId, int userCount, long companyId);
     boolean saveVoucher(Voucher voucher);

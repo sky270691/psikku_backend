@@ -17,6 +17,7 @@ public class TestPackage {
     private String name;
     private String description;
     private int price;
+    private String category;
 
     @Column(name = "view_type")
     private String viewType;
@@ -98,5 +99,13 @@ public class TestPackage {
 
     public void setVoucher(List<Voucher> voucher) {
         this.voucher = voucher;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

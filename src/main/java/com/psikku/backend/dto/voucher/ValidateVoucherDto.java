@@ -7,6 +7,7 @@ public class ValidateVoucherDto {
     private String voucher;
     @JsonProperty("package_id")
     private int testPackageId;
+    private String category;
 
     public int getTestPackageId() {
         return testPackageId;
@@ -22,5 +23,13 @@ public class ValidateVoucherDto {
 
     public void setVoucher(String voucher) {
         this.voucher = voucher;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

@@ -29,6 +29,10 @@ public class TestPackageCreationDto {
     @JsonProperty("view_type")
     private String viewType;
 
+    @NotBlank
+    @Pattern(regexp = "(AC) | (SCHOOL) | (PUBLIC) | (INSTANCE) ")
+    private String category;
+
     public String getName() {
         return name;
     }
@@ -83,5 +87,13 @@ public class TestPackageCreationDto {
 
     public void setViewType(String viewType) {
         this.viewType = viewType;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
