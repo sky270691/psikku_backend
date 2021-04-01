@@ -5,6 +5,7 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.ServletRequestBindingException;
@@ -87,6 +88,19 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
                                 .collect(Collectors.toList());
 
         body.put("errors",errors);
+        return new ResponseEntity<>(body,headers,status);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("status", status.value());
+        body.put("exception","validation exception");
+        body.put("timestamp", LocalDateTime.now().format(getDtf()));
+        String error = ex.getMessage();
+
+        body.put("errors",error);
+        ex.printStackTrace();
         return new ResponseEntity<>(body,headers,status);
     }
 

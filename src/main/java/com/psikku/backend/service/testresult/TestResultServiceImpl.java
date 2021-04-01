@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -97,5 +98,10 @@ public class TestResultServiceImpl implements TestResultService {
     public List<TestResult> findAllResultByVoucher(String voucher) {
 
         return testResultRepository.findAllByVoucher_VoucherCode(voucher);
+    }
+
+    @Override
+    public Optional<TestResult> findTestResultByVoucherCodeUsernameAndTest(String voucherCode, String username, int testId) {
+        return testResultRepository.findByVoucher_VoucherCodeAndUser_UsernameAndTest_Id(voucherCode,username, testId);
     }
 }

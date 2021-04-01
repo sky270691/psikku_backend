@@ -28,6 +28,10 @@ public class SubmittedAnswer {
     @JoinColumn(name = "question_id")
     private Question question;
 
+    @ManyToOne
+    @JoinColumn(name = "voucher_id")
+    private Voucher voucher;
+
     public long getId() {
         return id;
     }
@@ -66,5 +70,13 @@ public class SubmittedAnswer {
 
     public void setQuestion(Question question) {
         this.question = question;
+    }
+
+    public Voucher getVoucher() {
+        return voucher;
+    }
+
+    public void setVoucher(Voucher voucher) {
+        this.voucher = voucher;
     }
 }

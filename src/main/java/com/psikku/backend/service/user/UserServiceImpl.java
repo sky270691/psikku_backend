@@ -167,6 +167,7 @@ public class UserServiceImpl implements UserService {
         roleRegisterDtoList.add(userRole);
 
         userRegisterDto.setRoles(roleRegisterDtoList);
+        userRegisterDto.setUsername(userRegisterDto.getEmail());
         ResponseEntity<UserRegisterAuthServerResponse> responseJson = restTemplate.postForEntity(usersEndpoint,userRegisterDto, UserRegisterAuthServerResponse.class);
 
         User user =  userMapper.convertRegisteredAuthServerUserToUserEntity(responseJson.getBody());
@@ -176,10 +177,11 @@ public class UserServiceImpl implements UserService {
 
         //Todo
         // update later for dynamically assign to company
-//        Company company = companyService.findById(15);
-//        if(checkCompany(userRegisterDto.getEmail())){
-//            user.setCompany(company);
-//        }
+        Company company = companyService.findById(16);
+        if(checkCompany(userRegisterDto.getEmail())){
+            user.setCompany(company);
+        }
+
         userRepository.save(user);
         UserRegisterResponse userRegisterResponse = userMapper.convertUserEntityToUserRegisterResponse(user);
         return new ResponseEntity<>(userRegisterResponse, HttpStatus.OK);
@@ -198,12 +200,23 @@ public class UserServiceImpl implements UserService {
         if(searchResponse.getBody() != null && searchResponse.getBody().getUsername().equalsIgnoreCase(userRegisterDto.getUsername())){
             restTemplate.put(usersEndpoint,userRegisterDto);
             user.setFirstname(userRegisterDto.getFirstname());
-            user.setLastname(userRegisterDto.getLastname());
+            if(userRegisterDto.getLastname() != null) {
+                user.setLastname(userRegisterDto.getLastname());
+            }
             user.setSex(userRegisterDto.getSex());
-            user.setDateOfBirth(userRegisterDto.getDateOfBirth());
-            user.setAddress(userRegisterDto.getAddress());
-            user.setCity(userRegisterDto.getCity());
-            user.setProvince(userRegisterDto.getProvince());
+            if(userRegisterDto.getDateOfBirth()!=null) {
+                user.setDateOfBirth(userRegisterDto.getDateOfBirth());
+            }
+            if(user.getAddress() != null) {
+                user.setAddress(userRegisterDto.getAddress());
+            }
+            if(user.getCity() != null) {
+                user.setCity(userRegisterDto.getCity());
+            }
+            if(user.getProvince() != null) {
+                user.setProvince(userRegisterDto.getProvince());
+            }
+
             user.setEmail(userRegisterDto.getEmail());
 
             UserRegisterResponse response = new UserRegisterResponse();
@@ -240,15 +253,30 @@ public class UserServiceImpl implements UserService {
             UserRegisterDto dto = userMapper.convertUserUpdateToUserRegisterDto(userUpdateDto);
             restTemplate.put(usersEndpoint,dto);
             user.setFirstname(userUpdateDto.getFirstname());
-            user.setLastname(userUpdateDto.getLastname());
+            if(userUpdateDto.getLastname() != null) {
+                user.setLastname(userUpdateDto.getLastname());
+            }
             user.setSex(userUpdateDto.getSex());
-            user.setDateOfBirth(userUpdateDto.getDateOfBirth());
-            user.setAddress(userUpdateDto.getAddress());
-            user.setCity(userUpdateDto.getCity());
-            user.setProvince(userUpdateDto.getProvince());
+            if(userUpdateDto.getDateOfBirth() != null) {
+                user.setDateOfBirth(userUpdateDto.getDateOfBirth());
+            }
+            if(userUpdateDto.getAddress() != null) {
+                user.setAddress(userUpdateDto.getAddress());
+            }
+            if(userUpdateDto.getCity() != null) {
+                user.setCity(userUpdateDto.getCity());
+            }
+            if(userUpdateDto.getProvince() != null) {
+                user.setProvince(userUpdateDto.getProvince());
+            }
             user.setEmail(userUpdateDto.getEmail());
-            user.setSim(userUpdateDto.getSim());
-            user.setMaritalStatus(userUpdateDto.getMaritalStatus());
+            if(userUpdateDto.getSim()!= null) {
+                user.setSim(userUpdateDto.getSim());
+            }
+            if(userUpdateDto.getMaritalStatus() != null){
+                user.setMaritalStatus(userUpdateDto.getMaritalStatus());
+            }
+
 
 
         }
@@ -334,6 +362,12 @@ public class UserServiceImpl implements UserService {
         if(dto.getEnd() != null){
             workExp.setEnd(dto.getEnd());
         }
+        if(dto.getJabatan() != null){
+            workExp.setJabatan(dto.getJabatan());
+        }
+        if(dto.getNip() != null){
+            workExp.setNip(dto.getNip());
+        }
 
         WorkExperience savedWorkExp = workExperienceRepository.save(workExp);
 
@@ -347,6 +381,16 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
 
+    }
+
+    @Override
+    public void deleteWorkExpById(Long id) {
+        workExperienceRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteEducationById(Long id) {
+        educationRepository.deleteById(id);
     }
 
     @Override
@@ -401,7 +445,7 @@ public class UserServiceImpl implements UserService {
 
     private boolean checkCompany(String email){
 
-        Resource resource = resourceLoader.getResource("classpath:static/company/email-bsg.txt");
+        Resource resource = resourceLoader.getResource("classpath:static/company/email-company.txt");
         try {
             List<String> emailList = Files.readAllLines(Paths.get(resource.getURI()));
             for (String emailListData : emailList) {

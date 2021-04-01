@@ -26,6 +26,11 @@ public class TestPackageDto {
 
     private String category;
 
+    private boolean requiredPreRegister;
+
+    @JsonProperty(value = "current_test_order")
+    private Integer currentTestOrder;
+
     @JsonProperty("tests")
     private List<MinimalTestDto> minimalTestDtoList;
 
@@ -99,5 +104,21 @@ public class TestPackageDto {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public boolean isRequiredPreRegister() {
+        return requiredPreRegister;
+    }
+
+    public void setRequiredPreRegister(boolean requiredPreRegister) {
+        this.requiredPreRegister = requiredPreRegister;
+    }
+
+    public Integer getCurrentTestOrder() {
+        return currentTestOrder;
+    }
+
+    public void setCurrentTestOrder(Integer currentTestOrder) {
+        this.currentTestOrder = currentTestOrder;
     }
 }

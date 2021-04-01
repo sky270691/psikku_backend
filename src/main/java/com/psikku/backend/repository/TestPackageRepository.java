@@ -7,4 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TestPackageRepository extends JpaRepository<TestPackage, Integer> {
+
+    Optional<TestPackage> getTestPackageByVoucher_VoucherCode(String voucherCode);
+
+
 }

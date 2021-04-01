@@ -33,6 +33,10 @@
 	<lib name="Maven: org.springframework:spring-test:5.2.4.RELEASE" scope="TEST"/>
 	<lib name="Maven: org.xmlunit:xmlunit-core:2.6.3" scope="TEST"/>
 	<lib name="Maven: org.springframework.security:spring-security-test:5.2.2.RELEASE" scope="TEST"/>
+	<lib name="Maven: org.springframework.boot:spring-boot-starter-tomcat:2.2.5.RELEASE" scope="PROVIDED"/>
+	<lib name="Maven: org.apache.tomcat.embed:tomcat-embed-core:9.0.31" scope="PROVIDED"/>
+	<lib name="Maven: org.apache.tomcat.embed:tomcat-embed-el:9.0.31" scope="PROVIDED"/>
+	<lib name="Maven: org.apache.tomcat.embed:tomcat-embed-websocket:9.0.31" scope="PROVIDED"/>
 	<levels>
 		<level name="Maven: org.springframework.boot:spring-boot-starter-security:2.2.5.RELEASE" value="project"/>
 		<level name="Maven: org.springframework.boot:spring-boot-starter:2.2.5.RELEASE" value="project"/>
@@ -44,7 +48,6 @@
 		<level name="Maven: org.apache.logging.log4j:log4j-to-slf4j:2.12.1" value="project"/>
 		<level name="Maven: org.apache.logging.log4j:log4j-api:2.12.1" value="project"/>
 		<level name="Maven: org.slf4j:jul-to-slf4j:1.7.30" value="project"/>
-		<level name="Maven: jakarta.annotation:jakarta.annotation-api:1.3.5" value="project"/>
 		<level name="Maven: org.yaml:snakeyaml:1.25" value="project"/>
 		<level name="Maven: org.springframework:spring-aop:5.2.4.RELEASE" value="project"/>
 		<level name="Maven: org.springframework:spring-beans:5.2.4.RELEASE" value="project"/>
@@ -57,10 +60,6 @@
 		<level name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.10.2" value="project"/>
 		<level name="Maven: com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.10.2" value="project"/>
 		<level name="Maven: com.fasterxml.jackson.module:jackson-module-parameter-names:2.10.2" value="project"/>
-		<level name="Maven: org.springframework.boot:spring-boot-starter-tomcat:2.2.5.RELEASE" value="project"/>
-		<level name="Maven: org.apache.tomcat.embed:tomcat-embed-core:9.0.31" value="project"/>
-		<level name="Maven: org.apache.tomcat.embed:tomcat-embed-el:9.0.31" value="project"/>
-		<level name="Maven: org.apache.tomcat.embed:tomcat-embed-websocket:9.0.31" value="project"/>
 		<level name="Maven: org.springframework.boot:spring-boot-starter-validation:2.2.5.RELEASE" value="project"/>
 		<level name="Maven: jakarta.validation:jakarta.validation-api:2.0.2" value="project"/>
 		<level name="Maven: org.hibernate.validator:hibernate-validator:6.0.18.Final" value="project"/>
@@ -175,5 +174,10 @@
 		<level name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.10.2" value="project"/>
 		<level name="Maven: net.sf.jasperreports:jasperreports-functions:6.12.2" value="project"/>
 		<level name="Maven: joda-time:joda-time:2.10.5" value="project"/>
+		<level name="Maven: org.springframework.boot:spring-boot-starter-tomcat:2.2.5.RELEASE" value="project"/>
+		<level name="Maven: jakarta.annotation:jakarta.annotation-api:1.3.5" value="project"/>
+		<level name="Maven: org.apache.tomcat.embed:tomcat-embed-core:9.0.31" value="project"/>
+		<level name="Maven: org.apache.tomcat.embed:tomcat-embed-el:9.0.31" value="project"/>
+		<level name="Maven: org.apache.tomcat.embed:tomcat-embed-websocket:9.0.31" value="project"/>
 	</levels>
 </component>

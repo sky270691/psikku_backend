@@ -1,8 +1,13 @@
 package com.psikku.backend.dto.test;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
+import org.codehaus.jackson.annotate.JsonPropertyOrder;
+import org.hibernate.annotations.SortComparator;
+import org.springframework.core.annotation.Order;
 
-public class MinimalTestDto {
+import javax.persistence.OrderBy;
+
+public class MinimalTestDto{
 
     private int id;
     @JsonProperty("internal_name")
@@ -13,6 +18,9 @@ public class MinimalTestDto {
     //Todo disable this later
     private boolean view;
     private boolean finish;
+    private int skippable;
+    private int priority;
+    private boolean takePict;
 
     public int getId() {
         return id;
@@ -68,5 +76,29 @@ public class MinimalTestDto {
 
     public void setFinish(boolean finish) {
         this.finish = finish;
+    }
+
+    public int getSkippable() {
+        return skippable;
+    }
+
+    public void setSkippable(int skippable) {
+        this.skippable = skippable;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public boolean isTakePict() {
+        return takePict;
+    }
+
+    public void setTakePict(boolean takePict) {
+        this.takePict = takePict;
     }
 }

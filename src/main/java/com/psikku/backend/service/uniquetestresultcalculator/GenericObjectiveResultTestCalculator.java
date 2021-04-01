@@ -4,8 +4,10 @@ import com.psikku.backend.dto.useranswer.SubmittedAnswerDto;
 import com.psikku.backend.entity.*;
 import com.psikku.backend.exception.TestException;
 import com.psikku.backend.service.answer.AnswerService;
+import com.psikku.backend.service.test.TestService;
 import com.psikku.backend.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -13,27 +15,38 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class GenericObjectiveResultTestCalculator{
+public class GenericObjectiveResultTestCalculator implements UniqueResultTestCalculator{
 
     private String result;
 
     private final UserService userService;
     private final AnswerService answerService;
+    private final String name;
+    private final TestService testService;
 
 
     @Autowired
-    public GenericObjectiveResultTestCalculator(UserService userService, AnswerService answerService) {
+    public GenericObjectiveResultTestCalculator(UserService userService,
+                                                @Lazy AnswerService answerService,
+                                                @Lazy TestService testService) {
         this.userService = userService;
         this.answerService = answerService;
+        this.testService = testService;
+        this.name = "genericTest";
     }
 
 
-    public TestResult calculateNewResult(List<SubmittedAnswerDto> submittedAnswerDtoList, Test test) {
+    @Override
+    public TestResult calculateNewResult(List<SubmittedAnswerDto> submittedAnswerDtoList) {
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findByUsername(username);
-        String testInternalName = test.getInternalName();
-        List<Answer> answersFromDb = answerService.findByIdStartingWith(testInternalName);
+
+
+        String testname = submittedAnswerDtoList.get(0).getQuestionId().split("_")[0];
+        List<Answer> answersFromDb = answerService.findByIdStartingWith(testname);
+        Test test = testService.findTestByInternalName(testname);
+
 
         int correctAnswer = 0;
 
@@ -123,15 +136,22 @@ public class GenericObjectiveResultTestCalculator{
 
     private int getCountQuestion(Test test){
         int totalQuestion = (int) test.getSubtestList().stream().flatMap(subtest -> subtest.getQuestionList().stream())
-                                                                .count();
+                .count();
 
         return totalQuestion;
     }
 
+    @Override
     public String getResult() {
         return result;
     }
 
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
     public void setResult(String result) {
         this.result = result;
     }

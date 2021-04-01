@@ -29,6 +29,11 @@ public class Voucher {
     @Column(name = "used")
     private long used;
 
+    private boolean rest;
+
+    @Column(name = "current_test_order")
+    private Integer currentTestOrder;
+
     @ManyToOne(cascade = {CascadeType.REFRESH,CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST},fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id")
     private TestPackage testPackage;
@@ -137,5 +142,21 @@ public class Voucher {
 
     public void setUserCount(int userCont) {
         this.userCount = userCont;
+    }
+
+    public boolean isRest() {
+        return rest;
+    }
+
+    public void setRest(boolean rest) {
+        this.rest = rest;
+    }
+
+    public Integer getCurrentTestOrder() {
+        return currentTestOrder;
+    }
+
+    public void setCurrentTestOrder(Integer currentTestOrder) {
+        this.currentTestOrder = currentTestOrder;
     }
 }

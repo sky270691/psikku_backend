@@ -228,7 +228,7 @@ public class CfitResultTestCalculator implements UniqueResultTestCalculator {
         testResult.setTest(testService.findTestByInternalName("cfit3"));
         testResult.setResult(getResult());
 //        testResultRepository.save(testResult);
-        logger.info("username: '"+username+"' CF" + "IT answer calculated successfully");
+        logger.info("username: '"+username+"' CFIT answer calculated successfully");
         return testResult;
     }
 

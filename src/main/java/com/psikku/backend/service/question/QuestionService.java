@@ -11,5 +11,7 @@ public interface QuestionService {
 
     List<Question> findByIdStartingWith(String prefix);
 
+    Optional<Question> findOptQuestionByIdEquals(String id);
+
     Question save(Question question);
 }

@@ -58,28 +58,28 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
 
         List<SubmittedAnswerDto> an =
                 submittedAnswerDtoList.stream()
-                              .filter(st1 -> {
-                                 String[] questionIdSplit = st1.getQuestionId().split("_");
-                                 return Integer.parseInt(questionIdSplit[1]) == 1;
-                              })
-                              .collect(Collectors.toList());
+                        .filter(st1 -> {
+                            String[] questionIdSplit = st1.getQuestionId().split("_");
+                            return Integer.parseInt(questionIdSplit[1]) == 1;
+                        })
+                        .collect(Collectors.toList());
 
         List<SubmittedAnswerDto> ge =
                 submittedAnswerDtoList.stream()
-                                .filter(st2 -> {
-                                    String[] questionIdSplit = st2.getQuestionId().split("_");
-                                    return Integer.parseInt(questionIdSplit[1]) == 2;
-                                })
-                                .collect(Collectors.toList());
+                        .filter(st2 -> {
+                            String[] questionIdSplit = st2.getQuestionId().split("_");
+                            return Integer.parseInt(questionIdSplit[1]) == 2;
+                        })
+                        .collect(Collectors.toList());
 
         List<SubmittedAnswerDto> ra =
                 submittedAnswerDtoList.stream()
-                               .filter(st3 -> {
-                                   String[] questionIdSplit = st3.getQuestionId().split("_");
-                                   return Integer.parseInt(questionIdSplit[1]) == 3;
-                               })
-                               .peek(zrTest -> zrTest.setQuestionId(zrTest.getQuestionId().toLowerCase()))
-                               .collect(Collectors.toList());
+                        .filter(st3 -> {
+                            String[] questionIdSplit = st3.getQuestionId().split("_");
+                            return Integer.parseInt(questionIdSplit[1]) == 3;
+                        })
+                        .peek(zrTest -> zrTest.setQuestionId(zrTest.getQuestionId().toLowerCase()))
+                        .collect(Collectors.toList());
 
         List<SubmittedAnswerDto> zr = submittedAnswerDtoList;
         zr.removeAll(an);
@@ -101,7 +101,7 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
 
         String[] answerDtoQuestionIdSplit = submittedAnswerDtoList.stream()
                 .findAny()
-                .orElseGet(()->{
+                .orElseGet(() -> {
                     SubmittedAnswerDto a = new SubmittedAnswerDto();
                     a.setQuestionId("bakat_1_1");
                     return a;
@@ -111,11 +111,16 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
         List<Answer> allMinatBakatAnswerFromDb = answerService.findByIdStartingWith(testName);
 
         // calculate "an" answer
-        for (SubmittedAnswerDto anAnswerDto : an) {
-            for (Answer ansFromDb : allMinatBakatAnswerFromDb) {
-                if (anAnswerDto.getAnswers().get(0).equalsIgnoreCase(ansFromDb.getId())) {
-                    if (ansFromDb.getIsCorrect() == 1) {
-                        anCorrectAnswers++;
+
+        if(!an.isEmpty()) {
+            for (SubmittedAnswerDto anAnswerDto : an) {
+                if (anAnswerDto.getAnswers() != null && !anAnswerDto.getAnswers().isEmpty()) {
+                    for (Answer ansFromDb : allMinatBakatAnswerFromDb) {
+                        if (anAnswerDto.getAnswers().get(0).equalsIgnoreCase(ansFromDb.getId())) {
+                            if (ansFromDb.getIsCorrect() == 1) {
+                                anCorrectAnswers++;
+                            }
+                        }
                     }
                 }
             }
@@ -123,11 +128,15 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
 
 
         // calculate "ge" answer need to sum the answer category 1 or 2
-        for (SubmittedAnswerDto geAnswerDto : ge) {
-            for (Answer ansFromDb : allMinatBakatAnswerFromDb) {
-                if(ansFromDb.getId().startsWith(testName+"_2")){
-                    if(ansFromDb.getAnswerContent().equals(geAnswerDto.getAnswers().get(0))){
-                        geCorrectAnswers += Integer.parseInt(ansFromDb.getAnswerCategory());
+        if(!ge.isEmpty()) {
+            for (SubmittedAnswerDto geAnswerDto : ge) {
+                if (geAnswerDto.getAnswers() != null && !geAnswerDto.getAnswers().isEmpty()) {
+                    for (Answer ansFromDb : allMinatBakatAnswerFromDb) {
+                        if (ansFromDb.getId().startsWith(testName + "_2")) {
+                            if (ansFromDb.getAnswerContent().equals(geAnswerDto.getAnswers().get(0))) {
+                                geCorrectAnswers += Integer.parseInt(ansFromDb.getAnswerCategory());
+                            }
+                        }
                     }
                 }
             }
@@ -135,67 +144,75 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
 
 
         // calculate "ra" answer
-        for (SubmittedAnswerDto raAnswerDto : ra){
-            for(Answer ansFromDb : allMinatBakatAnswerFromDb){
-                if(ansFromDb.getAnswerContent().equals(raAnswerDto.getAnswers().get(0))){
-                    raCorrectAnswers++;
+        if(!ra.isEmpty()) {
+            for (SubmittedAnswerDto raAnswerDto : ra) {
+                if (raAnswerDto.getAnswers() != null && !raAnswerDto.getAnswers().isEmpty()) {
+                    for (Answer ansFromDb : allMinatBakatAnswerFromDb) {
+                        if (ansFromDb.getAnswerContent().equals(raAnswerDto.getAnswers().get(0))) {
+                            raCorrectAnswers++;
+                        }
+                    }
                 }
             }
         }
 
         // calculate "zr" answer
-        for (SubmittedAnswerDto zrAnswerDto : zr){
-            for(Answer ansFromDb : allMinatBakatAnswerFromDb){
-                if(ansFromDb.getAnswerContent().equals(zrAnswerDto.getAnswers().get(0))){
-                    zrCorrectAnswers++;
+        if(!zr.isEmpty()) {
+            for (SubmittedAnswerDto zrAnswerDto : zr) {
+                if (zrAnswerDto.getAnswers() != null && !zrAnswerDto.getAnswers().isEmpty()) {
+                    for (Answer ansFromDb : allMinatBakatAnswerFromDb) {
+                        if (ansFromDb.getAnswerContent().equals(zrAnswerDto.getAnswers().get(0))) {
+                            zrCorrectAnswers++;
+                        }
+                    }
                 }
             }
         }
 
-        if(userAgeInMonth < 156){
+        if (userAgeInMonth < 156) {
             raMaxCorrectByAge = geMaxCorrectByAge = anMaxCorrectByAge = 15;
             zrMaxCorrectByAge = 16;
-        }else if(userAgeInMonth < 168){
+        } else if (userAgeInMonth < 168) {
             anMaxCorrectByAge = 15;
             geMaxCorrectByAge = 16;
             raMaxCorrectByAge = 17;
             zrMaxCorrectByAge = 18;
-        }else if(userAgeInMonth < 192){
+        } else if (userAgeInMonth < 192) {
             anMaxCorrectByAge = 16;
             geMaxCorrectByAge = raMaxCorrectByAge = 17;
             zrMaxCorrectByAge = 18;
-        }else {
+        } else {
             anMaxCorrectByAge = geMaxCorrectByAge = raMaxCorrectByAge = zrMaxCorrectByAge = 20;
         }
 
         //final output per subtest
-        if(anCorrectAnswers > anMaxCorrectByAge){
+        if (anCorrectAnswers > anMaxCorrectByAge) {
             anCorrectAnswers = anMaxCorrectByAge;
         }
-        if(raCorrectAnswers > raMaxCorrectByAge){
+        if (raCorrectAnswers > raMaxCorrectByAge) {
             raCorrectAnswers = raMaxCorrectByAge;
         }
-        if(geCorrectAnswers > geMaxCorrectByAge){
+        if (geCorrectAnswers > geMaxCorrectByAge) {
             geCorrectAnswers = geMaxCorrectByAge;
         }
-        if(zrCorrectAnswers > zrMaxCorrectByAge){
+        if (zrCorrectAnswers > zrMaxCorrectByAge) {
             zrCorrectAnswers = zrMaxCorrectByAge;
         }
 
         double anPercentage = (double) anCorrectAnswers / (double) anMaxCorrectByAge * 100;
-        double gePercentage = (double) geCorrectAnswers / (double) geMaxCorrectByAge * 100 ;
-        double raPercentage = (double) raCorrectAnswers / (double) raMaxCorrectByAge * 100 ;
-        double zrPercentage = (double) zrCorrectAnswers / (double) zrMaxCorrectByAge * 100 ;
+        double gePercentage = (double) geCorrectAnswers / (double) geMaxCorrectByAge * 100;
+        double raPercentage = (double) raCorrectAnswers / (double) raMaxCorrectByAge * 100;
+        double zrPercentage = (double) zrCorrectAnswers / (double) zrMaxCorrectByAge * 100;
 
-        double testEksak = (double)(geCorrectAnswers + raCorrectAnswers) / (geCorrectAnswers + raCorrectAnswers + anCorrectAnswers + zrCorrectAnswers)*100;
-        double testNonEksak = (double)(anCorrectAnswers + zrCorrectAnswers) / (geCorrectAnswers + raCorrectAnswers + anCorrectAnswers + zrCorrectAnswers)*100;
-        double testLiterasi = (double) (anCorrectAnswers+geCorrectAnswers) / (anCorrectAnswers + geCorrectAnswers + raCorrectAnswers + zrCorrectAnswers)*100;
-        double testNumerasi = (double) (raCorrectAnswers+zrCorrectAnswers) / (anCorrectAnswers + geCorrectAnswers + raCorrectAnswers + zrCorrectAnswers)*100;
+        double testEksak = (double) (geCorrectAnswers + raCorrectAnswers) / (geCorrectAnswers + raCorrectAnswers + anCorrectAnswers + zrCorrectAnswers) * 100;
+        double testNonEksak = (double) (anCorrectAnswers + zrCorrectAnswers) / (geCorrectAnswers + raCorrectAnswers + anCorrectAnswers + zrCorrectAnswers) * 100;
+        double testLiterasi = (double) (anCorrectAnswers + geCorrectAnswers) / (anCorrectAnswers + geCorrectAnswers + raCorrectAnswers + zrCorrectAnswers) * 100;
+        double testNumerasi = (double) (raCorrectAnswers + zrCorrectAnswers) / (anCorrectAnswers + geCorrectAnswers + raCorrectAnswers + zrCorrectAnswers) * 100;
 
-        System.out.println("eksak: "+String.format("%.2f",testEksak));
-        System.out.println("non Eksak: "+String.format("%.2f",testNonEksak));
-        System.out.println("literasi: "+String.format("%.2f",testLiterasi));
-        System.out.println("numerasi: "+String.format("%.2f",testNumerasi));
+        System.out.println("eksak: " + String.format("%.2f", testEksak));
+        System.out.println("non Eksak: " + String.format("%.2f", testNonEksak));
+        System.out.println("literasi: " + String.format("%.2f", testLiterasi));
+        System.out.println("numerasi: " + String.format("%.2f", testNumerasi));
 
         double eksak = gePercentage + raPercentage;
         double nonEksak = anPercentage + zrPercentage;
@@ -204,14 +221,14 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
 
         StringBuilder sb = new StringBuilder();
 //        sb.append("Minat bakat").append("\n");
-        sb.append("an:").append((int)anPercentage).append(",");
-        sb.append("ge:").append((int)gePercentage).append(",");
-        sb.append("ra:").append((int)raPercentage).append(",");
-        sb.append("zr:").append((int)zrPercentage).append(",");
-        sb.append("eksak:").append(String.format("%.2f",testEksak)).append(",");
-        sb.append("nonEksak:").append(String.format("%.2f",testNonEksak)).append(",");
-        sb.append("literasi:").append(String.format("%.2f",testLiterasi)).append(",");
-        sb.append("numerasi:").append(String.format("%.2f",testNumerasi));
+        sb.append("an:").append((int) anPercentage).append(",");
+        sb.append("ge:").append((int) gePercentage).append(",");
+        sb.append("ra:").append((int) raPercentage).append(",");
+        sb.append("zr:").append((int) zrPercentage).append(",");
+        sb.append("eksak:").append(String.format("%.2f", testEksak)).append(",");
+        sb.append("nonEksak:").append(String.format("%.2f", testNonEksak)).append(",");
+        sb.append("literasi:").append(String.format("%.2f", testLiterasi)).append(",");
+        sb.append("numerasi:").append(String.format("%.2f", testNumerasi));
 
         setResult(sb.toString());
 
@@ -219,9 +236,9 @@ public class MinatBakatResultTestCalculator implements UniqueResultTestCalculato
         testResult.setUser(user);
         testResult.setTest(testService.findTestByInternalName(testName));
         testResult.setResult(getResult());
-        testResult.setResultCalculation("an:"+anPercentage+",ge:"+gePercentage+",ra:"+raPercentage+",zr:"+zrPercentage);
+        testResult.setResultCalculation("an:" + anPercentage + ",ge:" + gePercentage + ",ra:" + raPercentage + ",zr:" + zrPercentage);
 //        testResultRepository.save(testResult);
-        logger.info("username: '"+username+"' MINATBAKAT answer calculated successfully");
+        logger.info("username: '" + username + "' MINATBAKAT answer calculated successfully");
         return testResult;
 
 //        boolean exact = false;

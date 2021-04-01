@@ -85,10 +85,10 @@
 				<reportElement x="2" y="7" width="181" height="40" uuid="4c8c7050-5db5-415d-bc48-3d30fa043b10"/>
 				<imageExpression><![CDATA["C:/Users/langi/Desktop/psyche.png"]]></imageExpression>
 			</image>
-			<image>
-				<reportElement x="493" y="7" width="50" height="50" uuid="754f973d-8575-4c75-aa99-6e3f6d2b8bb3"/>
-				<imageExpression><![CDATA["C:/Users/langi/Documents/Project/Psyche/Psyche online test/Hasil/SMAN 1 Amurang/480-SMAN_1_AMURANG.png"]]></imageExpression>
-			</image>
+<!--			<image>-->
+<!--				<reportElement x="493" y="10" width="43" height="46" uuid="1c0788ac-48c6-4470-afef-bc95c8bc63d0"/>-->
+<!--				<imageExpression><![CDATA["C:/Users/langi/Desktop/index.jpg"]]></imageExpression>-->
+<!--			</image>-->
 		</band>
 	</title>
 	<pageHeader>

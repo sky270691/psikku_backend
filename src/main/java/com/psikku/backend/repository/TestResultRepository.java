@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface TestResultRepository extends JpaRepository<TestResult, Integer> {
     List<TestResult> findAllByUser_Id(long userId);
@@ -14,4 +15,5 @@ public interface TestResultRepository extends JpaRepository<TestResult, Integer>
     List<TestResult> findAllByTest_IdAndVoucher_Id(int testId, long voucherId);
     List<TestResult> findAllByVoucher_VoucherCodeAndUser_Username(String voucher, String username);
     List<TestResult> findAllByVoucher_VoucherCode(String voucher);
+    Optional<TestResult> findByVoucher_VoucherCodeAndUser_UsernameAndTest_Id(String voucher,String username, int testId);
 }

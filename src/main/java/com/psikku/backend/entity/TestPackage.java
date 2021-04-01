@@ -12,12 +12,15 @@ public class TestPackage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
     private String name;
     private String description;
     private int price;
     private String category;
+
+    @Column(name = "required_pre_register")
+    private boolean requiredPreRegister;
 
     @Column(name = "view_type")
     private String viewType;
@@ -26,20 +29,18 @@ public class TestPackage {
     @Column(name = "creation_date")
     private LocalDate createDate;
 
-    @ManyToMany(cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
-    @JoinTable(name = "package_test",
-                joinColumns = @JoinColumn(name = "package_id"),
-                inverseJoinColumns = @JoinColumn(name = "test_id"))
-    private List<Test> testList;
+    @OneToMany(mappedBy = "testPackage",cascade = CascadeType.ALL)
+    @OrderBy("priority")
+    private List<TestPackageTest> testPackageTestList;
 
     @OneToMany(mappedBy = "testPackage")
     private List<Voucher> voucher;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -84,14 +85,13 @@ public class TestPackage {
         this.price = price;
     }
 
-    public List<Test> getTestList() {
-        return testList;
+    public List<TestPackageTest> getTestPackageTestList() {
+        return testPackageTestList;
     }
 
-    public void setTestList(List<Test> testList) {
-        this.testList = testList;
+    public void setTestPackageTestList(List<TestPackageTest> testPackageTests) {
+        this.testPackageTestList = testPackageTests;
     }
-
 
     public List<Voucher> getVoucher() {
         return voucher;
@@ -107,5 +107,13 @@ public class TestPackage {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public boolean isRequiredPreRegister() {
+        return requiredPreRegister;
+    }
+
+    public void setRequiredPreRegister(boolean requiredPreRegister) {
+        this.requiredPreRegister = requiredPreRegister;
     }
 }

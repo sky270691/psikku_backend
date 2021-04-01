@@ -55,6 +55,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .mvcMatchers("/api/users/reset-password*/*").permitAll()
                 .mvcMatchers("/api/users/update-password*/*").permitAll()
                 .mvcMatchers("/api/packages/*").fullyAuthenticated()
+                .mvcMatchers("/api/packages/live/*").permitAll()
                 .mvcMatchers("/api/packages/internal*/*").permitAll()
                 .mvcMatchers("/api/content*/*").fullyAuthenticated()
                 .mvcMatchers("/api/mail-sender*/*").permitAll()
@@ -68,7 +69,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 CorsConfiguration corsConfiguration = new CorsConfiguration();
                 corsConfiguration.setAllowedOrigins(Arrays.asList("*"));
                 corsConfiguration.setAllowedMethods(Arrays.asList("POST","GET","PUT","DELETE"));
-                corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization","Content-Type","Voucher","Content-Disposition","X-Code"));
+                corsConfiguration.setAllowedHeaders(Arrays.asList("Authorization","Content-Type","Voucher","Content-Disposition","X-Code","Order-Admin"));
 
                 return corsConfiguration;
             };

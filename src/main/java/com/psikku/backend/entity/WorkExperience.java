@@ -21,6 +21,10 @@ public class WorkExperience {
 
     private LocalDate end;
 
+    private String nip;
+
+    private String jabatan;
+
     public Long getId() {
         return id;
     }
@@ -59,5 +63,21 @@ public class WorkExperience {
 
     public void setEnd(LocalDate end) {
         this.end = end;
+    }
+
+    public String getNip() {
+        return nip;
+    }
+
+    public void setNip(String nip) {
+        this.nip = nip;
+    }
+
+    public String getJabatan() {
+        return jabatan;
+    }
+
+    public void setJabatan(String jabatan) {
+        this.jabatan = jabatan;
     }
 }

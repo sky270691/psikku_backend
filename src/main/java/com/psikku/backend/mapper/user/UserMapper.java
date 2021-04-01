@@ -27,7 +27,7 @@ public class UserMapper {
     public User convertRegisteredAuthServerUserToUserEntity(UserRegisterAuthServerResponse userRegisterAuthServerResponse) {
 
         User user = new User();
-        user.setUsername(userRegisterAuthServerResponse.getUsername());
+        user.setUsername(userRegisterAuthServerResponse.getEmail());
         user.setId(userRegisterAuthServerResponse.getId());
         user.setFirstname(userRegisterAuthServerResponse.getFirstname());
         user.setLastname(userRegisterAuthServerResponse.getLastname());
@@ -89,7 +89,7 @@ public class UserMapper {
         }
 
         if(user.getProfilPicture() != null){
-            userDto.setPictureUrl("/api/content/picture/"+user.getProfilPicture().getFileName());
+            userDto.setPictureUrl("/content/picture/"+user.getProfilPicture().getFileName());
         }
 
         return userDto;

@@ -101,6 +101,10 @@ public class FileStorageServiceImpl implements FileStorageService {
     public boolean storeUserPicture(MultipartFile file) {
         String credential = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userService.findByUsername(credential);
+        if(user.getProfilPicture() != null){
+            fileDataRepository.deleteById(user.getProfilPicture().getId());
+            user.setProfilPicture(null);
+        }
         FileData fileData = new FileData();
         fileData.setType("picture");
         String[] fileNameArray = file.getOriginalFilename().split("\\.");
@@ -119,6 +123,26 @@ public class FileStorageServiceImpl implements FileStorageService {
         user.setProfilPicture(fileData1);
         userService.saveOrUpdateUserEntity(user);
         return true;
+    }
+
+    @Override
+    public String storeUserAnswerPicture(MultipartFile pictFile) {
+        FileData fileData = new FileData();
+        fileData.setType("answer-picture");
+        String[] fileNameArray = pictFile.getOriginalFilename().split("\\.");
+        fileData.setFileName(UUID.randomUUID().toString()+"."+fileNameArray[fileNameArray.length-1]);
+        setFileStorageLocation(Paths.get(storageProperties.getUploadDir()+"/picture").toAbsolutePath());
+        fileData.setFilePath(getFileStorageLocation().toString());
+        Path targetLocation = fileStorageLocation.resolve(fileData.getFileName());
+        try {
+            Files.createDirectories(this.fileStorageLocation);
+            Files.copy(pictFile.getInputStream(),targetLocation, StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        FileData fileData1 = fileDataRepository.save(fileData);
+        return fileData1.getFileName();
     }
 
 

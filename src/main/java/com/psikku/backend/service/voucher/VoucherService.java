@@ -22,5 +22,6 @@ public interface VoucherService {
     boolean saveVoucher(Voucher voucher);
     boolean deleteVoucher(long voucherId);
     Voucher findVoucherByPaymentId(long paymentId);
-
+    boolean validateUrutan(String voucher, Integer testId);
+    void registerUserToVoucher(List<String> email, String voucher);
 }

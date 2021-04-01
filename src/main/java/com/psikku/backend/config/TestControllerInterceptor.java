@@ -16,7 +16,11 @@ public class TestControllerInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        String username = "";
+        if(SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null){
+            username = SecurityContextHolder.getContext().getAuthentication().getName();
+        }
+
         logger.info("| Request from:'"+request.getRemoteAddr()+"'| with-username:'"+username+"' | Endpoint:'"+request.getRequestURI()+"' |");
 
         return true;

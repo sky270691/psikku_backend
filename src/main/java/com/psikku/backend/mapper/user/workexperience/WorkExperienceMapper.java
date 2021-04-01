@@ -26,6 +26,12 @@ public class WorkExperienceMapper {
         if(dto.getEnd() != null){
             workExperience.setEnd(dto.getEnd());
         }
+        if(dto.getNip() != null){
+            workExperience.setNip(dto.getNip());
+        }
+        if(dto.getJabatan() != null){
+            workExperience.setJabatan(dto.getJabatan());
+        }
 
         return workExperience;
     }
@@ -48,6 +54,12 @@ public class WorkExperienceMapper {
         }
         if(workExperience.getEnd() != null){
             dto.setEnd(workExperience.getEnd());
+        }
+        if(workExperience.getJabatan() != null){
+            dto.setJabatan(workExperience.getJabatan());
+        }
+        if(workExperience.getNip() != null){
+            dto.setNip(workExperience.getNip());
         }
         return dto;
     }

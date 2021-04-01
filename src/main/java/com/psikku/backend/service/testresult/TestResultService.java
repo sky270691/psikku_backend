@@ -6,6 +6,7 @@ import com.psikku.backend.entity.TestResult;
 import com.psikku.backend.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TestResultService  {
     //--------------------repository method-----------------------------------------
@@ -18,6 +19,7 @@ public interface TestResultService  {
     List<TestFinalResultDto> findAllResultByVoucherAndUsername(String voucher, String username);
     List<TestResult> findAllResultByVoucherAndUsername(User user, String voucher);
     List<TestResult> findAllResultByVoucher(String voucher);
+    Optional<TestResult> findTestResultByVoucherCodeUsernameAndTest(String voucherCode, String username, int testId);
 
     //-------------converter method-------------------------------------------------
     TestFinalResultDto convertToTestResultDto(TestResult testResult);

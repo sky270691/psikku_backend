@@ -85,6 +85,7 @@ public class TestServiceImpl implements TestService{
         test.setInternalName(fullTestDto.getInternalName());
         test.setDescription(fullTestDto.getDescription());
         test.setIsSurvey(fullTestDto.getIsSurvey());
+        test.setSkippable(fullTestDto.getSkippable());
         List<SubtestDto> subtestDtoList = fullTestDto.getSubtests();
         List<Subtest> entitySubtestList = new ArrayList<>();
         int subtestNumber = 1;
@@ -159,6 +160,7 @@ public class TestServiceImpl implements TestService{
         fullTestDto.setId(test.getId());
         fullTestDto.setDescription(test.getDescription());
         fullTestDto.setSubtests(new ArrayList<>());
+        fullTestDto.setSkippable(test.getSkippable());
         for(Subtest subtest : test.getSubtestList()){
             SubtestDto subtestDto = new SubtestDto();
             subtestDto.setId(subtest.getId());
@@ -223,11 +225,22 @@ public class TestServiceImpl implements TestService{
     public List<MinimalTestDto> getMinTestByVoucher(String voucherCode){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Voucher voucher = voucherService.getVoucherByCode(voucherCode);
-        List<Test> testList = voucher.getTestPackage().getTestList();
+        List<Test> testList = voucher.getTestPackage().getTestPackageTestList().stream()
+                .map(TestPackageTest::getTest)
+                .collect(Collectors.toList());
         // get all the test result that submitted before to prevent the user do the test again
         List<TestResult> testResultList = testResultService.findAllResultByVoucherIdAndUsername(voucher.getId(),username);
         List<MinimalTestDto> minimalTestDtoList = new ArrayList<>();
         List<Test> doneTestList = new ArrayList<>();
+
+        //check what test will take picture secretly
+        List<String> takePictFlag =
+                voucher.getTestPackage().getTestPackageTestList()
+                        .stream()
+                        .filter(TestPackageTest::isTakePict)
+                        .map(x -> x.getTest().getInternalName())
+                .collect(Collectors.toList());
+
         if(!testResultList.isEmpty()){
             doneTestList = testResultList.stream()
                     .map(TestResult::getTest)
@@ -252,6 +265,18 @@ public class TestServiceImpl implements TestService{
         testList.forEach(test -> {
             minimalTestDtoList.add(convertToMinimalTestDto(test));
         });
+
+        //assign the take pict flag to minimal test dto
+        if(!takePictFlag.isEmpty()){
+            for (String testNameTakePict : takePictFlag) {
+                for (MinimalTestDto minimalTestDto : minimalTestDtoList) {
+                    if(minimalTestDto.getInternalName() == testNameTakePict){
+                        minimalTestDto.setTakePict(true);
+                    }
+                }
+            }
+        }
+
 
         // check if the minimalTestDto contains finished test or not
         for (Test doneTest : doneTestList) {

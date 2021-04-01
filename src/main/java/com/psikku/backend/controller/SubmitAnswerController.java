@@ -2,15 +2,19 @@ package com.psikku.backend.controller;
 
 import com.psikku.backend.dto.testresult.TestFinalResultDto;
 import com.psikku.backend.dto.useranswer.KraepelinResultDto;
+import com.psikku.backend.dto.useranswer.PauliResultDto;
+import com.psikku.backend.dto.useranswer.RawAnswerDto;
 import com.psikku.backend.dto.useranswer.UserAnswerDto;
 import com.psikku.backend.service.submitanswer.SubmitAnswerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -26,6 +30,7 @@ public class SubmitAnswerController {
     public SubmitAnswerController(SubmitAnswerService submitAnswerService){
         this.submitAnswerService = submitAnswerService;
         logger = LoggerFactory.getLogger(SubmitAnswerController.class);
+
     }
 
     @PostMapping
@@ -58,6 +63,42 @@ public class SubmitAnswerController {
         Map<String,String> returnBody = new LinkedHashMap<>();
         returnBody.put("status","success");
         logger.info("username: '"+getUsername()+"' result submitted successfully");
+        return ResponseEntity.ok(returnBody);
+    }
+
+    @PostMapping("/pauli")
+    public ResponseEntity<?> submitPauliAnswer(@RequestBody PauliResultDto dto){
+        logger.info("username: '"+getUsername()+"' try to submit pauli answer");
+        submitAnswerService.savePauliResult(dto);
+        Map<String,String> returnBody = new LinkedHashMap<>();
+        returnBody.put("status","success");
+        logger.info("username: '"+getUsername()+"' result submitted successfully");
+        return ResponseEntity.ok(returnBody);
+    }
+
+    @PostMapping(value = "/upload-picture-answer",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> submitPictureAnswer(String voucher, String testId, MultipartFile pictFile){
+        logger.info("username: '"+getUsername()+"' try to upload picture answer");
+
+        submitAnswerService.saveUserPictureAnswer(voucher,testId,pictFile);
+
+        Map<String,String> returnBody = new LinkedHashMap<>();
+        returnBody.put("status","success");
+        logger.info("username: '"+getUsername()+"' result submitted successfully");
+        return ResponseEntity.ok(returnBody);
+    }
+
+    @PostMapping("/raw")
+    public ResponseEntity<?> submitRawAnswer(@RequestBody RawAnswerDto dto){
+        logger.info("username: '"+getUsername()+"' try to upload raw answer");
+
+        System.out.println("==========================================");
+        System.out.println(dto);
+        System.out.println("==========================================");
+        submitAnswerService.saveRawAnswer(dto);
+        Map<String,String> returnBody = new LinkedHashMap<>();
+        returnBody.put("status","success");
+        logger.info("username: '"+getUsername()+"' answer submitted successfully");
         return ResponseEntity.ok(returnBody);
     }
 

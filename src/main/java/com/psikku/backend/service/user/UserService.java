@@ -30,6 +30,8 @@ public interface UserService {
     ResponseEntity<UserRegisterResponse>updatePassword(UserResetPasswordDto userResetPasswordDto, String code);
     void addEducation(EducationDto dto);
     void addWorkExp(WorkExperienceDto dto);
+    void deleteWorkExpById(Long id);
+    void deleteEducationById(Long id);
 //    public User convertToUserEntity(UserRegisterAuthServerResponse userRegisterAuthServerResponse);
 //    public UserRegisterResponse register  Response(UserRegisterDto userRegisterDto, boolean status);
 

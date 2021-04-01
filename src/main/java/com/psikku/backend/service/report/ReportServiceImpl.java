@@ -38,6 +38,7 @@ public class ReportServiceImpl implements ReportService {
     private final TestResultService testResultService;
     private final Path path;
     private final VoucherService voucherService;
+    private final String normaIstCsvLocation;
     private final FileStorageService fileStorageService;
 
     @Autowired
@@ -46,12 +47,14 @@ public class ReportServiceImpl implements ReportService {
                              UserService userService,
                              TestResultService testResultService,
                              VoucherService voucherService,
+                             @Value("${ist-csv.location}")String normaIstCsvLocation,
                              FileStorageService fileStorageService) throws IOException{
         this.resourceLoader = resourceLoader;
         this.riasecPkuLocation = riasecPkuLocation;
         this.userService = userService;
         this.testResultService = testResultService;
         this.voucherService = voucherService;
+        this.normaIstCsvLocation = normaIstCsvLocation;
         this.logger = LoggerFactory.getLogger(this.getClass());
         this.path = Paths.get(resourceLoader.getResource("classpath:static/report").getURI());
         this.fileStorageService = fileStorageService;
@@ -131,40 +134,40 @@ public class ReportServiceImpl implements ReportService {
 
         List<TestResult> testResultList = getTestResultByUserAndVoucher(user,voucher);
 
-            JasperPrint jasperPrint;
-            try {
+        JasperPrint jasperPrint;
+        try {
 
-                jasperPrint = JasperFillManager.fillReport(jasperReport,parametersBuilder(user,testResultList), new JREmptyDataSource(1));
+            jasperPrint = JasperFillManager.fillReport(jasperReport,parametersBuilder(user,testResultList), new JREmptyDataSource(1));
 
-                JRPdfExporter exporter = new JRPdfExporter();
+            JRPdfExporter exporter = new JRPdfExporter();
 
-                exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
+            exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
 
-                String pdfFileName = user.getUsername();
-                //        Resource resource = resourceLoader.getResource("classpath:static/report");
-                exporter.setExporterOutput(
-                        new SimpleOutputStreamExporterOutput(path+"/"+pdfFileName+".pdf"));
+            String pdfFileName = user.getUsername();
+            //        Resource resource = resourceLoader.getResource("classpath:static/report");
+            exporter.setExporterOutput(
+                    new SimpleOutputStreamExporterOutput(path+"/"+pdfFileName+".pdf"));
 
-                SimplePdfReportConfiguration reportConfig
-                        = new SimplePdfReportConfiguration();
-                reportConfig.setSizePageToContent(true);
-                reportConfig.setForceLineBreakPolicy(false);
+            SimplePdfReportConfiguration reportConfig
+                    = new SimplePdfReportConfiguration();
+            reportConfig.setSizePageToContent(true);
+            reportConfig.setForceLineBreakPolicy(false);
 
 
-                SimplePdfExporterConfiguration exportConfig
-                        = new SimplePdfExporterConfiguration();
-                exportConfig.setMetadataAuthor("Psyche Indonesia");
-                exportConfig.setEncrypted(false);
-                exportConfig.setAllowedPermissionsHint("PRINTING");
+            SimplePdfExporterConfiguration exportConfig
+                    = new SimplePdfExporterConfiguration();
+            exportConfig.setMetadataAuthor("Psyche Indonesia");
+            exportConfig.setEncrypted(false);
+            exportConfig.setAllowedPermissionsHint("PRINTING");
 
-                exporter.setConfiguration(reportConfig);
-                exporter.setConfiguration(exportConfig);
+            exporter.setConfiguration(reportConfig);
+            exporter.setConfiguration(exportConfig);
 
-                exporter.exportReport();
+            exporter.exportReport();
 
-            } catch (JRException e) {
-                e.printStackTrace();
-            }
+        } catch (JRException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -330,35 +333,80 @@ public class ReportServiceImpl implements ReportService {
             parameters.put("kecemasanResultPercentage",kecemasanResultPercentage);
         }
 
-        String bakatFullResult = testResultList.stream()
-                .filter(result->result.getTest().getInternalName().contains("bakat"))
+
+        String ist3 = testResultList.stream()
+                .filter(result->result.getTest().getInternalName().contains("ist3"))
                 .map(result->result.getResult())
                 .findAny()
+                .map(x -> x.split("=")[1])
+                .orElse("");
+        String ist4 = testResultList.stream()
+                .filter(result->result.getTest().getInternalName().contains("ist4"))
+                .map(result->result.getResult())
+                .findAny()
+                .map(x -> x.split("=")[1])
+                .orElse("");
+        String ist5 = testResultList.stream()
+                .filter(result->result.getTest().getInternalName().contains("ist5"))
+                .map(result->result.getResult())
+                .findAny()
+                .map(x -> x.split("=")[1])
+                .orElse("");
+        String ist6 = testResultList.stream()
+                .filter(result->result.getTest().getInternalName().contains("ist6"))
+                .map(result->result.getResult())
+                .findAny()
+                .map(x -> x.split("=")[1])
                 .orElse("");
 
-        if(!bakatFullResult.equals("")){
-        Map.Entry<String,Double> exact = bakatCalc(bakatFullResult).stream()
-                .filter(x -> x.getKey().equalsIgnoreCase("eksak"))
-                .findAny()
-                .orElse(null);
-        Map.Entry<String,Double> nonExact = bakatCalc(bakatFullResult).stream()
-                .filter(x -> x.getKey().equalsIgnoreCase("nonEksak"))
-                .findAny()
-                .orElse(null);
-        Map.Entry<String,Double> literasi = bakatCalc(bakatFullResult).stream()
-                .filter(x -> x.getKey().equalsIgnoreCase("literasi"))
-                .findAny()
-                .orElse(null);
-        Map.Entry<String,Double> numerasi = bakatCalc(bakatFullResult).stream()
-                .filter(x -> x.getKey().equalsIgnoreCase("numerasi"))
-                .findAny()
-                .orElse(null);
+        int an = bakatIstCalc(user,"ist3",ist3);
+        int ge = bakatIstCalc(user,"ist4",ist4);
+        int ra = bakatIstCalc(user,"ist5",ist5);
+        int zr = bakatIstCalc(user,"ist6",ist6);
 
-            parameters.put("kognitifExactResult",exact.getValue());
-            parameters.put("kognitifNonExactResult",nonExact.getValue());
-            parameters.put("kognitifLiterasiResult",literasi.getValue());
-            parameters.put("kognitifNumerasiResult",numerasi.getValue());
-        }
+        System.out.println(an+", "+ge+", "+ra+", "+zr);
+
+
+        double exact = (double) (ge + ra) / (an + ge + ra + zr) * 100;
+        double nonExact = (double) (an + zr) / (an + ge + ra + zr) * 100;
+        double literasi = (double) (an + ge) / (an + ge + ra + zr) * 100;
+        double numerasi = (double) (ra + zr) / (an + ge + ra + zr) * 100;
+
+
+        parameters.put("kognitifExactResult",Double.parseDouble(String.format("%.1f",exact)));
+        parameters.put("kognitifNonExactResult",Double.parseDouble(String.format("%.1f",nonExact)));
+        parameters.put("kognitifLiterasiResult",Double.parseDouble(String.format("%.1f",literasi)));
+        parameters.put("kognitifNumerasiResult",Double.parseDouble(String.format("%.1f",numerasi)));
+
+//        String bakatFullResult = testResultList.stream()
+//                .filter(result->result.getTest().getInternalName().contains("bakat"))
+//                .map(result->result.getResult())
+//                .findAny()
+//                .orElse("");
+//
+//        if(!bakatFullResult.equals("")){
+//        Map.Entry<String,Double> exact = bakatCalc(bakatFullResult).stream()
+//                .filter(x -> x.getKey().equalsIgnoreCase("eksak"))
+//                .findAny()
+//                .orElse(null);
+//        Map.Entry<String,Double> nonExact = bakatCalc(bakatFullResult).stream()
+//                .filter(x -> x.getKey().equalsIgnoreCase("nonEksak"))
+//                .findAny()
+//                .orElse(null);
+//        Map.Entry<String,Double> literasi = bakatCalc(bakatFullResult).stream()
+//                .filter(x -> x.getKey().equalsIgnoreCase("literasi"))
+//                .findAny()
+//                .orElse(null);
+//        Map.Entry<String,Double> numerasi = bakatCalc(bakatFullResult).stream()
+//                .filter(x -> x.getKey().equalsIgnoreCase("numerasi"))
+//                .findAny()
+//                .orElse(null);
+//
+//            parameters.put("kognitifExactResult",exact.getValue());
+//            parameters.put("kognitifNonExactResult",nonExact.getValue());
+//            parameters.put("kognitifLiterasiResult",literasi.getValue());
+//            parameters.put("kognitifNumerasiResult",numerasi.getValue());
+//        }
 
         String riasecFullResult = testResultList.stream()
                 .filter(result->result.getTest().getInternalName().contains("riasec"))
@@ -450,6 +498,21 @@ public class ReportServiceImpl implements ReportService {
 
         return (result*100)/80;
 
+    }
+
+    private int bakatIstCalc(User user, String ist, String sw){
+        int age = user.getAge() / 12;
+        Resource resource = resourceLoader.getResource(normaIstCsvLocation);
+        int hasil = 0;
+        try {
+            String data = Files.lines(Paths.get(resource.getURI()))
+                    .filter(x -> x.startsWith("age,"+age) && x.endsWith(sw) && x.split(",")[2].equalsIgnoreCase(ist))
+                    .findAny().orElse("age,0,0,0,0,0,0");
+            hasil = Integer.parseInt(data.split(",")[4]);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return hasil;
     }
 
     private List<Map.Entry<String,Double>> bakatCalc(String result){

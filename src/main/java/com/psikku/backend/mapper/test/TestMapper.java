@@ -22,6 +22,7 @@ public class TestMapper {
                 .mapToInt(Subtest::getDuration)
                 .sum();
         minimalTestDto.setDuration(duration);
+        minimalTestDto.setSkippable(test.getSkippable());
         return minimalTestDto;
     }
 }

@@ -130,7 +130,7 @@ public class TestResultController {
 //        }
 //    }
 
-    @GetMapping(value = "/{voucher}", produces = MediaType.APPLICATION_PDF_VALUE)
+    @GetMapping(value = "/{voucher}")
     public ResponseEntity<?> getAllPdfReportByVoucher(@PathVariable String voucher, HttpServletRequest request){
         Resource resource = reportService.generateAllReportByVoucher(voucher);
         try {

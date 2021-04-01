@@ -32,7 +32,7 @@ public class LiveCountServiceImpl implements LiveCountService {
         Voucher myVoucher = voucherService.getVoucherByCode(voucher);
         List<TestResult> testResultList = testResultService.findAllResultByTestIdAndVoucherId(testId,myVoucher.getId());
         List<TestFinalResultDto> testFinalResultDtoList = testResultList.stream()
-                                                    .map(result -> testResultService.convertToTestResultDto(result))
+                                                    .map(testResultService::convertToTestResultDto)
                                                     .collect(Collectors.toList());
         return testFinalResultDtoList;
     }

@@ -31,6 +31,11 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    public Optional<Question> findOptQuestionByIdEquals(String id) {
+        return questionRepository.findQuestionByIdEquals(id);
+    }
+
+    @Override
     public Question save(Question question) {
         return questionRepository.save(question);
     }

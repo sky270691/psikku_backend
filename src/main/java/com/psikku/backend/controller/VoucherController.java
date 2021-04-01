@@ -1,8 +1,10 @@
 package com.psikku.backend.controller;
 
 import com.psikku.backend.dto.payment.GeneratedPaymentDetailDto;
+import com.psikku.backend.dto.test.MinimalTestDto;
 import com.psikku.backend.dto.testpackage.TestPackageDto;
 import com.psikku.backend.dto.voucher.ValidateVoucherDto;
+import com.psikku.backend.dto.voucher.VoucherParticipantAddDto;
 import com.psikku.backend.service.voucher.VoucherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -52,10 +56,10 @@ public class VoucherController {
     }
 
 
-    @PostMapping(value = "/generate")
-    public ResponseEntity<GeneratedPaymentDetailDto> generateVoucherWithExistingPackage(@RequestPart("package_id") int packageId,
-                                                                                        @RequestPart("total_user") int totalUser,
-                                                                                        @RequestPart("company_id") long companyId){
+    @PostMapping(value = "/generate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<GeneratedPaymentDetailDto> generateVoucherWithExistingPackage(Integer packageId,
+                                                                                         Integer totalUser,
+                                                                                         Long companyId){
         GeneratedPaymentDetailDto paymentDetailDto = voucherService.generateVoucherCurrentPackage(packageId,totalUser,companyId);
         return new ResponseEntity<>(paymentDetailDto,HttpStatus.OK);
     }
@@ -65,5 +69,19 @@ public class VoucherController {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
+
+
+    @PostMapping("/add-participant")
+    public ResponseEntity<?> addNewParticipant(@RequestBody VoucherParticipantAddDto emailList,
+                                               @RequestParam String voucher){
+
+        Map<String,String> returnBody = new LinkedHashMap<>();
+
+
+        voucherService.registerUserToVoucher(emailList.getEmailList(),voucher);
+
+        returnBody.put("status","success");
+        return ResponseEntity.ok(returnBody);
+    }
 
 }

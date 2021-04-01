@@ -26,6 +26,8 @@ public class Test {
     @Column(name = "view")
     private boolean view;
 
+    private int skippable;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "test_id")
     private List<Subtest> subtestList;
@@ -34,8 +36,8 @@ public class Test {
     @JoinColumn(name = "test_id")
     private List<SurveyCategory> surveyCategoryList;
 
-    @ManyToMany(mappedBy = "testList",fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH,CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
-    private List<TestPackage> testPackageList;
+    @OneToMany(mappedBy = "test",fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH,CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
+    private List<TestPackageTest> testPackageTestList;
 
     @OneToMany(mappedBy = "user",
             fetch = FetchType.LAZY,
@@ -98,12 +100,20 @@ public class Test {
         this.subtestList = subtestList;
     }
 
-    public List<TestPackage> getTestPackageList() {
-        return testPackageList;
+    public boolean isSurvey() {
+        return isSurvey;
     }
 
-    public void setTestPackageList(List<TestPackage> testPackageList) {
-        this.testPackageList = testPackageList;
+    public void setSurvey(boolean survey) {
+        isSurvey = survey;
+    }
+
+    public List<TestPackageTest> getTestPackageTestList() {
+        return testPackageTestList;
+    }
+
+    public void setTestPackageTestList(List<TestPackageTest> testPackageTestList) {
+        this.testPackageTestList = testPackageTestList;
     }
 
     public List<SurveyCategory> getSurveyCategoryList() {
@@ -120,5 +130,13 @@ public class Test {
 
     public void setTestResultList(List<TestResult> testResultList) {
         this.testResultList = testResultList;
+    }
+
+    public int getSkippable() {
+        return skippable;
+    }
+
+    public void setSkippable(int skippable) {
+        this.skippable = skippable;
     }
 }

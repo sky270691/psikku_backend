@@ -1,9 +1,11 @@
 package com.psikku.backend.mapper.testpackage;
 
+import com.psikku.backend.dto.test.MinimalTestDto;
 import com.psikku.backend.dto.testpackage.TestPackageCreationDto;
 import com.psikku.backend.dto.testpackage.TestPackageDto;
 import com.psikku.backend.entity.Test;
 import com.psikku.backend.entity.TestPackage;
+import com.psikku.backend.entity.TestPackageTest;
 import com.psikku.backend.mapper.test.TestMapper;
 import com.psikku.backend.service.test.TestService;
 import org.slf4j.Logger;
@@ -12,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
 @Component
 public class TestPackageMapper {
@@ -33,10 +38,14 @@ public class TestPackageMapper {
         testPackage.setDescription(testPackageCreationDto.getDescription());
         testPackage.setViewType(testPackageCreationDto.getViewType());
         testPackage.setCategory(testPackageCreationDto.getCategory());
-        testPackage.setTestList(new ArrayList<>());
-        testPackageCreationDto.getTestIdList().forEach((testId)-> {
+        testPackage.setRequiredPreRegister(testPackageCreationDto.isRequiredPreRegister());
+        testPackage.setTestPackageTestList(new ArrayList<>());
+        testPackageCreationDto.getTestListId().forEach(testId -> {
             Test tempTest = testService.findTestById(testId);
-            testPackage.getTestList().add(tempTest);
+            TestPackageTest newTestPackageTest = new TestPackageTest();
+            newTestPackageTest.setTest(tempTest);
+            newTestPackageTest.setTestPackage(testPackage);
+            testPackage.getTestPackageTestList().add(newTestPackageTest);
         });
         return testPackage;
     }
@@ -50,11 +59,14 @@ public class TestPackageMapper {
         testPackageDto.setPrice(testPackage.getPrice());
         testPackageDto.setViewType(testPackage.getViewType());
         testPackageDto.setCategory(testPackage.getCategory());
-        testPackageDto.setMinimalTestDtoList(new ArrayList<>());
+        testPackageDto.setRequiredPreRegister(testPackage.isRequiredPreRegister());
+        List<MinimalTestDto> minimalTestDtoLinkedList = new LinkedList<>();
         if(testPackage.getVoucher() != null && !testPackage.getVoucher().isEmpty()) {
             testPackageDto.setVoucherValidUntil(testPackage.getVoucher().get(0).getValidUntil());
         }
-        testPackage.getTestList().forEach(test-> testPackageDto.getMinimalTestDtoList().add(testMapper.convertToMinTestDto(test)));
+        testPackage.getTestPackageTestList().forEach(test-> minimalTestDtoLinkedList.add(testMapper.convertToMinTestDto(test.getTest())));
+        testPackageDto.setMinimalTestDtoList(minimalTestDtoLinkedList);
+        testPackageDto.getMinimalTestDtoList().sort(Comparator.comparingInt(MinimalTestDto::getPriority));
         return testPackageDto;
     }
 

@@ -10,8 +10,6 @@ import java.util.List;
 
 public class UserRegisterDto {
 
-    @NotBlank(message = "id pengguna tidak boleh kosong")
-    @Pattern(regexp ="\\S+", message = "id pengguna tidak boleh mengandung karakter spasi")
     private String username;
 
     @NotBlank(message = "kata sandi tidak boleh kosong")

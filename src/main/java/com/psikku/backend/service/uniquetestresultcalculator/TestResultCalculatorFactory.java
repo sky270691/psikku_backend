@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -13,6 +14,8 @@ public class TestResultCalculatorFactory {
 
     private final List<UniqueResultTestCalculator> uniqueResultTestCalculator;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final List<String> objectiveIst = Arrays.asList("ist1","ist2","ist3","ist7","ist8","ist9");
+    private final List<String> userInputIst = Arrays.asList("ist4","ist5","ist6");
 
     @Autowired
     public TestResultCalculatorFactory(List<UniqueResultTestCalculator> uniqueResultTestCalculator) {
@@ -50,6 +53,8 @@ public class TestResultCalculatorFactory {
 //    }
 
     public UniqueResultTestCalculator getTestCalculator(String testName){
+
+
         if(testName.contains("cfit")||testName.equalsIgnoreCase("cfit")){
             return getCalculator("cfit");
         }else if(testName.equalsIgnoreCase("gayabelajar1")){
@@ -78,7 +83,36 @@ public class TestResultCalculatorFactory {
             return getCalculator("riasec");
         }else if(testName.equalsIgnoreCase("papi")){
             return getCalculator("papi");
-        }else{
+        }else if(testName.equalsIgnoreCase("msdt")){
+            return getCalculator("msdt");
+        }else if(testName.equalsIgnoreCase("disc")){
+            return getCalculator("disc");
+        }
+        else if(objectiveIst.contains(testName)){
+            return getCalculator("istObjective");
+        }else if(userInputIst.contains(testName)){
+            return getCalculator("istUserInput");
+        }else if(testName.startsWith("generic")){
+            return getCalculator("genericTest");
+        }
+//        else if(testName.equalsIgnoreCase("ist2")){
+//            return getCalculator("ist2");
+//        }else if(testName.equalsIgnoreCase("ist3")){
+//            return getCalculator("ist3");
+//        }else if(testName.equalsIgnoreCase("ist4")){
+//            return getCalculator("ist4");
+//        }else if(testName.equalsIgnoreCase("ist5")){
+//            return getCalculator("ist5");
+//        }else if(testName.equalsIgnoreCase("ist6")){
+//            return getCalculator("ist6");
+//        }else if(testName.equalsIgnoreCase("ist7")){
+//            return getCalculator("ist7");
+//        }else if(testName.equalsIgnoreCase("ist8")){
+//            return getCalculator("ist8");
+//        }else if(testName.equalsIgnoreCase("ist9")){
+//            return getCalculator("ist9");
+//        }
+        else{
             logger.error("can't find result calculator for the testname: "+testName);
             throw new AnswerException("answer is not valid, please re-check your answer");
         }

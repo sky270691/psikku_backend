@@ -145,12 +145,32 @@ public class UserController {
         return ResponseEntity.ok(returnBody);
     }
 
-    @PutMapping("/work_experience")
+    @PutMapping("/work-experience")
     public ResponseEntity<?> addOrUpdateEducation(@RequestBody WorkExperienceDto dto){
         userService.addWorkExp(dto);
         Map<String,String> returnBody = new LinkedHashMap<>();
         returnBody.put("status","success");
         return ResponseEntity.ok(returnBody);
+    }
+
+    @DeleteMapping("/work-experience/{id}")
+    public ResponseEntity<?> deleteWorkExp(@PathVariable Long id){
+
+        userService.deleteWorkExpById(id);
+        Map<String,String> returnBody = new LinkedHashMap<>();
+        returnBody.put("status","success");
+        return ResponseEntity.ok(returnBody);
+
+    }
+
+    @DeleteMapping("/education/{id}")
+    public ResponseEntity<?> deleteEducation(@PathVariable Long id){
+
+        userService.deleteEducationById(id);
+        Map<String,String> returnBody = new LinkedHashMap<>();
+        returnBody.put("status","success");
+        return ResponseEntity.ok(returnBody);
+
     }
 
 

@@ -19,6 +19,8 @@ public class FullTestDto {
 
     private String description;
 
+    private int skippable;
+
     @JsonProperty("is_survey")
     private boolean isSurvey;
 
@@ -83,5 +85,21 @@ public class FullTestDto {
 
     public void setSubtests(List<SubtestDto> subtests) {
         this.subtests = subtests;
+    }
+
+    public boolean isSurvey() {
+        return isSurvey;
+    }
+
+    public void setSurvey(boolean survey) {
+        isSurvey = survey;
+    }
+
+    public int getSkippable() {
+        return skippable;
+    }
+
+    public void setSkippable(int skippable) {
+        this.skippable = skippable;
     }
 }

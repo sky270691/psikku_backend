@@ -2,6 +2,7 @@ package com.psikku.backend.service.testpackage;
 
 import com.psikku.backend.dto.payment.GeneratedPaymentDetailDto;
 import com.psikku.backend.dto.test.MinimalTestDto;
+import com.psikku.backend.dto.testpackage.PackageWithOrderDto;
 import com.psikku.backend.dto.testpackage.TestPackageCreationDto;
 import com.psikku.backend.dto.testpackage.TestPackageDto;
 import com.psikku.backend.entity.*;
@@ -16,11 +17,12 @@ import com.psikku.backend.service.voucher.VoucherService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,6 +35,7 @@ public class TestPackageServiceImpl implements TestPackageService{
     private final TestPackageMapper testPackageMapper;
     private final TestMapper testMapper;
     private final UserService userService;
+    private final VoucherService voucherService;
 
     @Autowired
     public TestPackageServiceImpl(TestPackageRepository testPackageRepository,
@@ -40,9 +43,11 @@ public class TestPackageServiceImpl implements TestPackageService{
                                   PaymentService paymentService,
                                   TestPackageMapper testPackageMapper,
                                   TestMapper testMapper,
-                                  UserService userService) {
+                                  UserService userService,
+                                  @Lazy VoucherService voucherService) {
         this.testResultService = testResultService;
         this.testMapper = testMapper;
+        this.voucherService = voucherService;
         this.logger = LoggerFactory.getLogger(this.getClass());
         this.testPackageRepository = testPackageRepository;
         this.paymentService = paymentService;
@@ -67,7 +72,12 @@ public class TestPackageServiceImpl implements TestPackageService{
     public List<MinimalTestDto> getAllTestDescByPackageId(int id){
         TestPackage testPackage = getPackageById(id);
         List<MinimalTestDto> minimalTestDtoList = new ArrayList<>();
-        testPackage.getTestList().forEach(test->minimalTestDtoList.add(testMapper.convertToMinTestDto(test)));
+        testPackage.getTestPackageTestList().forEach(test->{
+            MinimalTestDto minimalTestDto = testMapper.convertToMinTestDto(test.getTest());
+            minimalTestDto.setPriority(test.getPriority());
+            minimalTestDtoList.add(minimalTestDto);
+        });
+        minimalTestDtoList.sort(Comparator.comparingInt(MinimalTestDto::getPriority));
         return minimalTestDtoList;
     }
 
@@ -106,9 +116,56 @@ public class TestPackageServiceImpl implements TestPackageService{
         User user = userService.findByUsername(username);
         TestPackage testPackage = getPackageById(idPackage);
         List<Voucher> userVoucherList =
-        user.getVoucherList().stream()
-                .filter(v -> v.getTestPackage().getId() == testPackage.getId())
-                .collect(Collectors.toList());
+                user.getVoucherList().stream()
+                        .filter(v -> v.getTestPackage().getId() == testPackage.getId())
+                        .collect(Collectors.toList());
         return !userVoucherList.isEmpty();
+    }
+
+    @Override
+    public PackageWithOrderDto getOrderingPackageByVoucher(String voucher) {
+        Optional<TestPackage> tpOpt = testPackageRepository.getTestPackageByVoucher_VoucherCode(voucher);
+        Voucher vch = voucherService.getVoucherByCode(voucher);
+        TestPackage testPackage = null;
+        if(tpOpt.isPresent()){
+            testPackage = tpOpt.get();
+        }else{
+            throw new PackageException("voucher tidak valid");
+        }
+        List<MinimalTestDto> minTesDto = new ArrayList<>();
+        List<TestPackageTest> tpt = testPackage.getTestPackageTestList();
+
+        tpt.sort(Comparator.comparingInt(TestPackageTest::getPriority));
+        for (TestPackageTest testPackageTest : tpt) {
+            Test test = testPackageTest.getTest();
+            MinimalTestDto minTestDto = new MinimalTestDto();
+            minTestDto.setPriority(testPackageTest.getPriority());
+            minTestDto.setSkippable(test.getSkippable());
+            minTestDto.setDescription(test.getDescription());
+            minTestDto.setName(test.getName());
+            minTesDto.add(minTestDto);
+        }
+
+        PackageWithOrderDto dto = new PackageWithOrderDto();
+        dto.setRest(vch.isRest());
+        dto.setTestList(minTesDto);
+        dto.setCurrentStopPosition(vch.getCurrentTestOrder());
+        return dto;
+    }
+
+    @Override
+    @Transactional
+    public void sendStopSignal(String voucher, Integer position) {
+        Voucher vch = voucherService.getVoucherByCode(voucher);
+        vch.setCurrentTestOrder(position);
+        voucherService.saveVoucher(vch);
+    }
+
+    @Override
+    @Transactional
+    public void sendRestSignal(String voucher, boolean rest) {
+        Voucher vch = voucherService.getVoucherByCode(voucher);
+        vch.setRest(rest);
+        voucherService.saveVoucher(vch);
     }
 }
