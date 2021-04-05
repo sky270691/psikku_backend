@@ -64,7 +64,15 @@ public class TestPackageMapper {
         if(testPackage.getVoucher() != null && !testPackage.getVoucher().isEmpty()) {
             testPackageDto.setVoucherValidUntil(testPackage.getVoucher().get(0).getValidUntil());
         }
-        testPackage.getTestPackageTestList().forEach(test-> minimalTestDtoLinkedList.add(testMapper.convertToMinTestDto(test.getTest())));
+//        testPackage.getTestPackageTestList().forEach(test->
+//                minimalTestDtoLinkedList.add(testMapper.convertToMinTestDto(test.getTest())));
+
+        for (TestPackageTest tpt : testPackage.getTestPackageTestList()) {
+            MinimalTestDto mtd = testMapper.convertToMinTestDto(tpt.getTest());
+            mtd.setTakePict(tpt.isTakePict());
+            minimalTestDtoLinkedList.add(mtd);
+        }
+
         testPackageDto.setMinimalTestDtoList(minimalTestDtoLinkedList);
         testPackageDto.getMinimalTestDtoList().sort(Comparator.comparingInt(MinimalTestDto::getPriority));
         return testPackageDto;
