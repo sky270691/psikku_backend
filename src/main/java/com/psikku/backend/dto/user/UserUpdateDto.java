@@ -50,6 +50,8 @@ public class UserUpdateDto {
 
     private String maritalStatus;
 
+    private String geolocation;
+
 //    private LocalDateTime createTime;
 
     @Past(message = "mohon periksa kembali untuk tahun kelahirannya")
@@ -190,5 +192,13 @@ public class UserUpdateDto {
 
     public void setNewPassword(String newPassword) {
         this.newPassword = newPassword;
+    }
+
+    public String getGeolocation() {
+        return geolocation;
+    }
+
+    public void setGeolocation(String geolocation) {
+        this.geolocation = geolocation;
     }
 }

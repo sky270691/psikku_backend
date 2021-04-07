@@ -276,6 +276,9 @@ public class UserServiceImpl implements UserService {
             if(userUpdateDto.getMaritalStatus() != null){
                 user.setMaritalStatus(userUpdateDto.getMaritalStatus());
             }
+            if(userUpdateDto.getGeolocation() != null){
+                user.setGeolocation(userUpdateDto.getGeolocation());
+            }
 
 
 

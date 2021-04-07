@@ -33,6 +33,8 @@ public class User {
 
     private String sim;
 
+    private String geolocation;
+
     @Column(name = "marital_status")
     private String maritalStatus;
 
@@ -259,5 +261,13 @@ public class User {
 
     public void setProfilPicture(FileData fileData) {
         this.profilPicture = fileData;
+    }
+
+    public String getGeolocation() {
+        return geolocation;
+    }
+
+    public void setGeolocation(String geolocation) {
+        this.geolocation = geolocation;
     }
 }

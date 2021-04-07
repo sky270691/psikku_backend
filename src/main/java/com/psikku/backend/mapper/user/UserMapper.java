@@ -69,6 +69,7 @@ public class UserMapper {
         userDto.setProvince(user.getProvince());
         userDto.setCity(user.getCity());
         userDto.setAddress(user.getAddress());
+        userDto.setGeolocation(user.getGeolocation());
         if(user.getMaritalStatus() != null && !user.getMaritalStatus().equalsIgnoreCase("")) {
             userDto.setMaritalStatus(user.getMaritalStatus());
         }

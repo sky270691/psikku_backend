@@ -20,6 +20,7 @@ public class UserDto {
     private String address;
     private String sim;
     private String maritalStatus;
+    private String geolocation;
     private LocalDateTime createTime;
     private LocalDate dateOfBirth;
     private List<EducationDto> educationList;
@@ -152,5 +153,13 @@ public class UserDto {
 
     public void setPictureUrl(String pictureUrl) {
         this.pictureUrl = pictureUrl;
+    }
+
+    public String getGeolocation() {
+        return geolocation;
+    }
+
+    public void setGeolocation(String geolocation) {
+        this.geolocation = geolocation;
     }
 }
