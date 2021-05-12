@@ -98,7 +98,7 @@ public class IstObjectiveResultTestCalculator implements UniqueResultTestCalcula
         StringBuilder sb = new StringBuilder();
         sb.append("sw=");
         System.out.println(loadNorma(userAgeInYear, rw, testname));
-        String[] norma = loadNorma(userAgeInYear, rw, testname).split(",");
+        String[] norma = loadNorma(Math.max(userAgeInYear,12), rw, testname).split(",");
         int sw = Integer.parseInt(norma[6]);
         sb.append(sw);
         setResult(sb.toString());
