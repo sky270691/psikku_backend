@@ -501,7 +501,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     private int bakatIstCalc(User user, String ist, String sw){
-        int age = user.getAge() / 12;
+        int age = Math.max((user.getAge()/12),12);
         Resource resource = resourceLoader.getResource(normaIstCsvLocation);
         int hasil = 0;
         try {
